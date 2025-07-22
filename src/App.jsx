@@ -1,5 +1,4 @@
 import React from 'react'
-import './App.css' // Assuming you have an App.css for styles
 import {
   BrowserRouter as Router,
   Route,
@@ -14,12 +13,10 @@ import DashboardStudent from './Components/Candidates/DashboardStudent';
 import Register from './Components/Auth/Register';
 const App = () => {
   return (
-
-    
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div>
       <Router>
       <Routes>
-        <Route path="/DashboardSidebar" element={<DashboardSidebar />} />
+        <Route path="/" element={<DashboardSidebar />} />
         </Routes>
         </Router>
     </div>
