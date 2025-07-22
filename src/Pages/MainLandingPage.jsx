@@ -22,9 +22,15 @@ import { useEffect, useState } from 'react';
 import Footer from '../Components/Global/Footer';
 import Contact from '../Components/Global/Contact';
 import MainHeader from '../Components/Global/MainHeader';
+import { useNavigate } from 'react-router';
 
 const LandingPage = () => {
     const [activeIndex, setActiveIndex] = useState(0);
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/RecruiterRegister")
+    }
 
     const features = [
         {
@@ -130,7 +136,7 @@ const LandingPage = () => {
                             Revolutionize your hiring process with our AI-powered platform. Find, match, and hire top talent faster than ever before.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-                            <button className="bg-blue-600 hover:bg-blue-700 transition duration-300 text-white px-8 py-3 rounded-xl font-semibold shadow-xl hover:scale-105">
+                            <button onClick={handleClick} className="bg-blue-600 hover:bg-blue-700 transition duration-300 text-white px-8 py-3 rounded-xl font-semibold shadow-xl hover:scale-105">
                                 Get Started
                             </button>
                             <button className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 transition duration-300 px-8 py-3 rounded-xl font-semibold shadow-sm hover:scale-105">
