@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Brain, Menu, X } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 const MainHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate("/RecruiterRegister")
+  }
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -30,7 +36,7 @@ const MainHeader = () => {
             <a href="#how-it-works" className="text-gray-700 hover:text-violet-600 transition-colors font-medium">How It Works</a>
             <a href="#testimonials" className="text-gray-700 hover:text-violet-600 transition-colors font-medium">Testimonials</a>
             <a href="#contact" className="text-gray-700 hover:text-violet-600 transition-colors font-medium">Contact</a>
-            <button className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-2.5 rounded-lg hover:from-violet-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 font-medium shadow-lg">
+            <button onClick={handleClick} className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-2.5 rounded-lg hover:from-violet-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 font-medium shadow-lg">
               Get Started
             </button>
           </div>
