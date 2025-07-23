@@ -23,6 +23,7 @@ import RecruiterMainLandingPage from "./Pages/Recruiter/RecruiterMainLandingPage
 import AdminDashboard from "./Pages/Admin/AdminDashboard"
 import MainContext from "./Components/Context/RecruiterProvider"
 import RecruiterProvider from "./Components/Context/RecruiterProvider"
+import RecruiterProfilePage from './Pages/Recruiter/RecruiterProfile/RecruiterProfilePage';
 const App = () => {
   return (
     <div>
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/EmailResetPage" element={<EmailResetPage />} />
             <Route path="/EmailOtpPage" element={<EmailOtpPage />} />
             <Route path="/ChangePasswordPage" element={<ChangePassword />} />
+            <Route path = "/RecruiterProfile" element={<RecruiterProfilePage />} />
 
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
