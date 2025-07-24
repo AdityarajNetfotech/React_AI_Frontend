@@ -23,31 +23,32 @@ import RecruiterMainLandingPage from "./Pages/Recruiter/RecruiterMainLandingPage
 import AdminDashboard from "./Pages/Admin/AdminDashboard"
 import MainContext from "./Components/Context/RecruiterProvider"
 import RecruiterProvider from "./Components/Context/RecruiterProvider"
-import RecruiterProfilePage from './Pages/Recruiter/RecruiterProfile/RecruiterProfilePage';
+import Sidebar from './Pages/Recruiter/Sidebar';
+
 const App = () => {
   return (
     <div>
-     <RecruiterProvider >
+      <RecruiterProvider >
 
-      <Router>
-        <Routes>
-          <Route path="/DashboardSidebar" element={<DashboardSidebar />} />
-          <Route path="/" element={<LandingPage />} />
-           <Route path="/RecruiterMainLandingPage" element={<RecruiterMainLandingPage />} />
+        <Router>
+          <Routes>
+            <Route path="/DashboardSidebar" element={<DashboardSidebar />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/RecruiterMainLandingPage" element={<RecruiterMainLandingPage />} />
             <Route path="/RecruiterRegister" element={<RecriuterRegister />} />
             <Route path="/RecruiterLogin" element={<RecruiterLogin />} />
             <Route path="/EmailResetPage" element={<EmailResetPage />} />
             <Route path="/EmailOtpPage" element={<EmailOtpPage />} />
             <Route path="/ChangePasswordPage" element={<ChangePassword />} />
-            <Route path = "/RecruiterProfile" element={<RecruiterProfilePage />} />
 
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/AdminDashboard" element={<AdminDashboard />} />
+            <Route path="/Sidebar" element={<Sidebar />} />
 
-        </Routes>
-      </Router>
-       </RecruiterProvider>
+          </Routes>
+        </Router>
+      </RecruiterProvider>
 
     </div>
   )
