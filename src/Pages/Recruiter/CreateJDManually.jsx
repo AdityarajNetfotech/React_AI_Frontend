@@ -199,9 +199,10 @@ const CreateJDManually = () => {
                                         ))}
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex justify-center pt-6">
                                     <button
+                                        onClick={handleCreateJD}
                                         className="bg-gray-800 text-white px-12 py-4 rounded-xl font-bold hover:bg-gray-900 transform hover:scale-105 transition-all duration-200 shadow-lg"
                                     >
                                         Create JD
