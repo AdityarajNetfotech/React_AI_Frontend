@@ -24,6 +24,9 @@ import AdminDashboard from "./Pages/Admin/AdminDashboard"
 import MainContext from "./Components/Context/RecruiterProvider"
 import RecruiterProvider from "./Components/Context/RecruiterProvider"
 import Sidebar from './Pages/Recruiter/Sidebar';
+import Layout from './Pages/Recruiter/Layout';
+import RecruiterDashboard from './Pages/Recruiter/RecuriterDashboard';
+import MyJD from './Pages/Recruiter/MyJD';
 
 const App = () => {
   return (
@@ -44,7 +47,11 @@ const App = () => {
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/Sidebar" element={<Sidebar />} />
+
+            <Route path="/recruiter" element={<Layout />}>
+              <Route path="dashboard" element={<RecruiterDashboard />} />
+              <Route path="my-jd" element={<MyJD />} />
+            </Route>
 
           </Routes>
         </Router>
