@@ -27,6 +27,8 @@ import Sidebar from './Pages/Recruiter/Sidebar';
 import Layout from './Pages/Recruiter/Layout';
 import RecruiterDashboard from './Pages/Recruiter/RecuriterDashboard';
 import MyJD from './Pages/Recruiter/MyJD';
+import CreateJDManually from './Pages/Recruiter/CreateJDManually';
+import CreateJDAI from './Pages/Recruiter/CreateJDAI';
 
 const App = () => {
   return (
@@ -48,9 +50,11 @@ const App = () => {
             <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/AdminDashboard" element={<AdminDashboard />} />
 
-            <Route path="/recruiter" element={<Layout />}>
-              <Route path="dashboard" element={<RecruiterDashboard />} />
-              <Route path="my-jd" element={<MyJD />} />
+            <Route path="/Recruiter-Dashboard" element={<Layout />}>
+              <Route index element={<RecruiterDashboard />} />
+              <Route path="CreateJDManually" element={<CreateJDManually />} />
+              <Route path="CreateJDAI" element={<CreateJDAI />} />
+              <Route path="My-Jd" element={<MyJD />} />
             </Route>
 
           </Routes>

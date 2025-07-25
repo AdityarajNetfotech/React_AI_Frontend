@@ -14,9 +14,9 @@ import {
 } from "react-icons/fi";
 
 const navItems = [
-  { label: "Dashboard", icon: FiHome, path: "dashboard" },
-  { label: "Create JD", icon: FiFilePlus, path: "create-jd" },
-  { label: "My JD", icon: FiFileText, path: "my-jd" },
+  { label: "Dashboard", icon: FiHome, path: "" },
+  { label: "Create JD", icon: FiFilePlus, path: "Create-jd" },
+  { label: "My JD", icon: FiFileText, path: "My-Jd" },
   { label: "My Question", icon: FiHelpCircle, path: "/my-question" },
   { label: "Result", icon: FiCheckCircle, path: "/result" },
   { label: "My Link", icon: FiLink, path: "/my-link" },
