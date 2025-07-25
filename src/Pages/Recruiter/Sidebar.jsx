@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
   FiHome,
   FiFilePlus,
   FiFileText,
   FiHelpCircle,
-  FiEdit,
   FiCheckCircle,
   FiLink,
   FiUser,
@@ -14,15 +14,14 @@ import {
 } from "react-icons/fi";
 
 const navItems = [
-  { label: "Dashboard", icon: FiHome },
-  { label: "Create JD", icon: FiFilePlus },
-  { label: "My JD", icon: FiFileText },
-  { label: "My Question", icon: FiHelpCircle },
-//   { label: "Exam", icon: FiEdit },
-  { label: "Result", icon: FiCheckCircle },
-  { label: "My Link", icon: FiLink },
-  { label: "Profile", icon: FiUser },
-  { label: "Logout", icon: FiLogOut },
+  { label: "Dashboard", icon: FiHome, path: "dashboard" },
+  { label: "Create JD", icon: FiFilePlus, path: "create-jd" },
+  { label: "My JD", icon: FiFileText, path: "my-jd" },
+  { label: "My Question", icon: FiHelpCircle, path: "/my-question" },
+  { label: "Result", icon: FiCheckCircle, path: "/result" },
+  { label: "My Link", icon: FiLink, path: "/my-link" },
+  { label: "Profile", icon: FiUser, path: "/profile" },
+  { label: "Logout", icon: FiLogOut, path: "/logout" },
 ];
 
 const Sidebar = () => {
@@ -55,15 +54,17 @@ const Sidebar = () => {
             const Icon = item.icon;
             return (
               <li key={index}>
-                <a
-                  href={`#${item.label.toLowerCase().replace(/\s/g, "")}`}
-                  className="flex items-center px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 transition-all duration-300 group"
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 text-sm font-medium transition-all duration-300 group ${
+                      isActive ? "bg-gray-800 text-white" : "text-gray-300 hover:text-white hover:bg-gray-800"
+                    }`
+                  }
                 >
                   <Icon className="w-5 h-5 text-gray-400 group-hover:text-white" />
-                  {!collapsed && (
-                    <span className="ml-3">{item.label}</span>
-                  )}
-                </a>
+                  {!collapsed && <span className="ml-3">{item.label}</span>}
+                </NavLink>
               </li>
             );
           })}
