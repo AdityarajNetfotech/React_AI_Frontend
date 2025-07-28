@@ -20,13 +20,14 @@ import EmailResetPage from "./Pages/Recruiter/EmailResetPage"
 import EmailOtpPage from "./Pages/Recruiter/EmailOtpPage"
 import ChangePassword from "./Pages/Recruiter/ChangePasswordPage"
 import RecruiterMainLandingPage from "./Pages/Recruiter/RecruiterMainLandingPage"
-import AdminDashboard from "./Pages/Admin/AdminDashboard"
+import AdminDashboard from "./Pages/Admin/Admin Dashboard/AdminDashboard"
 import MainContext from "./Components/Context/RecruiterProvider"
 import RecruiterProvider from "./Components/Context/RecruiterProvider"
 import Sidebar from './Pages/Recruiter/Sidebar';
 import Layout from './Pages/Recruiter/Layout';
 import RecruiterDashboard from './Pages/Recruiter/RecuriterDashboard';
 import MyJD from './Pages/Recruiter/MyJD';
+import AdminLayout from './Pages/Admin/Admin Dashboard/AdminLayout';
 
 const App = () => {
   return (
@@ -44,9 +45,12 @@ const App = () => {
             <Route path="/EmailOtpPage" element={<EmailOtpPage />} />
             <Route path="/ChangePasswordPage" element={<ChangePassword />} />
 
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="AdminDashboard" element={<AdminDashboard />} />
+            </Route>
+
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
-            <Route path="/AdminDashboard" element={<AdminDashboard />} />
 
             <Route path="/recruiter" element={<Layout />}>
               <Route path="dashboard" element={<RecruiterDashboard />} />
