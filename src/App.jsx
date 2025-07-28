@@ -29,6 +29,7 @@ import RecruiterDashboard from './Pages/Recruiter/RecuriterDashboard';
 import MyJD from './Pages/Recruiter/MyJD';
 import CreateJDManually from './Pages/Recruiter/CreateJDManually';
 import CreateJDAI from './Pages/Recruiter/CreateJDAI';
+import AdminLayout from './Pages/Admin/Admin Dashboard/AdminLayout';
 
 const App = () => {
   return (
@@ -46,9 +47,12 @@ const App = () => {
             <Route path="/EmailOtpPage" element={<EmailOtpPage />} />
             <Route path="/ChangePasswordPage" element={<ChangePassword />} />
 
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route path="AdminDashboard" element={<AdminDashboard />} />
+            </Route>
+
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
-            <Route path="/AdminDashboard" element={<AdminDashboard />} />
 
             <Route path="/Recruiter-Dashboard" element={<Layout />}>
               <Route index element={<RecruiterDashboard />} />
