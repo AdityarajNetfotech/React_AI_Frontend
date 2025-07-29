@@ -20,7 +20,7 @@ const navItems = [
   { label: "My Question", icon: FiHelpCircle, path: "/my-question" },
   { label: "Result", icon: FiCheckCircle, path: "/result" },
   { label: "My Link", icon: FiLink, path: "/my-link" },
-  { label: "Profile", icon: FiUser, path: "/profile" },
+  { label: "Profile", icon: FiUser, path: "RecruiterProfile" },
   { label: "Logout", icon: FiLogOut, path: "/logout" },
 ];
 

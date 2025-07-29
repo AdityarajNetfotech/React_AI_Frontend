@@ -32,6 +32,11 @@ import CreateJDManually from './Pages/Recruiter/CreateJDManually';
 import CreateJDAI from './Pages/Recruiter/CreateJDAI';
 import AdminLayout from './Pages/Admin/Admin Dashboard/AdminLayout';
 import AdminProfile from './Pages/Admin/Admin Dashboard/AdminProfile';
+import RecruiterProfilePage from './Pages/Recruiter/RecruiterProfile/RecruiterProfilePage';
+import JDDetails from './Pages/Recruiter/MyJD/JDDetails';
+import RegisteredRecruiters from './Pages/Admin/RegisteredRecruiters';
+
+
 
 const App = () => {
   return (
@@ -52,6 +57,7 @@ const App = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="AdminDashboard" element={<AdminDashboard />} />
               <Route path="Profile" element={<AdminProfile />} />
+              <Route path="RegisteredRecruiters" element={<RegisteredRecruiters />} />
             </Route>
 
             <Route path="/AdminRegister" element={<AdminRegister />} />
@@ -62,7 +68,11 @@ const App = () => {
               <Route path="CreateJDManually" element={<CreateJDManually />} />
               <Route path="CreateJDAI" element={<CreateJDAI />} />
               <Route path="My-Jd" element={<MyJD />} />
+              <Route path="RecruiterProfile" element={<RecruiterProfilePage />} />
             </Route>
+            
+            <Route path="/JDDetails/:id" element={<JDDetails />} />
+            
 
           </Routes>
         </Router>

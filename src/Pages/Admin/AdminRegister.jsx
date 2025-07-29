@@ -41,6 +41,7 @@ const AdminRegister = () => {
 
             if (response.data && response.status === 201) {
                 alert("Registration Successfull!! Please Login")
+                navigate("/AdminLogin")
             }
         } catch (error) {
             console.error("Error registering admin:", error);
