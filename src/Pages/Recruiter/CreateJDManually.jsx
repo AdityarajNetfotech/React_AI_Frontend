@@ -58,54 +58,54 @@ const CreateJDManually = () => {
                 <div className="px-6 py-8">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                         <div className="lg:col-span-2 h-full">
-                            <div className="bg-white rounded-2xl shadow-[0px_0px_6px_0px_rgba(59,_130,_246,_0.5)] p-8 space-y-2 transition-shadow duration-300 h-full">
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-800 mb-3">
+                            <div className="bg-white rounded-2xl shadow-[0px_0px_6px_0px_rgba(59,_130,_246,_0.5)] px-8 py-12 space-y-2 transition-shadow duration-300 h-full">
+
+                                <div className="relative mb-8">
+                                    <input
+                                        type="text"
+                                        value={formData.positionTitle}
+                                        onChange={(e) => handleInputChange('positionTitle', e.target.value)}
+                                        className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
+                                        placeholder="Enter position title"
+                                    />
+                                    <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
                                         Job Title <span className="text-red-500">*</span>
                                     </label>
-                                    <div className="">
-                                        <input
-                                            type="text"
-                                            value={formData.positionTitle}
-                                            onChange={(e) => handleInputChange('positionTitle', e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200"
-                                            placeholder="Enter position title"
-                                        />
-                                    </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-800 mb-3">
-                                        Job Description
-                                    </label>
+                                <div className="relative mb-8">
                                     <textarea
                                         value={formData.jobDescription}
                                         onChange={(e) => handleInputChange('jobDescription', e.target.value)}
-                                        className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 resize-none"
+                                        className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300 resize-none"
                                         placeholder="Enter job description"
                                         rows={4}
                                     />
+                                    <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                        Job Description
+                                    </label>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-800 mb-3">Domain</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div className="relative">
                                         <select
                                             value={formData.domain}
                                             onChange={(e) => handleInputChange('domain', e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200">
+                                            className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300">
                                             <option>IT</option>
                                             <option>Marketing</option>
                                             <option>Sales</option>
                                             <option>HR</option>
                                         </select>
+                                        <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                            Domain
+                                        </label>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-800 mb-3">Qualification</label>
+                                    <div className="relative">
                                         <select
                                             value={formData.qualification}
                                             onChange={(e) => handleInputChange('qualification', e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200">
+                                            className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300">
                                             <option>Bachelor's Degree</option>
                                             <option>Master's Degree</option>
                                             <option>PhD</option>
@@ -113,43 +113,47 @@ const CreateJDManually = () => {
                                             <option>High School</option>
                                             <option>Professional Certification</option>
                                         </select>
+                                        <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                            Qualification
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-800 mb-3">Location</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div className="relative">
                                         <input
                                             type="text"
                                             value={formData.location}
                                             onChange={(e) => handleInputChange('location', e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200"
+                                            className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
                                             placeholder="Enter location"
                                         />
+                                        <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                            Location
+                                        </label>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-800 mb-3">Employment Type</label>
+                                    <div className="relative">
                                         <select
                                             value={formData.employmentType}
                                             onChange={(e) => handleInputChange('employmentType', e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200"
-                                        >
+                                            className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300">
                                             <option>Full-time</option>
                                             <option>Part-time</option>
                                             <option>Contract</option>
                                             <option>Internship</option>
                                         </select>
+                                        <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                            Employment Type
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-800 mb-3">Experience</label>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                    <div className="relative">
                                         <select
                                             value={formData.minExperience}
                                             onChange={(e) => handleInputChange('minExperience', e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200"
-                                        >
+                                            className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300">
                                             <option>1 Year</option>
                                             <option>2 Years</option>
                                             <option>3 Years</option>
@@ -157,47 +161,52 @@ const CreateJDManually = () => {
                                             <option>5+ Years</option>
                                             <option>10+ Years</option>
                                         </select>
+                                        <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                            Experience
+                                        </label>
                                     </div>
-
-                                    <div>
-                                        <label className="block text-sm font-bold text-gray-800 mb-3">No of Positions</label>
+                                    <div className="relative">
                                         <input
                                             type="number"
                                             value={formData.noOfPositions}
                                             onChange={(e) => handleInputChange('noOfPositions', e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200"
+                                            className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
                                         />
+                                        <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                            No of Positions
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-bold text-gray-800 mb-3">
-                                        Add Skills
-                                    </label>
+                                <div className="relative mb-8">
                                     <input
                                         type="text"
                                         value={inputValue}
                                         onChange={(e) => setInputValue(e.target.value)}
                                         onKeyDown={handleKeyDown}
                                         placeholder="Enter Skills"
-                                        className="w-full px-4 py-3 bg-gray-50 outline-2 outline-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500  transition-all duration-200 mb-3"
+                                        className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
                                     />
-                                    <div className="flex flex-wrap gap-3">
-                                        {points.map((point, index) => (
-                                            <div
-                                                key={index}
-                                                className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full flex items-center shadow-sm border border-blue-200"
+                                    <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
+                                        Add Skills
+                                    </label>
+                                </div>
+
+                                <div className="flex flex-wrap gap-3 mb-8">
+                                    {points.map((point, index) => (
+                                        <div
+                                            key={index}
+                                            className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full flex items-center shadow-sm border border-blue-200"
+                                        >
+                                            <span className="font-medium">{point}</span>
+                                            <button
+                                                onClick={() => removePoint(index)}
+                                                className="ml-2 text-blue-600 hover:text-red-500 transition-colors duration-200"
                                             >
-                                                <span className="font-medium">{point}</span>
-                                                <button
-                                                    onClick={() => removePoint(index)}
-                                                    className="ml-2 text-blue-600 hover:text-red-500 transition-colors duration-200"
-                                                >
-                                                    <X size={16} />
-                                                </button>
-                                            </div>
-                                        ))}
-                                    </div>
+                                                <X size={16} />
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <div className="flex justify-center pt-6">
@@ -210,6 +219,7 @@ const CreateJDManually = () => {
                                 </div>
                             </div>
                         </div>
+
 
                         <div className="lg:col-span-1 h-full">
                             <div className="bg-white rounded-2xl shadow-[0px_0px_6px_0px_rgba(59,_130,_246,_0.5)] p-6 top-8 transition-shadow duration-300 h-full">

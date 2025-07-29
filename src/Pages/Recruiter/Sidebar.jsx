@@ -15,7 +15,7 @@ import {
 
 const navItems = [
   { label: "Dashboard", icon: FiHome, path: "" },
-  { label: "Create JD", icon: FiFilePlus, path: "Create-jd" },
+  { label: "Create JD", icon: FiFilePlus, path: "/Recruiter-Dashboard/CreateJDAI" },
   { label: "My JD", icon: FiFileText, path: "My-Jd" },
   { label: "My Question", icon: FiHelpCircle, path: "/my-question" },
   { label: "Result", icon: FiCheckCircle, path: "/result" },
