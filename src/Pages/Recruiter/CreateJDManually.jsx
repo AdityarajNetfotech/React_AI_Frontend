@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { Upload, X, FileText, Users, Clock, Building2, Briefcase, MapPin, Globe, GraduationCap, FilePlus } from 'lucide-react';
-import Sidebar from './component/Sidebar';
+// import Sidebar from './component/Sidebar';
 import { useNavigate } from 'react-router';
 
 const CreateJDManually = () => {

@@ -34,7 +34,7 @@ const RecruiterLogin = () => {
             }
 
             alert("Login Successfull!")
-            navigate("/RecruiterMainLandingPage")
+            navigate("/Recruiter-Dashboard")
         } catch (error) {
              setLoading(false);
             setError(error.response?.data?.message || "Login failed");
