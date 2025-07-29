@@ -8,6 +8,24 @@ import {
   UserCheck,
 } from "lucide-react";
 
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 const stats = [
   {
     label: "All Recruiters",
@@ -41,10 +59,36 @@ const stats = [
   },
 ];
 
+// Dummy chart data
+const chartData = [
+  { name: "Jan", Recruiters: 20, JDs: 35 },
+  { name: "Feb", Recruiters: 30, JDs: 45 },
+  { name: "Mar", Recruiters: 25, JDs: 40 },
+  { name: "Apr", Recruiters: 35, JDs: 30 },
+  { name: "May", Recruiters: 40, JDs: 20 },
+];
+
+const pieData = [
+  { name: "Selected", value: 47 },
+  { name: "Rejected", value: 85 },
+];
+
+const scatterData = [
+  { x: 10, y: 30 },
+  { x: 20, y: 50 },
+  { x: 30, y: 40 },
+  { x: 40, y: 80 },
+  { x: 50, y: 70 },
+];
+
+const COLORS = ["#34D399", "#EF4444"];
+
 const AdminDashboard = () => {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
+    <div className="p-6 space-y-10">
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">Dashboard</h1>
+
+      {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {stats.map((stat, index) => (
           <div
@@ -59,6 +103,74 @@ const AdminDashboard = () => {
           </div>
         ))}
       </div>
+
+      {/* Bar Chart */}
+      <div className="bg-white p-6 rounded-2xl shadow-md">
+        <h2 className="text-lg font-semibold mb-4">Recruiters vs JDs</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Recruiters" fill="#6366f1" />
+            <Bar dataKey="JDs" fill="#10b981" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Line Chart */}
+      <div className="bg-white p-6 rounded-2xl shadow-md">
+        <h2 className="text-lg font-semibold mb-4">Recruiter Growth Trend</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="Recruiters" stroke="#3b82f6" strokeWidth={2} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="flex flex-col xl:flex-row gap-6 mt-10">
+        {/* Pie Chart */}
+        <div className="bg-white rounded-2xl shadow-md p-5 flex-1">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Selection Ratio</h2>
+          <PieChart width={300} height={250}>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+              label
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </div>
+
+        {/* Scatter Chart */}
+        <div className="bg-white rounded-2xl shadow-md p-5 flex-1">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Engagement</h2>
+          <ScatterChart width={300} height={250}>
+            <CartesianGrid />
+            <XAxis dataKey="x" name="Days" />
+            <YAxis dataKey="y" name="Activity" />
+            <Tooltip cursor={{ strokeDasharray: "3 3" }} />
+            <Scatter name="User Activity" data={scatterData} fill="#82ca9d" />
+          </ScatterChart>
+        </div>
+      </div>
+
     </div>
   );
 };
