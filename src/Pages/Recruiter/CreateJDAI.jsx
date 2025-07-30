@@ -23,7 +23,7 @@ const CreateJDAI = () => {
     const [showButtons, setShowButtons] = useState(false);
     const typingIntervalRef = useRef(null);
     const [loader, setLoader] = useState(false);
-
+    const fileInputRef = useRef(null);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,12 +54,13 @@ const CreateJDAI = () => {
                 if (line.trim() === '---') return '';
                 return line;
             })
+            .filter(line => line.trim() !== '')
             .join('\n');
     };
 
+
     const formatJDWithRole = (text, jobTitle) => {
         const cleanedText = cleanJDText(text);
-
         const paragraphs = cleanedText.split(/\n\s*\n/).filter(p => p.trim() !== "");
 
         return (
@@ -72,7 +73,7 @@ const CreateJDAI = () => {
                     return (
                         <p
                             key={index}
-                            className={`${isHeading ? "font-bold mb-0" : "mb-4 leading-relaxed"}`}
+                            className={`${isHeading ? "font-bold mb-0" : "mb-5 leading-relaxed"}`}
                         >
                             {para}
                         </p>
@@ -82,24 +83,92 @@ const CreateJDAI = () => {
         );
     };
 
-
-
-
-
     const startTypingEffect = (text) => {
-        const formattedJSX = formatJDWithRole(text, formData.title);
-        setDisplayedJD(formattedJSX);
-        setIsTyping(false);
-        setShowButtons(true);
+        if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+
+        const plainText = `Role: ${formData.title}\n\n` + cleanJDText(text);
+
+        setDisplayedJD("");
+        setIsTyping(true);
+        setShowButtons(false);
+
+        let index = 0;
+        typingIntervalRef.current = setInterval(() => {
+            if (index < plainText.length) {
+                setDisplayedJD(prev => prev + plainText[index]);
+                index++;
+            } else {
+                clearInterval(typingIntervalRef.current);
+                setIsTyping(false);
+                setDisplayedJD(formatJDWithRole(text, formData.title));
+                setShowButtons(true);
+            }
+        }, 10);
     };
 
-    useEffect(() => {
-        return () => {
-            if (typingIntervalRef.current) {
-                clearInterval(typingIntervalRef.current);
+
+
+    const handleFileUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.type !== 'application/pdf') {
+            alert('Please upload a PDF file only');
+            return;
+        }
+
+        setLoader(true);
+
+        try {
+            const token = localStorage.getItem("recruiterAuthToken");
+            const formData = new FormData();
+            formData.append('jdPdf', file);
+
+            const res = await fetch("http://localhost:5000/api/jd/upload-pdf", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData
+            });
+
+            const data = await res.json();
+            console.log("first", data);
+
+
+            if (res.ok) {
+                setFormData({
+                    title: data.jd.title || "",
+                    domain: data.jd.domain || "",
+                    Qualification: data.jd.qualification || "",
+                    location: data.jd.location || "",
+                    employmentType: data.jd.employmentType || "",
+                    experience: data.jd.experience || "",
+                    positions: formData.positions,
+                    salaryRange: data.jd.salaryRange || ""
+                });
+
+                setSkillsList(data.jd.skills || []);
+
+                setFullJD(data.jd.fullJD);
+                console.log("second", fullJD);
+
+                startTypingEffect(data.jd.fullJD);
+
+                alert("JD uploaded and processed successfully!");
+            } else {
+                alert(data.message || "Error uploading JD");
             }
-        };
-    }, []);
+        } catch (error) {
+            console.error("Error uploading JD:", error);
+            alert("Error uploading JD");
+        } finally {
+            setLoader(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
 
     const handleSubmit = async () => {
         if (!formData.title || !formData.location || skillsList.length === 0) {
@@ -120,6 +189,8 @@ const CreateJDAI = () => {
                 },
                 body: JSON.stringify({
                     title: formData.title,
+                    domain: formData.domain,
+                    Qualification: formData.qualification,
                     experience: parseInt(formData.experience),
                     skills: skillsList,
                     location: formData.location,
@@ -133,7 +204,6 @@ const CreateJDAI = () => {
 
             setFullJD(data.jd.fullJD);
             startTypingEffect(data.jd.fullJD);
-            // alert("JD Created Successfully");
         } catch (error) {
             console.error(error);
             alert("Error creating JD");
@@ -142,32 +212,29 @@ const CreateJDAI = () => {
         }
     };
 
-
     const downloadJDAsPDF = () => {
-    if (!fullJD) return;
+        if (!fullJD) return;
 
-    const plainJD = cleanJDText(fullJD);
-    const doc = new jsPDF();
-    const margin = 15;
-    const pageHeight = doc.internal.pageSize.height;
-    const pageWidth = doc.internal.pageSize.width - margin * 2;
+        const plainJD = cleanJDText(fullJD);
+        const doc = new jsPDF();
+        const margin = 15;
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width - margin * 2;
 
-    const lines = doc.splitTextToSize(plainJD, pageWidth);
+        const lines = doc.splitTextToSize(plainJD, pageWidth);
 
-    let y = 20;
-    lines.forEach((line) => {
-        if (y > pageHeight - 20) {
-            doc.addPage();
-            y = 20;
-        }
-        doc.text(line, margin, y);
-        y += 10;
-    });
+        let y = 20;
+        lines.forEach((line) => {
+            if (y > pageHeight - 20) {
+                doc.addPage();
+                y = 20;
+            }
+            doc.text(line, margin, y);
+            y += 10;
+        });
 
-    doc.save(`${formData.title || 'JobDescription'}.pdf`);
-};
-
-
+        doc.save(`${formData.title || 'JobDescription'}.pdf`);
+    };
 
     return (
         <div className="">
@@ -177,12 +244,12 @@ const CreateJDAI = () => {
                         <div className="w-20 h-20 border-4 border-transparent text-blue-400 text-4xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
                             <div className="w-16 h-16 border-4 border-transparent text-red-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full"></div>
                         </div>
-                        <h1 className='font-bold'>Creating JD</h1>
+                        <h1 className='font-bold'>Processing JD</h1>
                     </div>
                 </div>
             )}
 
-            <div className="px-6 py-8">
+            <div className="">
                 <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 min-h-screen">
                     <div className="lg:col-span-3 ">
                         <div className="bg-white rounded-2xl shadow-[0px_0px_6px_0px_rgba(59,_130,_246,_0.5)] px-8 py-12 space-y-2 transition-shadow duration-300 h-full">
@@ -209,7 +276,7 @@ const CreateJDAI = () => {
                                         value={formData.domain}
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
-                                        placeholder="Enter position title"
+                                        placeholder="Enter domain"
                                     />
                                     <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
                                         Domain
@@ -222,7 +289,7 @@ const CreateJDAI = () => {
                                         value={formData.qualification}
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
-                                        placeholder="Enter position title"
+                                        placeholder="Enter qualification"
                                     />
                                     <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
                                         Qualification
@@ -251,7 +318,7 @@ const CreateJDAI = () => {
                                         value={formData.employmentType}
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
-                                        placeholder="Enter position title"
+                                        placeholder="Enter employment type"
                                     />
                                     <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
                                         Employment Type
@@ -267,7 +334,7 @@ const CreateJDAI = () => {
                                         value={formData.experience}
                                         onChange={handleChange}
                                         className="w-full px-4 py-3 bg-white/70 border border-gray-400 rounded-xl shadow-inner focus:border-blue-500 focus:ring-2 focus:ring-blue-400 outline-none transition-all duration-300"
-                                        placeholder="Enter position title"
+                                        placeholder="Enter experience"
                                     />
                                     <label className="absolute left-4 -top-2.5 bg-white px-2 text-sm font-medium text-blue-600">
                                         Experience (Years)
@@ -315,7 +382,7 @@ const CreateJDAI = () => {
                                 </label>
                             </div>
 
-                            <div className="flex flex-wrap gap-3 mb-8">
+                            <div className="flex flex-wrap gap-3 mb-8 max-h-[200px] overflow-y-auto">
                                 {skillsList.map((skill, index) => (
                                     <div
                                         key={index}
@@ -333,23 +400,30 @@ const CreateJDAI = () => {
                                 ))}
                             </div>
 
-                            <div className="flex justify-evenly mt-6">
+                            <div className="flex flex-col sm:flex-row justify-evenly mt-6 gap-4 sm:gap-0">
                                 <div className="flex justify-center pt-6">
                                     <button
                                         onClick={handleSubmit}
-                                        className="bg-gray-800 text-white px-12 py-4 rounded-xl font-semibold hover:bg-gray-900 transform hover:shadow-lg transition-all duration-200 cursor-pointer"
+                                        className="bg-gray-800 text-white px-8 py-3 sm:px-12 sm:py-4 rounded-xl font-semibold hover:bg-gray-900 transform hover:shadow-lg transition-all duration-200 cursor-pointer"
                                     >
                                         Create JD
                                     </button>
                                 </div>
                                 <div className="flex justify-center pt-6">
-                                    <label className="flex items-center gap-3 px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md shadow-red-400/20 hover:shadow-lg hover:shadow-red-400/30 cursor-pointer transition-all duration-300">
-                                        <FilePlus className="w-5 h-5" />
+                                    <label className="flex items-center gap-3 px-4 py-2 sm:px-6 sm:py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md shadow-red-400/20 hover:shadow-lg hover:shadow-red-400/30 cursor-pointer transition-all duration-300">
+                                        <FilePlus className="w-4 h-4 sm:w-5 sm:h-5" />
                                         Upload JD
-                                        <input type="file" accept=".pdf" className="hidden" />
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept=".pdf"
+                                            className="hidden"
+                                            onChange={handleFileUpload}
+                                        />
                                     </label>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
