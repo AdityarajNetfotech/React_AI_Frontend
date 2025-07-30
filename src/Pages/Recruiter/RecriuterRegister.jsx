@@ -3,6 +3,8 @@ import Frame from "../../Components/Images/Frame.png"
 import { useNavigate } from "react-router";
 import axios from "axios"
 import { AuthContext } from "../../Components/Context/RecruiterContext";
+import SpinLoader from "../../Components/SpinLoader/SpinLoader";
+import { toast, ToastContainer } from "react-toastify"
 
 const RecriuterRegister = () => {
 
@@ -23,6 +25,7 @@ const RecriuterRegister = () => {
     });
 
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,6 +35,7 @@ const RecriuterRegister = () => {
         e.preventDefault();
         console.log("Form Data Submitted:", formData);
         setError("");
+        setLoading(true);
 
         if (
             !formData.name ||
@@ -43,6 +47,7 @@ const RecriuterRegister = () => {
 
         ) {
             setError("Please provide all fields.");
+            setLoading(false);
             return;
         }
 
@@ -52,9 +57,19 @@ const RecriuterRegister = () => {
             console.log(response.data)
 
             if (response.data && response.status === 201) {
-                alert("Registration Successfull!! Please Login")
+              
                 setRecruiterData(response.data);
-                navigate("/RecruiterLogin")
+               
+
+                toast.success("Registration Successfull!! Please Login", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    className: "bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-xl shadow-lg border border-green-700",
+                    bodyClassName: "text-sm",
+                    progressClassName: "bg-green-200",
+                    onClose: () => navigate("/RecruiterLogin"),
+                });
+
             }
 
         } catch (error) {
@@ -63,6 +78,8 @@ const RecriuterRegister = () => {
                 error.response?.data?.message ||
                 "Registration failed. Please try again."
             );
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -85,158 +102,6 @@ const RecriuterRegister = () => {
                     />
                 </div>
 
-
-                {/* <div className="flex flex-col border-2 border-blue-300 justify-center bg-white p-8 rounded-xl shadow-md space-y-6 mt-4 mb-4">
-
-                    <div className="flex justify-center space-x-4 text-sm">
-                        <h2 className="text-3xl font-bold text-center text-blue-700 mb-2">Create Recruiter Account</h2>
-                    </div>
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
-                    <form className="space-y-4 md:space-y-6 " onSubmit={handleSubmit}>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Name*
-                            </label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                placeholder="Enter your Name"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Email*
-                            </label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                placeholder="Enter Your email"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Mobile Number*
-                            </label>
-                            <input
-                                type="number"
-                                name="number"
-                                value={formData.number}
-                                onChange={handleChange}
-                                placeholder="Enter Your mobile number"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Password*
-                            </label>
-                            <input
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                placeholder="••••••••"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Company Name*
-                            </label>
-                            <input
-                                type="text"
-                                name="companyName"
-                                value={formData.companyName}
-                                onChange={handleChange}
-                                placeholder="Enter Your Company name"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Company Website
-                            </label>
-                            <input
-                                type="text"
-                                name="companyWebsite"
-                                value={formData.companyWebsite}
-                                onChange={handleChange}
-                                placeholder="Enter Your Company website"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Designation*
-                            </label>
-                            <input
-                                type="text"
-                                name="designation"
-                                value={formData.designation}
-                                onChange={handleChange}
-                                placeholder="Enter Your designation"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                Industry
-                            </label>
-                            <input
-                                type="text"
-                                name="industry"
-                                value={formData.industry}
-                                onChange={handleChange}
-                                placeholder="Enter Your industry"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2 text-sm font-medium text-gray-700">
-                                LinkedIn Profile
-                            </label>
-                            <input
-                                type="text"
-                                name="linkedInProfile"
-                                value={formData.linkedInProfile}
-                                onChange={handleChange}
-                                placeholder="Enter Your LinkedIn Profile URL"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 my-4 text-center"
-                        >
-                            Register
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => navigate("/RecruiterLogin")}
-                            className="w-full text-white bg-[#131313] hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                        >
-                            Login
-                        </button>
-                    </form>
-
-
-
-                </div> */}
-
                 <div className="max-w-4xl mx-auto border border-blue-300 bg-white p-8 rounded-2xl shadow-xl mt-6 mb-6">
                     <h2 className="text-3xl font-bold text-center text-blue-700 mb-8">Create Recruiter Account</h2>
                     {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
@@ -255,7 +120,7 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                       
+
                         <div>
                             <label className="block mb-1 text-sm font-medium text-gray-700">Email*</label>
                             <input
@@ -269,11 +134,12 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                        
+
                         <div>
                             <label className="block mb-1 text-sm font-medium text-gray-700">Mobile Number*</label>
                             <input
-                                type="number"
+                                type="tel"
+                                maxLength={10}
                                 name="number"
                                 value={formData.number}
                                 onChange={handleChange}
@@ -283,7 +149,7 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                       
+
                         <div>
                             <label className="block mb-1 text-sm font-medium text-gray-700">Password*</label>
                             <input
@@ -297,7 +163,7 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                      
+
                         <div>
                             <label className="block mb-1 text-sm font-medium text-gray-700">Company Name*</label>
                             <input
@@ -311,7 +177,7 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                      
+
                         <div>
                             <label className="block mb-1 text-sm font-medium text-gray-700">Company Website</label>
                             <input
@@ -324,7 +190,7 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                      
+
                         <div>
                             <label className="block mb-1 text-sm font-medium text-gray-700">Designation*</label>
                             <input
@@ -338,7 +204,7 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                      
+
                         <div>
                             <label className="block mb-1 text-sm font-medium text-gray-700">Industry</label>
                             <input
@@ -351,7 +217,7 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                      
+
                         <div className="md:col-span-2">
                             <label className="block mb-1 text-sm font-medium text-gray-700">LinkedIn Profile</label>
                             <input
@@ -364,17 +230,24 @@ const RecriuterRegister = () => {
                             />
                         </div>
 
-                    
+
                         <div className="md:col-span-2">
                             <button
+                                disabled={loading}
                                 type="submit"
                                 className="w-full bg-blue-600 text-white font-semibold py-2 rounded-full hover:bg-blue-700 transition duration-200"
                             >
-                                Register
+                                {loading ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <SpinLoader />
+                                        Registering...
+                                    </div>
+                                ) : "Register"
+                                }
                             </button>
                         </div>
 
-                       
+
                         <div className="md:col-span-2 text-center">
                             <p className="text-sm text-gray-700 mt-1">
                                 Already have an account?{" "}
@@ -387,6 +260,7 @@ const RecriuterRegister = () => {
                             </p>
                         </div>
                     </form>
+                    <ToastContainer />
                 </div>
 
             </div>

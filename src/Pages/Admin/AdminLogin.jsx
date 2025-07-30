@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Frame from "../../Components/Images/Frame.png"
 import axios from "axios";
 import { useNavigate } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
 
 
 const AdminLogin = () => {
@@ -30,9 +31,14 @@ const AdminLogin = () => {
             if (response.data.token) {
                 localStorage.setItem("adminAuthToken", response.data.token);
             }
-
-            alert("Login Successfull!")
-            navigate("/AdminDashboard")
+              toast.success("Login Successful!", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            className: "bg-gradient-to-r from-green-500 to-green-600 text-white font-medium px-6 py-4 rounded-xl shadow-lg border border-green-700",
+                            bodyClassName: "text-sm",
+                            progressClassName: "bg-green-200",
+                            onClose: () => navigate("/AdminDashboa1rd"),
+                        });
         } catch (error) {
             setLoading(false);
             setError(error.response?.data?.message || "Login failed");

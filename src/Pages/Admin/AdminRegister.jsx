@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Frame from "../../Components/Images/Frame.png"
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify"
 
 const AdminRegister = () => {
 
@@ -34,14 +35,21 @@ const AdminRegister = () => {
             return;
         }
 
-          try {
+        try {
             const response = await axios.post("http://localhost:5000/api/admin/register", formData);
 
             console.log(response.data)
 
             if (response.data && response.status === 201) {
-                alert("Registration Successfull!! Please Login")
-                navigate("/AdminLogin")
+                toast.success("Registration Successfull!! Please Login", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    className: "bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-xl shadow-lg border border-green-700",
+                    bodyClassName: "text-sm",
+                    progressClassName: "bg-green-200",
+                    onClose: () => navigate("/AdminLogin"),
+                });
+
             }
         } catch (error) {
             console.error("Error registering admin:", error);
@@ -78,7 +86,7 @@ const AdminRegister = () => {
                     <div className="flex justify-center space-x-4 text-sm">
                         <h2 className="text-3xl font-bold text-center text-blue-700 mb-2">Create Admin Account</h2>
                     </div>
-                     {error && <p className="text-red-500 text-sm">{error}</p>}
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
                     <form className="space-y-4 md:space-y-6 " onSubmit={handleSubmit}>
                         <div>
                             <label className="block mb-2 text-sm font-medium text-gray-700">
@@ -113,7 +121,8 @@ const AdminRegister = () => {
                                 Mobile Number*
                             </label>
                             <input
-                                type="number"
+                                type="tel"
+                                maxLength={10}
                                 name="number"
                                 value={formData.number}
                                 onChange={handleChange}
@@ -150,7 +159,7 @@ const AdminRegister = () => {
                             Login
                         </button>
                     </form>
-
+                    <ToastContainer />
                 </div>
             </div>
         </div>
