@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Frame from "../../Components/Images/Frame.png"
 import axios from "axios";
 import { AuthContext } from "../../Components/Context/RecruiterContext";
+import SpinLoader from "../../Components/SpinLoader/SpinLoader";
+import { toast, ToastContainer } from "react-toastify";
 
 
 const RecruiterLogin = () => {
@@ -26,18 +28,26 @@ const RecruiterLogin = () => {
         try {
             const response = await axios.post("http://localhost:5000/api/recruiter/login", { email, password });
             console.log(response.data);
-            setLoading(false);
+
 
             if (response.data.token) {
                 localStorage.setItem("recruiterAuthToken", response.data.token);
                 setRecruiterData(response.data);
             }
+            toast.success("Login Successful!", {
+                position: "top-right",
+                autoClose: 3000,
+                className: "bg-gradient-to-r from-green-500 to-green-600 text-white font-medium px-6 py-4 rounded-xl shadow-lg border border-green-700",
+                bodyClassName: "text-sm",
+                progressClassName: "bg-green-200",
+                onClose: () => navigate("/Recruiter-Dashboard"),
+            });
 
-            alert("Login Successfull!")
-            navigate("/Recruiter-Dashboard")
         } catch (error) {
-             setLoading(false);
+            setLoading(false);
             setError(error.response?.data?.message || "Login failed");
+        } finally {
+            setLoading(false);
         }
 
     };
@@ -73,7 +83,7 @@ const RecruiterLogin = () => {
                 </div>
 
 
-                <div className="w-full max-w-lg mx-auto border-2 border-blue-300 bg-white p-10 rounded-2xl shadow-lg mt-8 mb-8">
+                <div className="w-full max-w-lg mx-auto border-2 border-blue-300 bg-white p-10 rounded-2xl shadow-lg mt-8 mb-10">
                     <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Recruiter Login</h2>
 
                     {error && (
@@ -125,7 +135,12 @@ const RecruiterLogin = () => {
                                 disabled={loading}
                                 className="w-full bg-blue-600 text-white font-medium py-2 rounded-full hover:bg-blue-700 transition disabled:opacity-50 mt-4"
                             >
-                                {loading ? "Signing in..." : "Sign in"}
+                                {loading ? (
+                                    <div className="flex items-center justify-center gap-2">
+                                        <SpinLoader />
+                                        Signing in...
+                                    </div>
+                                ) : "Sign In"}
                             </button>
                         </div>
 
@@ -139,6 +154,7 @@ const RecruiterLogin = () => {
                             </span>
                         </p>
                     </form>
+                    <ToastContainer />
                 </div>
 
 

@@ -24,7 +24,7 @@ const RecruiterProfilePage = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState(null);
-  const [disabled, setIsDisabled] = useState(true);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -37,18 +37,18 @@ const RecruiterProfilePage = () => {
   console.log("RecruiterData from context Api", recruiterData)
 
   useEffect(() => {
-    if(recruiterData) {
-    setFormData({
-      name: recruiterData.name,
-      email: recruiterData.email,
-      number: recruiterData.number,
-      companyName: recruiterData.companyName,
-      companyWebsite: recruiterData.companyWebsite,
-      designation: recruiterData.designation,
-      industry: recruiterData.industry,
-      linkedInProfile: recruiterData.linkedInProfile,
-    })
-  }
+    if (recruiterData) {
+      setFormData({
+        name: recruiterData.name,
+        email: recruiterData.email,
+        number: recruiterData.number,
+        companyName: recruiterData.companyName,
+        companyWebsite: recruiterData.companyWebsite,
+        designation: recruiterData.designation,
+        industry: recruiterData.industry,
+        linkedInProfile: recruiterData.linkedInProfile,
+      })
+    }
   }, [recruiterData])
 
   if (!recruiterData)
@@ -57,7 +57,6 @@ const RecruiterProfilePage = () => {
 
   const handleEdit = () => {
     setIsEditing(true);
-    setIsDisabled(false);
   }
 
   const handleSave = async () => {
@@ -77,7 +76,6 @@ const RecruiterProfilePage = () => {
 
       console.log("Updated details:", response.data);
       setIsEditing(false);
-      setIsDisabled(true);
     } catch (error) {
       console.log("Error updating recruiter details:", error.response ? error.response.data : error.message);
       setError("Failed to update Recruiter Details")
@@ -87,176 +85,224 @@ const RecruiterProfilePage = () => {
 
   const handleCancel = () => {
     setIsEditing(false);
-    setIsDisabled(true);
   }
 
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
-    
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-100 py-10 px-4">
-      <div className="absolute top-[-100px] left-[-100px]  h-[400px] bg-blue-300 opacity-30 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-[-100px] right-[-100px] h-[300px] bg-cyan-400 opacity-20 rounded-full filter blur-2xl"></div>
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-8 border-2 border-blue-600">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-blue-700 text-center">Account Details</h2>
-          <p className="text-sm text-gray-500 text-center mt-5">View and manage your recruiter information</p>
+
+    <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-blue-100 py-10 px-4">
+      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-10">
+
+        <div className="flex flex-col md:flex-row items-center md:items-start md:space-x-10">
+          <img
+            className="w-36 h-36 rounded-full object-cover border-4 border-indigo-500 shadow-md"
+            src="https://i.pravatar.cc/300"
+            alt="User Avatar"
+          />
+          <div className="mt-6 md:mt-0 text-center md:text-left">
+            <h2 className="text-3xl font-extrabold text-gray-800">{formData.name}</h2>
+            <p className="text-md text-indigo-600 font-medium mt-1">{formData.designation}</p>
+            <p className="text-sm text-gray-500 mt-1">{formData.companyName}</p>
+          </div>
         </div>
 
-        <div className="space-y-6">
-          <div>
-            <label className="text-sm text-gray-500">Name</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><FaUser /></span>
-              <input
-                onChange={handleChange}
-                type="text"
-                value={formData.name}
-                name='name'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
+
+        <div className="mt-12">
+          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">👤 Personal Details</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Full Name</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  value={formData.name}
+                  name='name'
+
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><FaUser /></span>
+                  {formData.name}
+                </div>
+
+              )}
+
+
             </div>
-          </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Email</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  value={formData.email}
+                  name='email'
 
-          <div>
-            <label className="text-sm text-gray-500">Email</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><HiOutlineMail /></span>
-              <input
-                onChange={handleChange}
-                type="text"
-                value={formData.email}
-                name='email'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-gray-500">Phone Number</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><FiPhone /></span>
-              <input
-                onChange={handleChange}
-                type="tel"
-                maxLength={10}
-                value={formData.number}
-                name='number'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-gray-500">Company Name</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><BsBuildings /></span>
-              <input
-                onChange={handleChange}
-                type="text"
-                value={formData.companyName}
-                name='companyName'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-sm text-gray-500">Company Website</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><FiGlobe /></span>
-              <input
-                onChange={handleChange}
-                type="text"
-                value={formData.companyWebsite}
-                name='companyWebsite'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
-            </div>
-          </div>
-
-
-          <div>
-            <label className="text-sm text-gray-500">Designation</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><MdWorkOutline /></span>
-              <input
-                onChange={handleChange}
-                type="text"
-                value={formData.designation}
-                name='designation'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
-            </div>
-          </div>
-
-
-          <div>
-            <label className="text-sm text-gray-500">Industry</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><RiBuilding4Line /></span>
-              <input
-                onChange={handleChange}
-                type="text"
-                value={formData.industry}
-                name='industry'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
-            </div>
-          </div>
-
-
-          <div>
-            <label className="text-sm text-gray-500">LinkedIn Profile</label>
-            <div className="mt-1 flex items-center border border-gray-200 rounded-lg px-4 py-3 bg-gray-50">
-              <span className="text-gray-400 text-lg mr-3"><FaLinkedin /></span>
-              <input
-                onChange={handleChange}
-                type="text"
-                value={formData.linkedInProfile}
-                name='linkedInProfile'
-                disabled={disabled}
-                className="bg-transparent w-full text-gray-700 font-medium focus:outline-none cursor-default"
-              />
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><HiOutlineMail /></span>
+                  {formData.email}
+                </div>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 mt-10">
-          {!isEditing ? (<button
-            onClick={handleEdit}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-          >
-            Edit
-          </button>
+
+        <div className="mt-10">
+          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">📞 Contact</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Phone</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="tel"
+                  maxLength={10}
+                  value={formData.number}
+                  name='number'
+
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><FiPhone /></span>
+                  {formData.number}
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">LinkedIn Profile</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  value={formData.linkedInProfile}
+                  name='linkedInProfile'
+
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><FaLinkedin /></span>
+                  {formData.linkedInProfile}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+
+        <div className="mt-10">
+          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">🏢 Company Details</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Company Name</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  value={formData.companyName}
+                  name='companyName'
+
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><BsBuildings /></span>
+                  {formData.companyName}
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Company Website</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  value={formData.companyWebsite}
+                  name='companyWebsite'
+
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><FiGlobe /></span>
+                  {formData.companyWebsite}
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Industry</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  value={formData.industry}
+                  name='industry'
+
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 p-3 flex items-center rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><RiBuilding4Line /></span>
+                  {formData.industry}
+                </div>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Designation</label>
+              {isEditing ? (
+                <input
+                  onChange={handleChange}
+                  type="text"
+                  value={formData.designation}
+                  name='designation'
+                  className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
+                />
+              ) : (
+                <div className="bg-gray-100 p-3 flex items-center rounded-md shadow-inner text-gray-800">
+                  <span className="text-gray-400 text-lg mr-3"><MdWorkOutline /></span>
+                  {formData.designation}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 flex justify-end gap-4">
+          {!isEditing ? (
+            <button
+              onClick={handleEdit}
+              className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-700 transition duration-300">
+              ✏️ Edit Profile
+            </button>
           ) : (
             <button
               onClick={handleSave}
-              className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
-            >
-              Save
+              className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md shadow hover:bg-green-700 transition duration-300">
+              💾 Save Changes
             </button>
           )}
 
           <button
             onClick={handleCancel}
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition"
-          >
+            className="px-6 py-2 bg-red-100 text-red-800 rounded-md shadow hover:bg-red-200 transition duration-300">
             Cancel
           </button>
         </div>
       </div>
-     
     </div>
-    
-    
+
+
+
+
+
   );
 };
 
