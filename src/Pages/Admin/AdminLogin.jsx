@@ -37,7 +37,7 @@ const AdminLogin = () => {
                             className: "bg-gradient-to-r from-green-500 to-green-600 text-white font-medium px-6 py-4 rounded-xl shadow-lg border border-green-700",
                             bodyClassName: "text-sm",
                             progressClassName: "bg-green-200",
-                            onClose: () => navigate("/AdminDashboa1rd"),
+                            onClose: () => navigate("/AdminDashboard"),
                         });
         } catch (error) {
             setLoading(false);
