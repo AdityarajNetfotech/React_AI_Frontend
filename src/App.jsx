@@ -35,6 +35,9 @@ import AdminProfile from './Pages/Admin/Admin Dashboard/AdminProfile';
 import RecruiterProfilePage from './Pages/Recruiter/RecruiterProfile/RecruiterProfilePage';
 import JDDetails from './Pages/Recruiter/MyJD/JDDetails';
 import RegisteredRecruiters from './Pages/Admin/RegisteredRecruiters';
+import JobDetails from './Pages/Admin/Jobs Posted/JobDetails';
+import JobsPosted from './Pages/Admin/Jobs Posted/JobsPosted';
+
 
 
 
@@ -58,6 +61,8 @@ const App = () => {
               <Route path="AdminDashboard" element={<AdminDashboard />} />
               <Route path="Profile" element={<AdminProfile />} />
               <Route path="RegisteredRecruiters" element={<RegisteredRecruiters />} />
+               <Route path="JobsPosted" element={<JobsPosted />} />
+               <Route path="JobDetails/:id" element={<JobDetails />} />
             </Route>
 
             <Route path="/AdminRegister" element={<AdminRegister />} />
