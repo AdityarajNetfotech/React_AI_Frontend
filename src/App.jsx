@@ -35,12 +35,40 @@ import AdminProfile from './Pages/Admin/Admin Dashboard/AdminProfile';
 import RecruiterProfilePage from './Pages/Recruiter/RecruiterProfile/RecruiterProfilePage';
 import JDDetails from './Pages/Recruiter/MyJD/JDDetails';
 import RegisteredRecruiters from './Pages/Admin/RegisteredRecruiters';
+import { Toaster } from 'react-hot-toast';
 
 
 
 const App = () => {
   return (
     <div>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1f2937",
+            color: "#fff",
+            fontSize: "16px",
+            fontWeight: "600",
+            borderRadius: "8px",
+            padding: "14px 18px",
+            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.25)",
+          },
+          success: {
+            iconTheme: {
+              primary: "#10b981",
+              secondary: "#fff",
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: "#ef4444",
+              secondary: "#fff",
+            },
+          },
+        }}
+      />
+
       <RecruiterProvider >
 
         <Router>
@@ -59,6 +87,8 @@ const App = () => {
               <Route path="Profile" element={<AdminProfile />} />
               <Route path="RegisteredRecruiters" element={<RegisteredRecruiters />} />
             </Route>
+            <Route path="/jd-details/:id" element={<JDDetails />} />
+
 
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
@@ -70,9 +100,9 @@ const App = () => {
               <Route path="My-Jd" element={<MyJD />} />
               <Route path="RecruiterProfile" element={<RecruiterProfilePage />} />
             </Route>
-            
+
             <Route path="/JDDetails/:id" element={<JDDetails />} />
-            
+
 
           </Routes>
         </Router>

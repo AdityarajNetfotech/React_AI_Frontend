@@ -1,10 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaUpload } from 'react-icons/fa';
-import defaultResumeImg from '../../../Components/Images/resume1.png'; 
+import toast from "react-hot-toast";
+import defaultResumeImg from '../../../Components/Images/resume1.png';
 import { useParams } from 'react-router'
 import Sidebar from '../Sidebar';
 import Pagination from '../../../Components/Pagination/Pagination';
 import ResumeModal from './ResumeModal';
+import axios from "axios";
 
 
 const JDDetails = () => {
@@ -19,79 +21,104 @@ const JDDetails = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedResume, setSelectedResume] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [filteredResumes, setFilteredResumes] = useState([]);
+    const [unfilteredResumes, setUnfilteredResumes] = useState([]);
 
 
-    const filteredResumes = [
-        {
-            name: "Aarav Mehta",
-            email: "aarav.mehta@gmail.com",
-            skills: "React, Node.js, MongoDB",
-            experience: "2 years",
-            fileName: "aarav_resume.pdf",
-            matchPercentage: 88,
-            goodFit: "Yes",
-            keyMatchingSkills: ["React", "Node.js", "MongoDB"],
-            reasoning: "Candidate has strong experience in full-stack projects using MERN stack.",
-        },
-        {
-            name: "Isha Verma",
-            email: "isha.verma@outlook.com",
-            skills: "Java, Spring Boot, MySQL",
-            experience: "3 years",
-            fileName: "isha_resume.pdf",
-            matchPercentage: 72,
-            goodFit: "Yes",
-            keyMatchingSkills: ["HTML", "CSS", "JavaScript"],
-            reasoning: "Has strong frontend skills, aligns with UI/UX requirements of the job.",
-        },
-        {
-            name: "Rohan Kapoor",
-            email: "rohan.kapoor@example.com",
-            skills: "Python, Django, PostgreSQL",
-            experience: "1.5 years",
-            fileName: "rohan_resume.pdf",
-            matchPercentage: 72,
-            goodFit: "Yes",
-            keyMatchingSkills: ["HTML", "CSS", "JavaScript"],
-            reasoning: "Has strong frontend skills, aligns with UI/UX requirements of the job.",
-        },
-    ];
 
-    const unfilteredResumes = [
-        {
-            name: "Sneha Joshi",
-            email: "sneha.joshi@gmail.com",
-            skills: "HTML, CSS, Bootstrap",
-            experience: "1 year",
-            fileName: "sneha_resume.pdf",
-            matchPercentage: 42,
-            goodFit: "No",
-            keyMatchingSkills: ["Excel"],
-            reasoning: "Doesn't match tech stack or role expectations.",
-        },
-        {
-            name: "Vikram Rao",
-            email: "vikram.rao@yahoo.com",
-            skills: "C++, Data Structures, Algorithms",
-            experience: "Fresher",
-            fileName: "vikram_resume.pdf",
-            matchPercentage: 42,
-            goodFit: "No",
-            keyMatchingSkills: ["Excel"],
-            reasoning: "Doesn't match tech stack or role expectations.",
-        },
-        {
-            name: "Anjali Nair",
-            email: "anjali.nair@protonmail.com",
-            skills: "PHP, Laravel, MySQL",
-            experience: "2 years",
-            fileName: "anjali_resume.pdf",
-            matchPercentage: 42,
-            goodFit: "No",
-            keyMatchingSkills: ["Excel"],
-            reasoning: "Doesn't match tech stack or role expectations.",
-        },
-    ];
+    // const filteredResumes = [
+    //     {
+    //         name: "Aarav Mehta",
+    //         email: "aarav.mehta@gmail.com",
+    //         skills: "React, Node.js, MongoDB",
+    //         experience: "2 years",
+    //         fileName: "aarav_resume.pdf",
+    //         matchPercentage: 88,
+    //         goodFit: "Yes",
+    //         keyMatchingSkills: ["React", "Node.js", "MongoDB"],
+    //         reasoning: "Candidate has strong experience in full-stack projects using MERN stack.",
+    //     },
+    //     {
+    //         name: "Isha Verma",
+    //         email: "isha.verma@outlook.com",
+    //         skills: "Java, Spring Boot, MySQL",
+    //         experience: "3 years",
+    //         fileName: "isha_resume.pdf",
+    //         matchPercentage: 72,
+    //         goodFit: "Yes",
+    //         keyMatchingSkills: ["HTML", "CSS", "JavaScript"],
+    //         reasoning: "Has strong frontend skills, aligns with UI/UX requirements of the job.",
+    //     },
+    //     {
+    //         name: "Rohan Kapoor",
+    //         email: "rohan.kapoor@example.com",
+    //         skills: "Python, Django, PostgreSQL",
+    //         experience: "1.5 years",
+    //         fileName: "rohan_resume.pdf",
+    //         matchPercentage: 72,
+    //         goodFit: "Yes",
+    //         keyMatchingSkills: ["HTML", "CSS", "JavaScript"],
+    //         reasoning: "Has strong frontend skills, aligns with UI/UX requirements of the job.",
+    //     },
+    // ];
+
+    // const unfilteredResumes = [
+    //     {
+    //         name: "Sneha Joshi",
+    //         email: "sneha.joshi@gmail.com",
+    //         skills: "HTML, CSS, Bootstrap",
+    //         experience: "1 year",
+    //         fileName: "sneha_resume.pdf",
+    //         matchPercentage: 42,
+    //         goodFit: "No",
+    //         keyMatchingSkills: ["Excel"],
+    //         reasoning: "Doesn't match tech stack or role expectations.",
+    //     },
+    //     {
+    //         name: "Vikram Rao",
+    //         email: "vikram.rao@yahoo.com",
+    //         skills: "C++, Data Structures, Algorithms",
+    //         experience: "Fresher",
+    //         fileName: "vikram_resume.pdf",
+    //         matchPercentage: 42,
+    //         goodFit: "No",
+    //         keyMatchingSkills: ["Excel"],
+    //         reasoning: "Doesn't match tech stack or role expectations.",
+    //     },
+    //     {
+    //         name: "Anjali Nair",
+    //         email: "anjali.nair@protonmail.com",
+    //         skills: "PHP, Laravel, MySQL",
+    //         experience: "2 years",
+    //         fileName: "anjali_resume.pdf",
+    //         matchPercentage: 42,
+    //         goodFit: "No",
+    //         keyMatchingSkills: ["Excel"],
+    //         reasoning: "Doesn't match tech stack or role expectations.",
+    //     },
+    // ];
+
+    useEffect(() => {
+        const fetchResumes = async (jdId) => {
+            try {
+                const token = localStorage.getItem("recruiterAuthToken");
+                const res = await axios.get(`http://localhost:5000/api/jd/resumes/${jdId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const { filtered, unfiltered } = res.data;
+                setFilteredResumes(filtered);
+                setUnfilteredResumes(unfiltered);
+            } catch (err) {
+                toast.error("Error fetching resumes:", err.response?.data?.message || err.message);
+            }
+        };
+
+        if (id) {
+            fetchResumes(id);
+        }
+    }, [id]);
+
 
     const handleUploadClick = () => {
         fileInputRef.current.click();
@@ -130,8 +157,57 @@ const JDDetails = () => {
 
     const handleCloseModal = () => {
         setOpenModal(false);
-       setSelectedResume(null);
+        setSelectedResume(null);
     }
+
+    const handleFilterResume = async () => {
+        if (resumes.length === 0) {
+            toast.error("📄 Please upload at least one resume.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("jdId", id);
+        formData.append("jdText", "Paste the JD text here or fetch from backend");
+
+        resumes.forEach((resume) => {
+            formData.append("resumes", resume);
+        });
+
+        try {
+            const token = localStorage.getItem("recruiterAuthToken");
+
+            const res = await axios.post(
+                "http://localhost:5000/api/jd/filter",
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            const data = res.data;
+            // console.log("Filtered Data:", data);
+
+            // Save dynamic resumes to state
+            setFilteredResumes(data.filtered || []);
+            setUnfilteredResumes(data.unfiltered || []);
+
+            setResumes([]);
+            setActiveTab("filtered");
+
+            toast.success(`✅ Resumes Filtered!
+        🎯 Filtered: ${data.filtered.length}
+        📂 Unfiltered: ${data.unfiltered.length}`);
+
+        } catch (err) {
+            console.error(err);
+            toast.error("❌ Something went wrong during filtering.");
+        }
+    };
+
 
     const indexOfLastResume = currentPage * resumePerPage;
     const indexOfFirstResume = indexOfLastResume - resumePerPage;
@@ -213,16 +289,15 @@ const JDDetails = () => {
                                     onPageChange={setCurrentPage} />
                             </div>
                         )}
-                        <button className="mt-5 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        <button
+                            className="mt-5 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            onClick={handleFilterResume}
+                        >
                             Filter Resume
                         </button>
+
                     </div>
-
-
-
-
                 </div>
-
 
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow">
                     <div className="flex space-x-4 mb-4 border-b border-gray-300">
@@ -240,7 +315,6 @@ const JDDetails = () => {
                         </button>
                     </div>
 
-
                     {activeTab === "filtered" ? (
                         filteredResumes.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-10">
@@ -254,7 +328,7 @@ const JDDetails = () => {
                                         <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Candidate Name</th>
                                         <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Email</th>
                                         <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Skills</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Experience</th>
+                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Match %</th>
                                         <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Actions</th>
                                     </tr>
                                 </thead>
@@ -262,17 +336,24 @@ const JDDetails = () => {
                                     {filteredResumes.map((resume, index) => (
                                         <tr
                                             key={index}
-                                            className={`transition duration-200 ease-in-out hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                                }`}
+                                            className={`transition duration-200 ease-in-out hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
                                         >
-                                            <td className="py-4 px-6 font-medium">{resume.name}</td>
-                                            <td className="py-4 px-6">{resume.email}</td>
-                                            <td className="py-4 px-6">{resume.skills}</td>
-                                            <td className="py-4 px-6">{resume.experience}</td>
+                                            <td className="py-4 px-6 font-medium">
+                                                <div>{resume.fileName || "Unnamed File"}</div>
+                                                <div className="text-xs text-gray-500">{resume.name || "No name provided"}</div>
+                                            </td>
+                                            <td className="py-4 px-6">{resume.email || "N/A"}</td>
+                                            <td className="py-4 px-6">
+                                                {Array.isArray(resume.skills) && resume.skills.length > 0
+                                                    ? resume.skills.join(", ")
+                                                    : "N/A"}
+                                            </td>
+                                            <td className="py-4 px-6">{resume.matchPercentage ? `${resume.matchPercentage}%` : "N/A"}</td>
                                             <td className="py-4 px-6">
                                                 <button
                                                     onClick={() => handleOpenModal(resume)}
-                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out">
+                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
+                                                >
                                                     View
                                                 </button>
                                             </td>
@@ -302,17 +383,24 @@ const JDDetails = () => {
                                     {unfilteredResumes.map((resume, index) => (
                                         <tr
                                             key={index}
-                                            className={`transition duration-200 ease-in-out hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                                                }`}
+                                            className={`transition duration-200 ease-in-out hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
                                         >
-                                            <td className="py-4 px-6 font-medium">{resume.name}</td>
-                                            <td className="py-4 px-6">{resume.email}</td>
-                                            <td className="py-4 px-6">{resume.skills}</td>
-                                            <td className="py-4 px-6">{resume.experience}</td>
+                                            <td className="py-4 px-6 font-medium">
+                                                <div>{resume.fileName || "Unnamed File"}</div>
+                                                <div className="text-xs text-gray-500">{resume.name || "No name provided"}</div>
+                                            </td>
+                                            <td className="py-4 px-6">{resume.email || "N/A"}</td>
+                                            <td className="py-4 px-6">
+                                                {Array.isArray(resume.skills) && resume.skills.length > 0
+                                                    ? resume.skills.join(", ")
+                                                    : "N/A"}
+                                            </td>
+                                            <td className="py-4 px-6">{resume.experience || "N/A"}</td>
                                             <td className="py-4 px-6">
                                                 <button
                                                     onClick={() => handleOpenModal(resume)}
-                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out">
+                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
+                                                >
                                                     View
                                                 </button>
                                             </td>
@@ -323,6 +411,7 @@ const JDDetails = () => {
                         )
                     )}
                 </div>
+
             </main>
 
             {openModal && (
