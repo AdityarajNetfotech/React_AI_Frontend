@@ -1,7 +1,7 @@
 import { Download, Upload } from 'lucide-react'
 import React from 'react'
 
-function JobDescAI({jdData, isTyping, showButtons, onDownload}) {
+function JobDescAI({ jdData, isTyping, showButtons, onDownload }) {
     return (
         <>
             <div className="lg:col-span-3">
@@ -12,11 +12,9 @@ function JobDescAI({jdData, isTyping, showButtons, onDownload}) {
 
                     <div className="flex-1 overflow-y-auto max-h-[100vh]">
                         {jdData && (
-                            <div className="prose prose-sm max-w-none">
-                                <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-gray-700">
-                                    {jdData}
-                                    {isTyping && <span className="animate-pulse">|</span>}
-                                </pre>
+                            <div className="prose prose-sm max-w-none font-sans text-sm leading-relaxed text-gray-700">
+                                {jdData}
+                                {isTyping && <span className="animate-pulse">|</span>}
                             </div>
                         )}
 
@@ -26,6 +24,7 @@ function JobDescAI({jdData, isTyping, showButtons, onDownload}) {
                             </div>
                         )}
                     </div>
+
 
 
 

@@ -39,74 +39,95 @@ const CreateJDAI = () => {
         }
     };
 
-    const removeSkill = (index) => {
-        setSkillsList(skillsList.filter((_, i) => i !== index));
-    };
-
     const cleanJDText = (text) => {
         let lines = text.split('\n');
 
         return lines
             .map(line => {
-                if (line.startsWith('#')) return line.replace(/^#+\s*/, '');
+                line = line.replace(/^#+\s*/, '');
                 line = line.replace(/\*\*/g, '');
-                if (line.startsWith('* ')) return line.replace(/^\*\s/, '• ');
+                line = line.replace(/^\s*\*\s+/, '• ');
                 if (line.trim() === '---') return '';
-                return line;
+                return line.trim();
             })
-            .filter(line => line.trim() !== '')
             .join('\n');
-    };
-
-
-    const formatJDWithRole = (text, jobTitle) => {
-        const cleanedText = cleanJDText(text);
-        const paragraphs = cleanedText.split(/\n\s*\n/).filter(p => p.trim() !== "");
-
-        return (
-            <>
-                <div className="mb-5 text-lg">
-                    Role: <strong>{jobTitle}</strong>
-                </div>
-                {paragraphs.map((para, index) => {
-                    const isHeading = /^[0-9.]*\s*[A-Za-z]/.test(para) && para.length < 80;
-                    return (
-                        <p
-                            key={index}
-                            className={`${isHeading ? "font-bold mb-0" : "mb-5 leading-relaxed"}`}
-                        >
-                            {para}
-                        </p>
-                    );
-                })}
-            </>
-        );
     };
 
     const startTypingEffect = (text) => {
         if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
 
-        const plainText = `Role: ${formData.title}\n\n` + cleanJDText(text);
+        const cleanedText = cleanJDText(text);
+        const lines = cleanedText.split(/\n/);
+        let lineIndex = 0, charIndex = 0;
+        let typedLines = [];
+        let completedLines = [];
 
-        setDisplayedJD("");
+        setDisplayedJD([]);
         setIsTyping(true);
         setShowButtons(false);
 
-        let index = 0;
+        const roleTitle = `Role: ${formData.title}`;
+
         typingIntervalRef.current = setInterval(() => {
-            if (index < plainText.length) {
-                setDisplayedJD(prev => prev + plainText[index]);
-                index++;
+            if (lineIndex < lines.length) {
+                const currentLine = lines[lineIndex];
+
+                if (!typedLines[lineIndex]) typedLines[lineIndex] = '';
+
+                typedLines[lineIndex] += currentLine[charIndex] || '';
+
+                if (charIndex >= currentLine.length - 1) {
+                    completedLines[lineIndex] = true;
+                }
+
+                const jsxContent = (
+                    <>
+                        <div className="mb-5 text-lg">
+                            <strong>{roleTitle}</strong>
+                        </div>
+                        {typedLines.map((line, i) => {
+                            if (line.trim() === '') return null;
+
+                            const isCompleted = completedLines[i];
+                            const originalLine = lines[i] || '';
+                            const isHeading = /^[0-9]+\./.test(originalLine) || originalLine.endsWith(':') || (originalLine.length < 60 && /^[A-Z]/.test(originalLine));
+
+                            if (isHeading) {
+                                return (
+                                    <h4 key={i} className="font-bold text-lg mt-6 mb-2 text-gray-900">
+                                        {line}
+                                    </h4>
+                                );
+                            } else if (originalLine.startsWith('•')) {
+                                return (
+                                    <div key={i} className="mb-2 ml-4 text-gray-700 leading-relaxed">
+                                        {line}
+                                    </div>
+                                );
+                            } else {
+                                return (
+                                    <p key={i} className="mb-5 leading-relaxed text-gray-700">
+                                        {line}
+                                    </p>
+                                );
+                            }
+                        })}
+                    </>
+                );
+                setDisplayedJD(jsxContent);
+
+                charIndex++;
+                if (charIndex >= currentLine.length) {
+                    charIndex = 0;
+                    lineIndex++;
+                }
             } else {
                 clearInterval(typingIntervalRef.current);
                 setIsTyping(false);
-                setDisplayedJD(formatJDWithRole(text, formData.title));
                 setShowButtons(true);
             }
         }, 10);
     };
-
-
 
     const handleFileUpload = async (e) => {
         const file = e.target.files[0];
