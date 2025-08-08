@@ -7,6 +7,7 @@ import Sidebar from '../Sidebar';
 import Pagination from '../../../Components/Pagination/Pagination';
 import ResumeModal from './ResumeModal';
 import axios from "axios";
+import SpinLoader from '../../../Components/SpinLoader/SpinLoader';
 
 
 const JDDetails = () => {
@@ -23,6 +24,7 @@ const JDDetails = () => {
     const [openModal, setOpenModal] = useState(false);
     const [filteredResumes, setFilteredResumes] = useState([]);
     const [unfilteredResumes, setUnfilteredResumes] = useState([]);
+    const [filterLoader, setFilterLoader] = useState(false);
 
 
 
@@ -173,6 +175,8 @@ const JDDetails = () => {
         resumes.forEach((resume) => {
             formData.append("resumes", resume);
         });
+         
+        setFilterLoader(true);
 
         try {
             const token = localStorage.getItem("recruiterAuthToken");
@@ -205,6 +209,8 @@ const JDDetails = () => {
         } catch (err) {
             console.error(err);
             toast.error("❌ Something went wrong during filtering.");
+        }finally{
+            setFilterLoader(false)
         }
     };
 
@@ -293,7 +299,7 @@ const JDDetails = () => {
                             className="mt-5 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                             onClick={handleFilterResume}
                         >
-                            Filter Resume
+                            Filter Resume {filterLoader && <SpinLoader/> }
                         </button>
 
                     </div>
