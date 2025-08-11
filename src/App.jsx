@@ -36,6 +36,11 @@ import RecruiterProfilePage from './Pages/Recruiter/RecruiterProfile/RecruiterPr
 import JDDetails from './Pages/Recruiter/MyJD/JDDetails';
 import RegisteredRecruiters from './Pages/Admin/RegisteredRecruiters';
 import { Toaster } from 'react-hot-toast';
+import CreateJDOption from './Pages/Recruiter/component/CreateJDOption';
+import RegisteredApplicants from './Pages/Admin/RegisteredApplicants';
+import MyQuestion from './Pages/Recruiter/MyQuestions';
+import Questions from './Pages/Recruiter/Questions';
+import MyResult from './Pages/Recruiter/MyResult';
 
 
 
@@ -82,10 +87,11 @@ const App = () => {
             <Route path="/EmailOtpPage" element={<EmailOtpPage />} />
             <Route path="/ChangePasswordPage" element={<ChangePassword />} />
 
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route path="AdminDashboard" element={<AdminDashboard />} />
+            <Route path="/Admin-Dashboard" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
               <Route path="Profile" element={<AdminProfile />} />
               <Route path="RegisteredRecruiters" element={<RegisteredRecruiters />} />
+              <Route path="RegisteredApplicants" element={<RegisteredApplicants />} />
             </Route>
             <Route path="/jd-details/:id" element={<JDDetails />} />
 
@@ -95,9 +101,13 @@ const App = () => {
 
             <Route path="/Recruiter-Dashboard" element={<Layout />}>
               <Route index element={<RecruiterDashboard />} />
-              <Route path="CreateJDManually" element={<CreateJDManually />} />
-              <Route path="CreateJDAI" element={<CreateJDAI />} />
+              <Route path="/Recruiter-Dashboard/CreateJDOption/CreateJDManually" element={<CreateJDManually />} />
+              <Route path="/Recruiter-Dashboard/CreateJDOption/CreateJDAI" element={<CreateJDAI />} />
               <Route path="My-Jd" element={<MyJD />} />
+              <Route path="My-Question" element={<MyQuestion />} />
+              <Route path="/Recruiter-Dashboard/My-Question/Questions" element={<Questions />} />
+              <Route path="Result" element={<MyResult />} />
+              <Route path="CreateJDOption" element={<CreateJDOption />} />
               <Route path="RecruiterProfile" element={<RecruiterProfilePage />} />
             </Route>
 

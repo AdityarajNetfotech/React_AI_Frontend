@@ -37,12 +37,20 @@ const RegisteredRecruiters = () => {
 
     }
 
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async () => {
         setOpenModal(false);
-        const recruiterDelete = recruiters.filter((recruiter) => recruiter._id !== selectedRecruiter)
-        setRecruiters(recruiterDelete)
 
-    }
+        try {
+            const response = await axios.delete(`http://localhost:5000/api/admin/deleteRecruiter/${selectedRecruiter}`);
+            console.log("Recruiter deleted successfully:", response.data.message);
+
+            const recruiterDelete = recruiters.filter((recruiter) => recruiter._id !== selectedRecruiter);
+            setRecruiters(recruiterDelete);
+        } catch (error) {
+            console.log("Error deleting recruiter:", error);
+        }
+    };
+
     const handleModalCancel = () => {
         setOpenModal(false);
         setSelectedRecruiter(null);
@@ -90,7 +98,7 @@ const RegisteredRecruiters = () => {
 
                     </div>
 
-                     {loading ? (
+                    {loading ? (
                         <p className="text-center text-gray-500 mt-4">Loading...</p>
                     ) : error ? (
                         <p className="text-center text-red-500 mt-4">{error}</p>
@@ -110,7 +118,7 @@ const RegisteredRecruiters = () => {
                                     </tr>
                                 </thead>
 
-                               <tbody className="text-gray-700">
+                                <tbody className="text-gray-700">
                                     {currentRecruiters.map((rec, index) => (
                                         <tr
                                             key={index}
@@ -140,7 +148,7 @@ const RegisteredRecruiters = () => {
                                             </td>
                                         </tr>
                                     ))}
-                                </tbody> 
+                                </tbody>
                             </table>
                         </div>
 
@@ -148,7 +156,7 @@ const RegisteredRecruiters = () => {
 
 
 
-                    )}  
+                    )}
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
