@@ -12,8 +12,8 @@ import {
 
 const sidebarItems = [
   { label: "Dashboard", icon: FiHome, path: "AdminDashboard" },
-  { label: "Register Recruiter", icon: FiUserPlus, path: "RegisteredRecruiters" },
-  { label: "Register Applicants", icon: FiUsers, path: "RegisterApplicants" },
+  { label: "Registered Recruiter", icon: FiUserPlus, path: "RegisteredRecruiters" },
+  { label: "Registered Applicants", icon: FiUsers, path: "RegisteredApplicants" },
   { label: "Scheduled Test", icon: FiCalendar, path: "ScheduledTest" },
   { label: "Job Posted", icon: FiBriefcase, path: "JobPosted" },
   { label: "Profile", icon: FiUser, path: "Profile" },

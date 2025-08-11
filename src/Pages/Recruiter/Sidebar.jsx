@@ -15,10 +15,10 @@ import {
 
 const navItems = [
   { label: "Dashboard", icon: FiHome, path: "" },
-  { label: "Create JD", icon: FiFilePlus, path: "/Recruiter-Dashboard/CreateJDAI" },
+  { label: "Create JD", icon: FiFilePlus, path: "/Recruiter-Dashboard/CreateJDOption" },
   { label: "My JD", icon: FiFileText, path: "My-Jd" },
-  { label: "My Question", icon: FiHelpCircle, path: "/my-question" },
-  { label: "Result", icon: FiCheckCircle, path: "/result" },
+  { label: "My Question", icon: FiHelpCircle, path: "My-Question" },
+  { label: "Result", icon: FiCheckCircle, path: "Result" },
   { label: "My Link", icon: FiLink, path: "/my-link" },
   { label: "Profile", icon: FiUser, path: "RecruiterProfile" },
   { label: "Logout", icon: FiLogOut, path: "/logout" },
