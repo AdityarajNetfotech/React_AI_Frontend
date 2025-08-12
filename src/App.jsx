@@ -41,6 +41,8 @@ import RegisteredApplicants from './Pages/Admin/RegisteredApplicants';
 import MyQuestion from './Pages/Recruiter/MyQuestions';
 import Questions from './Pages/Recruiter/Questions';
 import MyResult from './Pages/Recruiter/MyResult';
+import GenerateTest from './Pages/Recruiter/combinedcodes/GenerateTest';
+import FinalizeTest from './Pages/Recruiter/combinedcodes/FinalizeTest';
 
 
 
@@ -112,6 +114,9 @@ const App = () => {
             </Route>
 
             <Route path="/JDDetails/:id" element={<JDDetails />} />
+
+            <Route path="/generate-test" element={<GenerateTest />} />
+            <Route path="/finalize-test" element={<FinalizeTest />} />
 
 
           </Routes>
