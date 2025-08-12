@@ -8,12 +8,15 @@ import Pagination from '../../../Components/Pagination/Pagination';
 import ResumeModal from './ResumeModal';
 import axios from "axios";
 import SpinLoader from '../../../Components/SpinLoader/SpinLoader';
-
+import { useNavigate } from "react-router-dom";
 
 const JDDetails = () => {
 
+    const navigate = useNavigate();
+
     const { id } = useParams();
-    console.log(id)
+    console.log("JD ID from URL:", id);
+    
 
     const [activeTab, setActiveTab] = useState("filtered");
     const [resumes, setResumes] = useState([]);
@@ -417,7 +420,13 @@ const JDDetails = () => {
                         )
                     )}
                 </div>
-
+                <div className="flex justify-center mt-5">
+                    <button
+                        onClick={() => navigate("/generate-test", { state: { jdId: id } })}
+                        className="px-5 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                        Generate Assessment
+                    </button>
+                </div>
             </main>
 
             {openModal && (
