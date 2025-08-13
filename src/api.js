@@ -1,4 +1,4 @@
-const BASE_URL = 'https://back-3-s1d4.onrender.com'; // Update with your backend URL
+const BASE_URL = 'https://back-6-5pws.onrender.com'; // Update with your backend URL
 
 // HR Endpoints
 export const generateTest = async (formData) => {
@@ -16,7 +16,8 @@ export const finalizeTest = async (data) => {
   // Handle both old format (just questions) and new format (questions + duration)
   const requestData = {
     questions: data.questions || data,
-    duration: data.duration || 20  // Default to 20 minutes
+    duration: data.duration || 20,
+    jd_id:data.jd_id  // Default to 20 minutes
   };
 
   const response = await fetch(`${BASE_URL}/api/hr/finalize-test`, {
