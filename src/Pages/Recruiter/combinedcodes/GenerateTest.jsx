@@ -3,7 +3,7 @@ import { FileText, AlertCircle, Target, Hash, Zap, Award, Layers } from 'lucide-
 import { generateTest } from "../../../api.js";
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const GenerateTest = ({ onNavigate, onDataPass }) => {
+const GenerateTest = ({  onDataPass }) => {
   const [formData, setFormData] = useState({
     topic: '',
     difficulty: 'easy',
@@ -32,6 +32,7 @@ const GenerateTest = ({ onNavigate, onDataPass }) => {
         // Use the passed jdId or fallback to the hardcoded one
         const jobDescriptionId = jd_id;
         // console.log('Fetching job summary for JD ID:', jobDescriptionId);
+        console.log("Jd id --->",jobDescriptionId);
         
         const response = await fetch(`http://localhost:5000/api/jd/get-jd-summary/${jobDescriptionId}`, {
           headers: {
@@ -90,8 +91,10 @@ const GenerateTest = ({ onNavigate, onDataPass }) => {
       console.log('Sending form data with jd_id:', finalFormData.jd_id); // Debug log
 
       const data = await generateTest(finalFormData);
-      navigate('/finalize-test', data.questions, { state: { jd_id } }); // Navigate + pass questions
+      navigate('/finalize-test',  { state: { jd_id:jd_id,questions:data.questions } }); // Navigate + pass questions
       console.log('Generated questions:', jd_id);
+      console.log("havdhscbjd",data.questions);
+      
     } catch (err) {
       setError('Failed to generate test.');
       console.error('Error generating test:', err);

@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "../../Components/Pagination/Pagination";
+import { useLocation } from "react-router-dom";
 
 const Questions = () => {
+    const location = useLocation();
+    const jd = location.state?.selected || "NA";
     const [selectedJD, setSelectedJD] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4;
 
+    console.log("sidnns",jd);
+    
+
     useEffect(() => {
-        const jd = localStorage.getItem("selectedJD");
+        // const jd = localStorage.getItem("selectedJD");
         if (jd) {
-            setSelectedJD(JSON.parse(jd));
+            setSelectedJD(jd);
         }
     }, []);
 
@@ -31,12 +37,12 @@ const Questions = () => {
         <div className="max-w-6xl mx-auto mt-8 px-6">
             <div className="flex items-center justify-between mb-5">
                 <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2">
-                    📋 Questions for{" "}
+                    📋 Questions for "{selectedJD._id}"
                     <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">
                         {selectedJD.jobTitle}
                     </span>
                     <span className="text-gray-500 text-base ml-1 font-normal">
-                        ({selectedJD.jobId})
+                        ({selectedJD._Id})
                     </span>
                 </h1>
                 <div className="px-4 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 font-semibold rounded-full shadow border border-indigo-200 text-sm">

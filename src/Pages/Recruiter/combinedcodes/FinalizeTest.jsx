@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { CheckCircle, Settings, AlertCircle, Clock, Users, User, Mail, Percent, Edit, Trash2, Plus, Save, X, Send } from 'lucide-react';
 // import { generateTest } from "../../../api.js";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { finalizeTest } from '../../../api';
 
-const FinalizeTest = ({ questions, onNavigate, onDataPass }) => {
+const FinalizeTest = ({onDataPass}) => {
   const [testLink, setTestLink] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -23,8 +24,10 @@ const FinalizeTest = ({ questions, onNavigate, onDataPass }) => {
   const [newQuestionType, setNewQuestionType] = useState('mcq'); 
   const navigate = useNavigate();
 
-  const jd_id = location.state?.jdId || "NA";
+  const {jd_id, questions} = location.state || "NA";
   console.log('JD ID from location state:', jd_id); // Debug log
+  console.log("questions --->",questions);
+  
 
   useEffect(() => {
     if (!questions || questions.length === 0) navigate('generate');
@@ -32,8 +35,8 @@ const FinalizeTest = ({ questions, onNavigate, onDataPass }) => {
   }, [questions]);
 
   // Auth token and JD ID - Replace these with actual values
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4N2UwZDFkOGVkZWRlM2I1NDc4MDc0ZiIsImlhdCI6MTc1NDQ2MDU0MiwiZXhwIjoxNzU1MDY1MzQyfQ.wtD5KUk3viGRH-UIq2SdKByRBEZ67V1jMcqzizHNPQM';
-  const jdId = '687f78395eb49db9c41cc272'; // Replace with actual JD ID
+  const token = localStorage.getItem("recruiterAuthToken");
+  const jdId = jd_id; // Replace with actual JD ID
 
   // Fetch filtered candidates from API
   const fetchCandidates = async () => {
@@ -55,6 +58,7 @@ const FinalizeTest = ({ questions, onNavigate, onDataPass }) => {
 
       const data = await response.json();
       setCandidates(data.filteredResumes || []);
+      
     } catch (err) {
       console.error('Error fetching candidates:', err);
       setCandidatesError('Failed to load candidates');
@@ -62,7 +66,8 @@ const FinalizeTest = ({ questions, onNavigate, onDataPass }) => {
       setCandidatesLoading(false);
     }
   };
-
+  
+  console.log("candidates-->",candidates);
   // Send mail to candidates
   const sendMailToCandidates = async () => {
     setMailLoading(true);
@@ -115,14 +120,15 @@ const FinalizeTest = ({ questions, onNavigate, onDataPass }) => {
     try {
       const testData = {
         questions: editableQuestions, // Use edited questions instead of original
-        duration: testDuration
+        duration: testDuration,
+        jd_id:jdId
       };
       
       const data = await finalizeTest(testData);
       setTestLink(data.test_link);
       
-      onDataPass('testQuestions', editableQuestions);
-      onDataPass('testDuration', testDuration);
+      // onDataPass('testQuestions', editableQuestions);
+      // onDataPass('testDuration', testDuration);
       
       await fetchCandidates();
     } catch (err) {
