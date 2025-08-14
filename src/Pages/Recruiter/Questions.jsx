@@ -33,6 +33,9 @@ const Questions = () => {
         currentPage * itemsPerPage
     );
 
+    console.log("currentdata--->",currentData);
+    
+
     return (
         <div className="max-w-6xl mx-auto mt-8 px-6">
             <div className="flex items-center justify-between mb-5">
@@ -68,7 +71,7 @@ const Questions = () => {
                                 <td className="px-5 py-3 text-gray-700">
                                     <p className="font-semibold text-gray-900 mb-1">{q.question}</p>
                                     <ul className="list-disc ml-5 space-y-0.5">
-                                        {q.options.map((opt, idx) => (
+                                        {q.options && q.options.map((opt, idx) => (
                                             <li
                                                 key={idx}
                                                 className={`${
