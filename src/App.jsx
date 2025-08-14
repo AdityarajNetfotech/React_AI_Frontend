@@ -43,6 +43,7 @@ import Questions from './Pages/Recruiter/Questions';
 import MyResult from './Pages/Recruiter/MyResult';
 import GenerateTest from './Pages/Recruiter/combinedcodes/GenerateTest';
 import FinalizeTest from './Pages/Recruiter/combinedcodes/FinalizeTest';
+import GiveTestWrapper from './Pages/Recruiter/component/GiveTestWrapper';
 import NewRegisterAdmin from './Pages/Admin/NewRegisterAdmin';
 
 
@@ -120,6 +121,7 @@ const App = () => {
 
             <Route path="/generate-test" element={<GenerateTest />} />
             <Route path="/finalize-test" element={<FinalizeTest />} />
+            <Route path="/test/:id" element={<GiveTestWrapper />} />
 
 
           </Routes>
