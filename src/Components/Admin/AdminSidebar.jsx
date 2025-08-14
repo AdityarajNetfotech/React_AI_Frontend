@@ -17,6 +17,7 @@ const sidebarItems = [
   { label: "Scheduled Test", icon: FiCalendar, path: "ScheduledTest" },
   { label: "Job Posted", icon: FiBriefcase, path: "JobPosted" },
   { label: "Profile", icon: FiUser, path: "Profile" },
+  { label: "Rejister Admin", icon: FiUsers, path: "NewRegisterAdmin" },
 ];
 
 const AdminSidebar = () => {
@@ -24,8 +25,8 @@ const AdminSidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    localStorage.removeItem("adminAuthToken");
+    navigate("/AdminLogin");
   };
 
   return (
