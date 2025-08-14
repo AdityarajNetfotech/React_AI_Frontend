@@ -59,8 +59,9 @@ const MyJD = () => {
     };
 
     const handleViewDetails = (id) => {
-        navigate(`/JDDetails/${id}`);
+        navigate("/Recruiter-Dashboard/My-Jd/JDDetails", { state: { id } });
     };
+
 
     const handleDelete = async (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this JD?");

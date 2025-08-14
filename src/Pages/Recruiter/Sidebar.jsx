@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiHome,
   FiFilePlus,
@@ -21,14 +21,19 @@ const navItems = [
   { label: "Result", icon: FiCheckCircle, path: "Result" },
   { label: "My Link", icon: FiLink, path: "/my-link" },
   { label: "Profile", icon: FiUser, path: "RecruiterProfile" },
-  { label: "Logout", icon: FiLogOut, path: "/logout" },
+  { label: "Logout", icon: FiLogOut, path: "/RecruiterLogin" },
 ];
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("recruiterAuthToken");
   };
 
   return (
@@ -56,6 +61,7 @@ const Sidebar = () => {
               <li key={index}>
                 <NavLink
                   to={item.path}
+                  onClick={item.label === "Logout" ? handleLogout : undefined}
                   className={({ isActive }) =>
                     `flex items-center px-4 py-3 text-sm font-medium transition-all duration-300 group ${
                       isActive ? "bg-gray-800 text-white" : "text-gray-300 hover:text-white hover:bg-gray-800"
