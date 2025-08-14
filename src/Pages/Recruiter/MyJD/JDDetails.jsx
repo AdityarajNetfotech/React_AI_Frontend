@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaUpload } from 'react-icons/fa';
 import toast from "react-hot-toast";
 import defaultResumeImg from '../../../Components/Images/resume1.png';
-import { useParams } from 'react-router'
+import { useLocation, useParams } from 'react-router'
 import Sidebar from '../Sidebar';
 import Pagination from '../../../Components/Pagination/Pagination';
 import ResumeModal from './ResumeModal';
@@ -14,8 +14,8 @@ const JDDetails = () => {
 
     const navigate = useNavigate();
 
-    const { id } = useParams();
-    console.log("JD ID from URL:", id);
+    const location = useLocation();
+    const { id } = location.state || {};
     
 
     const [activeTab, setActiveTab] = useState("filtered");
@@ -225,8 +225,7 @@ const JDDetails = () => {
 
 
     return (
-        <div className="flex min-h-screen bg-white text-gray-800">
-            <Sidebar />
+        <>
 
             <main className="flex-1 p-6 transition-all duration-300">
 
@@ -436,7 +435,7 @@ const JDDetails = () => {
 
                 />
             )}
-        </div>
+        </>
 
 
     );

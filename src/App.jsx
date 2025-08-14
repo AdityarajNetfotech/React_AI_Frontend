@@ -43,6 +43,7 @@ import Questions from './Pages/Recruiter/Questions';
 import MyResult from './Pages/Recruiter/MyResult';
 import GenerateTest from './Pages/Recruiter/combinedcodes/GenerateTest';
 import FinalizeTest from './Pages/Recruiter/combinedcodes/FinalizeTest';
+import NewRegisterAdmin from './Pages/Admin/NewRegisterAdmin';
 
 
 
@@ -94,6 +95,8 @@ const App = () => {
               <Route path="Profile" element={<AdminProfile />} />
               <Route path="RegisteredRecruiters" element={<RegisteredRecruiters />} />
               <Route path="RegisteredApplicants" element={<RegisteredApplicants />} />
+              <Route path="RegisteredApplicants" element={<RegisteredApplicants />} />
+              <Route path="NewRegisterAdmin" element={<NewRegisterAdmin />} />
             </Route>
             <Route path="/jd-details/:id" element={<JDDetails />} />
 
@@ -111,9 +114,9 @@ const App = () => {
               <Route path="Result" element={<MyResult />} />
               <Route path="CreateJDOption" element={<CreateJDOption />} />
               <Route path="RecruiterProfile" element={<RecruiterProfilePage />} />
+              <Route path="/Recruiter-Dashboard/My-Jd/JDDetails" element={<JDDetails />} />
             </Route>
 
-            <Route path="/JDDetails/:id" element={<JDDetails />} />
 
             <Route path="/generate-test" element={<GenerateTest />} />
             <Route path="/finalize-test" element={<FinalizeTest />} />
