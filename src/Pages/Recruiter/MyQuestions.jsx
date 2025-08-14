@@ -163,7 +163,7 @@ else if (Array.isArray(payload.jobs)) jds = payload.jobs;
                         className="flex items-center gap-2 px-4 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full hover:bg-indigo-100 hover:text-indigo-900 transition-all duration-200"
                         disabled={loadingQuestionId !== null}
                       >
-                        {loadingQuestionId === jd.jobId ? (
+                        {loadingQuestionId === jd._id ? (
                           <>
                             <svg
                               className="animate-spin h-4 w-4"
