@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, AlertCircle, CheckCircle, Code, Play, Loader } from 'lucide-react';
+import { Clock, AlertCircle, CheckCircle, Code, Play, Loader,Info } from 'lucide-react';
 import MonacoEditor from '@monaco-editor/react';
 import { submitTest } from '../../../api';
 import axios from 'axios';
+import InstructionsPage from '../../../Components/Instructions_page/InstructionsPage';
 
 const JUDGE0_API_KEY = import.meta.env.VITE_JUDGE0_API_KEY;
 const JUDGE0_HOST = 'judge0-ce.p.rapidapi.com';
@@ -84,17 +85,21 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
   const [outputs, setOutputs] = useState({});
   const [runningCode, setRunningCode] = useState({});
   const [testStarted, setTestStarted] = useState(false);
+   const [agreed, setAgreed] = useState(false);
+  const [instructionsVisible, setInstructionsVisible] = useState(true);
+
 
   const questions = testQuestions || [];
   const error = null;
 
   // Initialize timer based on testDuration prop
+ // Initialize timer when exam starts
   useEffect(() => {
-    const duration = testDuration || 20; // Default to 20 minutes if not provided
+    if (!testStarted) return;
+    const duration = testDuration || 20;
     const timeInSeconds = duration * 60;
     setTimeLeft(timeInSeconds);
-    setTestStarted(true);
-  }, [testDuration]);
+  }, [testDuration, testStarted]);
 
   const handleAnswerChange = (index, value) => {
     setAnswers(prev => ({ ...prev, [index]: value }));
@@ -330,6 +335,20 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
     setSelectedLanguages(prev => ({ ...prev, ...initialLanguages }));
     setAnswers(prev => ({ ...prev, ...initialAnswers }));
   }, [questions]);
+
+
+    // ✅ Instructions Page before test starts
+  if (instructionsVisible) {
+    return (
+      <InstructionsPage
+      onComplete={()=>{
+        setInstructionsVisible(false);
+        setTestStarted(true);
+      }}
+      />
+    );
+  }
+
 
   // Show loading state while timer is being initialized
   if (!testStarted || timeLeft === null) {
