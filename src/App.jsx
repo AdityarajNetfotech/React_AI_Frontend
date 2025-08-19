@@ -45,6 +45,7 @@ import GenerateTest from './Pages/Recruiter/combinedcodes/GenerateTest';
 import FinalizeTest from './Pages/Recruiter/combinedcodes/FinalizeTest';
 import GiveTestWrapper from './Pages/Recruiter/component/GiveTestWrapper';
 import NewRegisterAdmin from './Pages/Admin/NewRegisterAdmin';
+import UserEmail from './Components/Instructions_page/UserEmail';
 
 
 
@@ -104,6 +105,7 @@ const App = () => {
 
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
+            <Route path="/UserEmail" element={<UserEmail />} />
 
             <Route path="/Recruiter-Dashboard" element={<Layout />}>
               <Route index element={<RecruiterDashboard />} />
