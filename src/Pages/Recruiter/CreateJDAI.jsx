@@ -39,6 +39,10 @@ const CreateJDAI = () => {
         }
     };
 
+     const removeSkill = (index) => {
+        setSkillsList(skillsList.filter((_, i) => i !== index));
+    };
+
     const cleanJDText = (text) => {
         let lines = text.split('\n');
 
@@ -154,7 +158,7 @@ const CreateJDAI = () => {
             });
 
             const data = await res.json();
-            console.log("first", data);
+            // console.log("first", data);
 
 
             if (res.ok) {
@@ -221,7 +225,7 @@ const CreateJDAI = () => {
             });
 
             const data = await res.json();
-            console.log("output", data);
+            // console.log("output", data);
 
             setFullJD(data.jd.fullJD);
             startTypingEffect(data.jd.fullJD);
@@ -433,7 +437,7 @@ const CreateJDAI = () => {
                                 <div className="flex justify-center pt-6">
                                     <label className="flex items-center gap-3 px-4 py-2 sm:px-6 sm:py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md shadow-red-400/20 hover:shadow-lg hover:shadow-red-400/30 cursor-pointer transition-all duration-300">
                                         <FilePlus className="w-4 h-4 sm:w-5 sm:h-5" />
-                                        Upload JD
+                                        Upload JD From Computer
                                         <input
                                             ref={fileInputRef}
                                             type="file"
