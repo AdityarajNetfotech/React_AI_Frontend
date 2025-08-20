@@ -92,7 +92,7 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
   const [instructionsVisible, setInstructionsVisible] = useState(true);
   const [mediaAllowed, setMediaAllowed] = useState(false);
   const [step, setStep] = useState("entry");
-  const [userInfo, setUserInfo] = useState({name:"",email:""});
+  const [userInfo, setUserInfo] = useState({name:"",email:"",id:""});
  
   const questions = testQuestions || [];
   const error = null;
@@ -379,6 +379,8 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
     );
   }}
  
+  console.log("userinfo--->",userInfo);
+  
  
   // Show loading state while timer is being initialized
   if (step === "test" && (!testStarted || timeLeft === null)) {
