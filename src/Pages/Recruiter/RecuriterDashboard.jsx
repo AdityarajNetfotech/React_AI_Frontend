@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Briefcase, Users, Calendar, CheckCircle } from 'lucide-react';
+import axios from "axios"
+
+
 
 const stats = [
   { title: 'Total Applicants', value: 1245, icon: <Users className="text-blue-500" /> },
@@ -21,7 +24,38 @@ const applicants = [
 ];
 
 const RecruiterDashboard = () => {
+
+const [recentFiltered, setRecentFilterd] = useState([])
+const [filterLoading, setFilterLoading] = useState(false);
+  const handleRecentFilter = async() => {
+    setFilterLoading(true);
+    const token = localStorage.getItem('recruiterAuthToken')
+    try {
+      const response = await axios.get("http://localhost:5000/api/jd/get-all-recent-filtered",{
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (response.status === 200){
+        console.log("filtered resumes data --->", response.data.recentFilteredResumes);
+        setRecentFilterd(response.data.recentFilteredResumes)
+      }
+    } catch (error) {
+      console.error("something went wrong",error)
+    }finally{
+      setFilterLoading(false)
+    }
+  }
+
+  useEffect(()=>{
+    handleRecentFilter()
+  },[])
+
+  console.log("recentFiltereddata--->",recentFiltered);
+ 
+  
   return (
+
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold mb-6">Recruiter Dashboard</h1>
 
@@ -67,23 +101,24 @@ const RecruiterDashboard = () => {
 
       {/* Recent Applicants Table */}
       <div className="bg-white p-4 rounded-lg shadow">
-        <h2 className="text-lg font-semibold mb-4">Recent Applicants</h2>
+        <h2 className="text-lg font-semibold mb-4">Recent Applicants Filtered</h2>
         <table className="w-full text-sm text-left">
           <thead>
             <tr className="text-gray-600 border-b">
               <th className="py-2">Name</th>
               <th className="py-2">Position</th>
-              <th className="py-2">Status</th>
+              <th className="py-2">Email</th>
             </tr>
           </thead>
           <tbody>
-            {applicants.map((applicant, index) => (
+            {!filterLoading? recentFiltered.map((applicant, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="py-2">{applicant.name}</td>
-                <td className="py-2">{applicant.position}</td>
-                <td className="py-2">{applicant.status}</td>
+                <td className="py-2">{applicant.jdTitle}</td>
+                <td className="py-2">{applicant.email}</td>
               </tr>
-            ))}
+            )):"Loading...."}
+            
           </tbody>
         </table>
       </div>
