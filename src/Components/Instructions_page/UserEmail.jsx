@@ -21,13 +21,18 @@ const EntryPage = ({ onContinue }) => {
        const response = await axios.post("http://localhost:5000/api/jd/get-filteredCandidateByEmail",{email})
      if(response.status === 200){
 console.log("response aaya ----> ", response.data);
-
-       onContinue({ name, email });
+      const id = await response.data.filteredResumes[0]?._id;
+      console.log("Here is your id--->",id);
+      
+       onContinue({ name, email, id });
+       setErrorMsg("")
+     }else if (response.status === 404){
+      
      }
     } catch (error) {
       console.error("something went wrong", error)
+      setErrorMsg(error.response.data.message)
     }
-
     
     
   };
