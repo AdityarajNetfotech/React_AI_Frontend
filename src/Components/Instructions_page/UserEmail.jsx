@@ -1,64 +1,83 @@
 import React, { useState } from "react";
-
-export default function UserEmail() {
+import { User } from "lucide-react";
+import axios from "axios";
+ 
+const EntryPage = ({ onContinue }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!name || !email) {
-      setError("Please input name and email");
+  const [errorMsg, setErrorMsg] = useState("");
+ 
+  const handleSubmit = async() => {
+    if (!name.trim()) {
+      setErrorMsg("Name is required");
       return;
     }
-    setError("");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMsg("Enter a valid email address");
+      return;
+    }
+    try {
+       const response = await axios.post("http://localhost:5000/api/jd/get-filteredCandidateByEmail",{email})
+     if(response.status === 200){
+console.log("response aaya ----> ", response.data);
+
+       onContinue({ name, email });
+     }
+    } catch (error) {
+      console.error("something went wrong", error)
+    }
+
+    
+    
   };
-
+ 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 via-pink-100 to-purple-100">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm px-8 py-10 rounded-2xl shadow-lg bg-white border border-gray-200"
-      >
-        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          Enter Details
-        </h1>
-
-        <label htmlFor="name">
-          Name
-        </label>
-        <input
-          id="name"
-          type="text"
-          placeholder="Enter Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition mb-3"
-        />
-
-        <label htmlFor="email">
-          Email address
-        </label>
-        <input
-          id="email"
-          type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition mb-2"
-        />
-
-        {error && (
-          <p className="text-sm text-red-600 mb-3">{error}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-100 to-purple-100 p-6">
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-8">
+        <div className="flex items-center space-x-3 mb-6">
+          <User className="w-7 h-7 text-green-600" />
+          <h1 className="text-2xl font-bold text-gray-800">Enter Your Details</h1>
+        </div>
+ 
+        {errorMsg && (
+          <div className="mb-4 text-red-600 font-medium">{errorMsg}</div>
         )}
-
-        <button
-          type="submit"
-          className="w-full rounded-xl px-4 py-3 font-semibold bg-indigo-500 text-white hover:bg-indigo-600 active:bg-indigo-700 transition"
-        >
-          Continue
-        </button>
-      </form>
+ 
+        <div className="space-y-4">
+          <div>
+            <label className="block text-gray-700 font-medium">Full Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your full name"
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-medium">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+        </div>
+ 
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={handleSubmit}
+            className="px-6 py-3 rounded-lg font-semibold text-white bg-green-600 hover:bg-green-700 transition-all shadow-lg"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
     </div>
   );
-}
+};
+ 
+export default EntryPage;

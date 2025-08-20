@@ -6,6 +6,7 @@ import axios from 'axios';
 import InstructionsPage from '../../../Components/Instructions_page/InstructionsPage';
 import ActivityMonitor from '../../../Components/Instructions_page/ActivityMonitor';
 import FaceDetection from '../../../Components/Instructions_page/FaceDetection'
+import UserEmail from '../../../Components/Instructions_page/UserEmail';
  
 const JUDGE0_API_KEY = import.meta.env.VITE_JUDGE0_API_KEY;
 const JUDGE0_HOST = 'judge0-ce.p.rapidapi.com';
@@ -90,12 +91,14 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
    const [agreed, setAgreed] = useState(false);
   const [instructionsVisible, setInstructionsVisible] = useState(true);
   const [mediaAllowed, setMediaAllowed] = useState(false);
+  const [step, setStep] = useState("entry");
+  const [userInfo, setUserInfo] = useState({name:"",email:""});
  
   const questions = testQuestions || [];
   const error = null;
 
   // Prompt for camera & microphone access before test starts
-  useEffect(() => {
+ 
     const requestMedia = async () => {
       try {
         await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -107,8 +110,7 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
       }
     };
 
-    requestMedia();
-  }, []);
+
 
  // Initialize timer when exam starts
   useEffect(() => {
@@ -352,8 +354,17 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
     setSelectedLanguages(prev => ({ ...prev, ...initialLanguages }));
     setAnswers(prev => ({ ...prev, ...initialAnswers }));
   }, [questions]);
+
+  if(step==="entry"){
+    return(
+    <UserEmail onContinue={(info) =>{
+      setUserInfo(info);
+      setStep("instructions")
+      requestMedia();
+    }}/>
+ ) }
  
- 
+ if(step=== "instructions"){
     // ✅ Instructions Page before test starts
   if (instructionsVisible || !mediaAllowed) {
     return (
@@ -361,15 +372,16 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
         onComplete={() => {
           setInstructionsVisible(false);
           setTestStarted(true);
+          setStep("test")
         }}
         mediaAllowed={mediaAllowed} // optional, in case you want to show a message
       />
     );
-  }
+  }}
  
  
   // Show loading state while timer is being initialized
-  if (!testStarted || timeLeft === null) {
+  if (step === "test" && (!testStarted || timeLeft === null)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">

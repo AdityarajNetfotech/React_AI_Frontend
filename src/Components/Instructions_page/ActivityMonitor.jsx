@@ -7,6 +7,8 @@ const ActivityMonitor = () => {
   const report = (type) => {
     socket.emit("suspicious_event", { type, timestamp: new Date().toISOString() });
   };
+  console.log("here is your report---->",report);
+  
 
   useEffect(() => {
     const handleVisibility = () => { if (document.hidden) report("tab_switch"); };
