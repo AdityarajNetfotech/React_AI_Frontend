@@ -296,6 +296,9 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
     try {
       setSubmitting(true);
       const data = {
+         candidate_id:userInfo.id,
+        candidate_name:userInfo.name,
+        candidate_email:userInfo.email,
         question_set_id: questionSetId,
         questions: testQuestions.map(q => ({
           question: q.question,

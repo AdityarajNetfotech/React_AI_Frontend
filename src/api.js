@@ -1,4 +1,4 @@
-const BASE_URL = 'https://back-6-5pws.onrender.com'; // Update with your backend URL
+const BASE_URL = 'https://back-11.onrender.com'; // Update with your backend URL
 
 // HR Endpoints
 export const generateTest = async (formData) => {
