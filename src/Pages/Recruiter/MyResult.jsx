@@ -1,106 +1,126 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../../Components/Pagination/Pagination";
+import axios from 'axios';
 
 const MyResult = () => {
     const [allData, setAllData] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [backendData, setBackendData] = useState([]);
+
+    const getCandidatesData = async()=>{
+        setLoading(true)
+        try {
+             const response = await axios.get("https://four-part-2.onrender.com/result");
+        if(response.status === 200){
+            console.log("candidate_Response----->",response.data)
+            setAllData(response.data)
+        }
+            
+        } catch (error) {
+            console.error("something went wrong",error)
+        }finally{
+             setLoading(false);
+        }
+       
+    }
+    
     
     useEffect(() => {
-        const backendData = [
-            {
-                "candidates": [
-                    {
-                        "candidate_id": "candidate_101",
-                        "candidate_name": "Priya Sharma",
-                        "cheating_insights": {
-                            "cheating_probability": "Low",
-                            "copy_paste_events": 0,
-                            "inactivity_warnings": 1,
-                            "tab_switches": 2
-                        },
-                        "email": "priya.sharma@example.com",
-                        "feedback": "The candidate's performance was evaluated with a final score of 8.8.\nThe candidate performed exceptionally well in the test.\nThe candidate was honest and did not cheat during the assessment.\n",
-                        "score": 8.8,
-                        "test_summary": {
-                            "duration_minutes": 45,
-                            "end_time": "2025-07-23T10:45:00Z",
-                            "max_score": 10,
-                            "start_time": "2025-07-23T10:00:00Z",
-                            "test_id": "test_abc_123",
-                            "total_score": 8.8
-                        }
-                    },
-                    {
-                        "candidate_id": "candidate_102",
-                        "candidate_name": "John Doe",
-                        "cheating_insights": {
-                            "cheating_probability": "Medium",
-                            "copy_paste_events": 0,
-                            "inactivity_warnings": 2,
-                            "tab_switches": 3
-                        },
-                        "email": "john.doe@example.com",
-                        "feedback": "The candidate's performance was evaluated with a final score of 7.5.\nThe candidate performed moderately well in the test.\nThere were concerns regarding cheating during the assessment.\n",
-                        "score": 7.5,
-                        "test_summary": {
-                            "duration_minutes": 45,
-                            "end_time": "2025-07-23T11:45:00Z",
-                            "max_score": 10,
-                            "start_time": "2025-07-23T11:00:00Z",
-                            "test_id": "test_abc_124",
-                            "total_score": 7.5
-                        }
-                    }
-                ],
-                "job_id": "job_1",
-                "job_title": "Frontend Developer"
-            },
-            {
-                "candidates": [
-                    {
-                        "candidate_id": "candidate_103",
-                        "candidate_name": "Alice Smith",
-                        "cheating_insights": {
-                            "cheating_probability": "Low",
-                            "copy_paste_events": 0,
-                            "inactivity_warnings": 0,
-                            "tab_switches": 1
-                        },
-                        "email": "alice.smith@example.com",
-                        "feedback": "The candidate's performance was evaluated with a final score of 9.2.\nThe candidate performed exceptionally well in the test.\nThe candidate was honest and did not cheat during the assessment.\n",
-                        "score": 9.2,
-                        "test_summary": {
-                            "duration_minutes": 45,
-                            "end_time": "2025-07-24T10:45:00Z",
-                            "max_score": 10,
-                            "start_time": "2025-07-24T10:00:00Z",
-                            "test_id": "test_xyz_123",
-                            "total_score": 9.2
-                        }
-                    }
-                ],
-                "job_id": "job_2",
-                "job_title": "Backend Developer"
-            },
-            {
-                "candidates": [],
-                "job_id": "job_3",
-                "job_title": "Full Stack Engineer"
-            },
-            {
-                "candidates": [],
-                "job_id": "job_4",
-                "job_title": "React JS Developer"
-            },
-            {
-                "candidates": [],
-                "job_id": "job_5",
-                "job_title": "Node.js API Developer"
-            }
-        ];
-
-        setAllData(backendData);
-        setLoading(false);
+        // const backendData = [
+        //     {
+        //         "candidates": [
+        //             {
+        //                 "candidate_id": "candidate_101",
+        //                 "candidate_name": "Priya Sharma",
+        //                 "cheating_insights": {
+        //                     "cheating_probability": "Low",
+        //                     "copy_paste_events": 0,
+        //                     "inactivity_warnings": 1,
+        //                     "tab_switches": 2
+        //                 },
+        //                 "email": "priya.sharma@example.com",
+        //                 "feedback": "The candidate's performance was evaluated with a final score of 8.8.\nThe candidate performed exceptionally well in the test.\nThe candidate was honest and did not cheat during the assessment.\n",
+        //                 "score": 8.8,
+        //                 "test_summary": {
+        //                     "duration_minutes": 45,
+        //                     "end_time": "2025-07-23T10:45:00Z",
+        //                     "max_score": 10,
+        //                     "start_time": "2025-07-23T10:00:00Z",
+        //                     "test_id": "test_abc_123",
+        //                     "total_score": 8.8
+        //                 }
+        //             },
+        //             {
+        //                 "candidate_id": "candidate_102",
+        //                 "candidate_name": "John Doe",
+        //                 "cheating_insights": {
+        //                     "cheating_probability": "Medium",
+        //                     "copy_paste_events": 0,
+        //                     "inactivity_warnings": 2,
+        //                     "tab_switches": 3
+        //                 },
+        //                 "email": "john.doe@example.com",
+        //                 "feedback": "The candidate's performance was evaluated with a final score of 7.5.\nThe candidate performed moderately well in the test.\nThere were concerns regarding cheating during the assessment.\n",
+        //                 "score": 7.5,
+        //                 "test_summary": {
+        //                     "duration_minutes": 45,
+        //                     "end_time": "2025-07-23T11:45:00Z",
+        //                     "max_score": 10,
+        //                     "start_time": "2025-07-23T11:00:00Z",
+        //                     "test_id": "test_abc_124",
+        //                     "total_score": 7.5
+        //                 }
+        //             }
+        //         ],
+        //         "job_id": "job_1",
+        //         "job_title": "Frontend Developer"
+        //     },
+        //     {
+        //         "candidates": [
+        //             {
+        //                 "candidate_id": "candidate_103",
+        //                 "candidate_name": "Alice Smith",
+        //                 "cheating_insights": {
+        //                     "cheating_probability": "Low",
+        //                     "copy_paste_events": 0,
+        //                     "inactivity_warnings": 0,
+        //                     "tab_switches": 1
+        //                 },
+        //                 "email": "alice.smith@example.com",
+        //                 "feedback": "The candidate's performance was evaluated with a final score of 9.2.\nThe candidate performed exceptionally well in the test.\nThe candidate was honest and did not cheat during the assessment.\n",
+        //                 "score": 9.2,
+        //                 "test_summary": {
+        //                     "duration_minutes": 45,
+        //                     "end_time": "2025-07-24T10:45:00Z",
+        //                     "max_score": 10,
+        //                     "start_time": "2025-07-24T10:00:00Z",
+        //                     "test_id": "test_xyz_123",
+        //                     "total_score": 9.2
+        //                 }
+        //             }
+        //         ],
+        //         "job_id": "job_2",
+        //         "job_title": "Backend Developer"
+        //     },
+        //     {
+        //         "candidates": [],
+        //         "job_id": "job_3",
+        //         "job_title": "Full Stack Engineer"
+        //     },
+        //     {
+        //         "candidates": [],
+        //         "job_id": "job_4",
+        //         "job_title": "React JS Developer"
+        //     },
+        //     {
+        //         "candidates": [],
+        //         "job_id": "job_5",
+        //         "job_title": "Node.js API Developer"
+        //     }
+        // ];
+        getCandidatesData()
+        // setAllData(backendData);
+       
     }, []);
 
     const itemsPerPage = 5;
@@ -121,14 +141,14 @@ const MyResult = () => {
         if (action === "open") {
             if (job.candidates && job.candidates.length > 0) {
                 setSelectedJobCandidates(job.candidates);
-                setSelectedJobTitle(job.job_title);
+                setSelectedJobTitle(job.jobTitle);
                 setCurrentCandidateIndex(0);
                 setIsPopupOpen(true);
             } else {
                 alert("No result data available for this test");
             }
         } else if (action === "delete") {
-            alert(`Delete functionality for ${job.job_title}`);
+            alert(`Delete functionality for ${job.jobTitle}`);
         }
         e.target.value = "";
     };
@@ -212,12 +232,12 @@ const MyResult = () => {
                     </thead>
                     <tbody>
                         {currentData.map((job, index) => (
-                            <tr key={job.job_id} className="border-t hover:bg-gray-50 transition">
+                            <tr key={job.jobId} className="border-t hover:bg-gray-50 transition">
                                 <td className="px-6 py-4 font-medium text-gray-800">
                                     {startIndex + index + 1}
                                 </td>
-                                <td className="px-6 py-4 text-gray-600">{job.job_id}</td>
-                                <td className="px-6 py-4 font-medium text-gray-800">{job.job_title}</td>
+                                <td className="px-6 py-4 text-gray-600">{job.jobId}</td>
+                                <td className="px-6 py-4 font-medium text-gray-800">{job.jobTitle}</td>
                                 <td className="px-6 py-4 text-gray-600">
                                     <span className={`${job.candidates?.length > 0 ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'} px-2 py-1 rounded-full text-xs font-medium`}>
                                         {job.candidates?.length || 0} Candidates
@@ -281,11 +301,11 @@ const MyResult = () => {
                             </div>
 
                             <div className="flex-1 overflow-y-auto p-6">
-                                <div className="text-center mb-6 pb-6 border-b border-gray-200">
+                                {/* <div className="text-center mb-6 pb-6 border-b border-gray-200">
                                     <div className={`text-4xl font-bold ${getScoreColor(currentCandidate.score)}`}>
                                         Score: {currentCandidate.score}/{currentCandidate.test_summary.max_score}
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="mb-6">
                                     <h3 className="font-semibold text-gray-700 mb-3">Candidate Information</h3>
@@ -293,11 +313,11 @@ const MyResult = () => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                             <div>
                                                 <span className="text-gray-500">ID:</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.candidate_id}</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.ID}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500">Name:</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.candidate_name}</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.name}</span>
                                             </div>
                                             <div className="col-span-2">
                                                 <span className="text-gray-500">Email:</span>
@@ -313,19 +333,23 @@ const MyResult = () => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                             <div>
                                                 <span className="text-gray-500">Test ID:</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.test_summary.test_id}</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.jobId}</span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500">Duration:</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.test_summary.duration_minutes} minutes</span>
+                                                <span className="text-gray-500">Evaluated at</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.evaluated_at} </span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500">Start Time:</span>
-                                                <span className="ml-2 font-medium">{new Date(currentCandidate.test_summary.start_time).toLocaleString()}</span>
+                                                <span className="text-gray-500">Max Score</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.max_score} </span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500">End Time:</span>
-                                                <span className="ml-2 font-medium">{new Date(currentCandidate.test_summary.end_time).toLocaleString()}</span>
+                                                <span className="text-gray-500">Score</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.score}</span>
+                                            </div>
+                                             <div>
+                                                <span className="text-gray-500">Status</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.status}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -337,21 +361,21 @@ const MyResult = () => {
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                             <div>
                                                 <span className="text-gray-500 block">Risk Level</span>
-                                                <span className={`font-semibold ${getCheatRiskColor(currentCandidate.cheating_insights.cheating_probability)}`}>
+                                                {/* <span className={`font-semibold ${getCheatRiskColor(currentCandidate.cheating_insights.cheating_probability)}`}>
                                                     {currentCandidate.cheating_insights.cheating_probability}
-                                                </span>
+                                                </span> */}
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Copy/Paste</span>
-                                                <span className="font-semibold">{currentCandidate.cheating_insights.copy_paste_events}</span>
+                                                {/* <span className="font-semibold">{currentCandidate.cheating_insights.copy_paste_events}</span> */}
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Tab Switches</span>
-                                                <span className="font-semibold">{currentCandidate.cheating_insights.tab_switches}</span>
+                                                {/* <span className="font-semibold">{currentCandidate.cheating_insights.tab_switches}</span> */}
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Inactivity</span>
-                                                <span className="font-semibold">{currentCandidate.cheating_insights.inactivity_warnings}</span>
+                                                {/* <span className="font-semibold">{currentCandidate.cheating_insights.inactivity_warnings}</span> */}
                                             </div>
                                         </div>
                                     </div>
@@ -360,7 +384,7 @@ const MyResult = () => {
                                 <div>
                                     <h3 className="font-semibold text-gray-700 mb-3">Feedback</h3>
                                     <div className="bg-gray-50 rounded-lg p-4">
-                                        <p className="text-sm text-gray-600 whitespace-pre-line">{currentCandidate.feedback}</p>
+                                        {/* <p className="text-sm text-gray-600 whitespace-pre-line">{currentCandidate.feedback}</p> */}
                                     </div>
                                 </div>
                             </div>
