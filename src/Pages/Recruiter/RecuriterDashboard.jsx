@@ -4,12 +4,6 @@ import axios from "axios"
 
 
 
-const stats = [
-  { title: 'Total Applicants', value: 1245, icon: <Users className="text-blue-500" /> },
-  { title: 'Open Positions', value: 8, icon: <Briefcase className="text-green-500" /> },
-  { title: 'Interviews Scheduled', value: 32, icon: <Calendar className="text-purple-500" /> },
-  { title: 'Hires', value: 15, icon: <CheckCircle className="text-yellow-500" /> },
-];
 
 const jobs = [
   { title: 'Frontend Developer', location: 'Remote', status: 'Open', applicants: 102 },
@@ -17,16 +11,53 @@ const jobs = [
   { title: 'UI/UX Designer', location: 'Remote', status: 'Open', applicants: 44 },
 ];
 
-const applicants = [
-  { name: 'Anjali Mehra', position: 'Frontend Developer', status: 'Interview Scheduled' },
-  { name: 'Rohit Sharma', position: 'Backend Engineer', status: 'Under Review' },
-  { name: 'Priya Singh', position: 'UI/UX Designer', status: 'Hired' },
-];
+
 
 const RecruiterDashboard = () => {
 
 const [recentFiltered, setRecentFilterd] = useState([])
 const [filterLoading, setFilterLoading] = useState(false);
+const [jds, setJds] = useState([]);
+const [fetchStats, setFetchStats] = useState({});
+
+
+const handleStats = async() => {
+  const token = localStorage.getItem('recruiterAuthToken')
+try {
+  const response = await axios.get("http://localhost:5000/api/jd/get-count",{
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
+  })
+  if (response.status === 200){
+    setFetchStats(response.data.data);
+  }
+} catch (error) {
+  console.error("somethong went wrong",error);
+  
+}
+}
+
+
+const handleGetJds = async() => {
+  const token = localStorage.getItem("recruiterAuthToken")
+try {
+  const response = await axios.get("http://localhost:5000/api/jd/get-recentJds",{
+    headers:{
+      Authorization:`Bearer ${token}`
+    }
+   
+  })
+   if (response.status === 200){
+    console.log("response jds--->",response.data);
+    setJds(response.data.data)
+    
+    }
+} catch (error) {
+  console.error("something went wrong", error)
+}
+}
+
   const handleRecentFilter = async() => {
     setFilterLoading(true);
     const token = localStorage.getItem('recruiterAuthToken')
@@ -49,9 +80,25 @@ const [filterLoading, setFilterLoading] = useState(false);
 
   useEffect(()=>{
     handleRecentFilter()
+    handleStats()
+  },[])
+
+  useEffect(()=>{
+handleGetJds()
   },[])
 
   console.log("recentFiltereddata--->",recentFiltered);
+  console.log("jds--->",jds);
+  console.log("stats",fetchStats);
+  
+  const stats = [
+  { title: 'Total Applicants', value:fetchStats.totalJds, icon: <Users className="text-blue-500" /> },
+  { title: 'Total Jds', value: fetchStats.totalApplicants, icon: <Briefcase className="text-green-500" /> },
+  // { title: 'Interviews Scheduled', value: 32, icon: <Calendar className="text-purple-500" /> },
+  // { title: 'Hires', value: 15, icon: <CheckCircle className="text-yellow-500" /> },
+];
+
+ 
  
   
   return (
@@ -60,7 +107,7 @@ const [filterLoading, setFilterLoading] = useState(false);
       <h1 className="text-2xl font-bold mb-6">Recruiter Dashboard</h1>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-6">
         {stats.map((stat, index) => (
           <div key={index} className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
             <div className="p-3 bg-gray-100 rounded-full">{stat.icon}</div>
@@ -74,15 +121,15 @@ const [filterLoading, setFilterLoading] = useState(false);
 
       {/* Job Listings */}
       <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <h2 className="text-lg font-semibold mb-4">Job Listings</h2>
+        <h2 className="text-lg font-semibold mb-4">Recent Job Listings</h2>
         <div className="space-y-3">
-          {jobs.map((job, index) => (
+          {jds.map((job, index) => (
             <div key={index} className="flex justify-between items-center border-b pb-2">
               <div>
-                <p className="font-medium">{job.title}</p>
+                <p className="font-medium">{job.jdTitle}</p>
                 <p className="text-sm text-gray-500">{job.location}</p>
               </div>
-              <div>
+              {/* <div>
                 <span
                   className={`text-sm px-3 py-1 rounded-full ${
                     job.status === 'Open'
@@ -92,8 +139,11 @@ const [filterLoading, setFilterLoading] = useState(false);
                 >
                   {job.status}
                 </span>
+              </div> */}
+              <div>
+              <div className="text-sm text-gray-600"> filtered Applicants : {job.filteredResumesCount}</div>
+              <div className="text-sm text-gray-600"> Unfiltered Applicants : {job.unfilteredResumesCount}</div>
               </div>
-              <div className="text-sm text-gray-600">{job.applicants} Applicants</div>
             </div>
           ))}
         </div>
