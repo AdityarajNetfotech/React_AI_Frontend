@@ -12,7 +12,7 @@ const MyQuestion = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loadingQuestionId, setLoadingQuestionId] = useState(null);
  
-  const itemsPerPage = 4;
+  const itemsPerPage = 7;
  
   useEffect(() => {
     const fetchJDs = async () => {
@@ -104,7 +104,7 @@ else if (Array.isArray(payload.jobs)) jds = payload.jobs;
  
   return (
     <div className="max-w-7xl mx-auto mt-10 px-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">📁 My Question</h1>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">My Question</h1>
  
       {loading ? (
         <div className="text-center py-10 text-gray-500">Loading...</div>

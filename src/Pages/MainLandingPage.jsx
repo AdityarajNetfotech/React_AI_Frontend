@@ -148,7 +148,7 @@ const LandingPage = () => {
                     <div className="md:w-1/2 flex justify-center">
                         <div className="text-center p-6 rounded-3xl">
                             <img src="https://www.eklavvya.com/wp-content/uploads/2023/10/video-interview.webp" alt="" />
-                            <p className="mt-6 text-base">
+                            <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
                                 Our intelligent system analyzes resumes, predicts candidate-job fit, and provides real-time hiring analytics.
                             </p>
                         </div>
@@ -158,7 +158,7 @@ const LandingPage = () => {
 
             <section className="py-12 bg-gray-50">
                 <div className="container max-w-3xl mx-auto px-6">
-                    <p className="text-center mb-8">
+                    <p className="text-center text-gray-600 text-lg mb-8">
                         Trusted by leading companies worldwide
                     </p>
 

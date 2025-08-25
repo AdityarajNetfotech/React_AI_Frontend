@@ -10,7 +10,7 @@ const MyResult = () => {
     const getCandidatesData = async()=>{
         setLoading(true)
         try {
-             const response = await axios.get("https://four-part-2.onrender.com/result");
+             const response = await axios.get("https://kshitij-10.onrender.com/result");
         if(response.status === 200){
             console.log("candidate_Response----->",response.data)
             setAllData(response.data)
@@ -333,7 +333,7 @@ const MyResult = () => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                             <div>
                                                 <span className="text-gray-500">Test ID:</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.jobId}</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.testId}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500">Evaluated at</span>
@@ -341,7 +341,7 @@ const MyResult = () => {
                                             </div>
                                             <div>
                                                 <span className="text-gray-500">Max Score</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.max_score} </span>
+                                                <span className="ml-2 font-medium">{currentCandidate.maxScore} </span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500">Score</span>
@@ -384,7 +384,7 @@ const MyResult = () => {
                                 <div>
                                     <h3 className="font-semibold text-gray-700 mb-3">Feedback</h3>
                                     <div className="bg-gray-50 rounded-lg p-4">
-                                        {/* <p className="text-sm text-gray-600 whitespace-pre-line">{currentCandidate.feedback}</p> */}
+                                        <p className="text-sm text-gray-600 whitespace-pre-line">{currentCandidate.status}</p>
                                     </div>
                                 </div>
                             </div>

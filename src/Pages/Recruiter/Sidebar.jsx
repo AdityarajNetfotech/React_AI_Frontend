@@ -19,7 +19,6 @@ const navItems = [
   { label: "My JD", icon: FiFileText, path: "My-Jd" },
   { label: "My Question", icon: FiHelpCircle, path: "My-Question" },
   { label: "Result", icon: FiCheckCircle, path: "Result" },
-  { label: "My Link", icon: FiLink, path: "/my-link" },
   { label: "Profile", icon: FiUser, path: "RecruiterProfile" },
   { label: "Logout", icon: FiLogOut, path: "/RecruiterLogin" },
 ];
@@ -33,7 +32,7 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("recruiterAuthToken");
+    localStorage.removeItem("recruiterAuthToken");  
   };
 
   return (

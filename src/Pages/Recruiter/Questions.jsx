@@ -44,9 +44,6 @@ const Questions = () => {
                     <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">
                         {selectedJD.jobTitle}
                     </span>
-                    <span className="text-gray-500 text-base ml-1 font-normal">
-                        ({selectedJD._Id})
-                    </span>
                 </h1>
                 <div className="px-4 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 font-semibold rounded-full shadow border border-indigo-200 text-sm">
                     Total: {selectedJD.questions.length}
