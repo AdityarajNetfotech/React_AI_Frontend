@@ -10,7 +10,7 @@ const MyResult = () => {
     const getCandidatesData = async()=>{
         setLoading(true)
         try {
-             const response = await axios.get("https://kshitij-10.onrender.com/result");
+             const response = await axios.get("https://kshitij-11.onrender.com/result");
         if(response.status === 200){
             console.log("candidate_Response----->",response.data)
             setAllData(response.data)
@@ -367,7 +367,7 @@ const MyResult = () => {
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Copy/Paste</span>
-                                                {/* <span className="font-semibold">{currentCandidate.cheating_insights.copy_paste_events}</span> */}
+                                                <span className="font-semibold">{currentCandidate.pastes}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Tab Switches</span>

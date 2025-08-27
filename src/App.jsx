@@ -124,13 +124,13 @@ const App = () => {
                 <Route path="CreateJDOption" element={<CreateJDOption />} />
                 <Route path="RecruiterProfile" element={<RecruiterProfilePage />} />
                 <Route path="/Recruiter-Dashboard/My-Jd/JDDetails" element={<JDDetails />} />
-                <Route path="generate-test" element={<GenerateTest />} />
-                <Route path="finalize-test" element={<FinalizeTest />} />
-                <Route path="test/:id" element={<GiveTestWrapper />} />
+                <Route path="/Recruiter-Dashboard/generate-test" element={<GenerateTest />} />
+                <Route path="/Recruiter-Dashboard/finalize-test" element={<FinalizeTest />} />
+                
               </Route>
             </Route>
 
-
+            <Route path="test/:id" element={<GiveTestWrapper />} />
 
 
           </Routes>
