@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { useNavigate } from "react-router";
 import axios from "axios";
 import SkeletonJDCard from "../../Components/Skeletons/SkeletonJDCard";
+import Pagination from "../../Components/Pagination/Pagination";
 
 const MyJD = () => {
     const navigate = useNavigate();
@@ -12,6 +13,8 @@ const MyJD = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedAction, setSelectedAction] = useState({});
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 5;
 
     useEffect(() => {
         const fetchJDs = async () => {
@@ -23,6 +26,7 @@ const MyJD = () => {
                     },
                 });
                 setJdData(res.data.jds);
+                console.log(res.data.jds);
             } catch (error) {
                 toast("Error fetching JDs:", error);
             } finally {
@@ -37,6 +41,18 @@ const MyJD = () => {
     const totalFiltered = jdData.reduce((sum, jd) => sum + jd.filteredResumes.length, 0);
     const totalUnfiltered = jdData.reduce((sum, jd) => sum + jd.unfilteredResumes.length, 0);
 
+    // Pagination calculations
+    const totalPages = Math.ceil(jdData.length / rowsPerPage);
+    const startIndex = (currentPage - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const currentData = jdData.slice(startIndex, endIndex);
+
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
     const openModal = (skills) => {
         setSelectedSkills(skills);
         setShowModal(true);
@@ -47,20 +63,24 @@ const MyJD = () => {
         setShowModal(false);
     };
 
-    const handleSelectChange = (e, id) => {
+    const handleSelectChange = (e, jd) => {
         const value = e.target.value;
-        setSelectedAction((prev) => ({ ...prev, [id]: value }));
+        setSelectedAction((prev) => ({ ...prev, [jd._id]: value }));
 
         if (value === "delete") {
-            handleDelete(id);
+            handleDelete(jd._id);
         } else if (value === "open") {
-            handleViewDetails(id);
+            handleViewDetails(jd._id, jd.jobSummary);
         }
     };
 
-    const handleViewDetails = (id) => {
-        navigate("/Recruiter-Dashboard/My-Jd/JDDetails", { state: { id } });
+
+    const handleViewDetails = (id, jobSummary) => {
+        navigate("/Recruiter-Dashboard/My-Jd/JDDetails", {
+            state: { id, jobSummary }
+        });
     };
+
 
 
     const handleDelete = async (id) => {
@@ -81,10 +101,10 @@ const MyJD = () => {
 
     return (
         <div className="max-w-7xl mx-auto mt-10 px-4 relative">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6"> My Job Descriptions</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-6">My Job Descriptions</h1>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-10">
                 <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
                     <h3 className="text-sm text-gray-500">Total JD Clicks</h3>
                     <p className="text-2xl font-bold text-blue-600 mt-1">{loading ? "..." : totalClicks}</p>
@@ -100,60 +120,71 @@ const MyJD = () => {
             </div>
 
             {/* JD Table */}
-            <div className="bg-white rounded-xl shadow border border-gray-100 overflow-x-auto">
+            <div className="bg-white rounded-xl shadow border border-gray-100">
                 {loading ? (
                     <SkeletonJDCard />
                 ) : (
-                    <table className="w-full table-auto text-sm">
-                        <thead className="bg-gray-50 text-gray-700 text-left">
-                            <tr>
-                                <th className="px-6 py-3">Job ID</th>
-                                <th className="px-6 py-3">Job Title</th>
-                                <th className="px-6 py-3">Created On</th>
-                                <th className="px-6 py-3">Skills</th>
-                                <th className="px-6 py-3">Filtered</th>
-                                <th className="px-6 py-3">Unfiltered</th>
-                                <th className="px-6 py-3">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {jdData.map((jd, index) => (
-                                <tr key={jd._id} className="border-t hover:bg-gray-50 transition">
-                                    <td className="px-6 py-4 font-medium text-gray-800">{index + 1}</td>
-                                    <td className="px-6 py-4 font-medium text-gray-800">{jd.title}</td>
-                                    <td className="px-6 py-4 text-gray-600">
-                                        {new Date(jd.createdAt).toLocaleDateString("en-IN")}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <button
-                                            onClick={() => openModal(jd.skills)}
-                                            className="inline-flex items-center gap-1 px-4 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full hover:bg-indigo-100 hover:text-indigo-900 transition-all duration-200"
-                                        >
-                                            View Skills
-                                            <span className="text-xs font-semibold text-indigo-500">
-                                                ({jd.skills.length})
-                                            </span>
-                                        </button>
-                                    </td>
-                                    <td className="px-6 py-4 text-green-600">{jd.filteredResumes.length}</td>
-                                    <td className="px-6 py-4 text-red-600">{jd.unfilteredResumes.length}</td>
-                                    <td className="py-4 px-6 space-x-3 flex">
-                                        <select
-                                            value={selectedAction[jd._id] || ""}
-                                            onChange={(e) => handleSelectChange(e, jd._id)}
-                                            className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700"
-                                        >
-                                            <option value="">Choose</option>
-                                            <option value="open">Open</option>
-                                            <option value="delete">Delete</option>
-                                        </select>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="min-w-[1024px] w-full text-sm">
+                            <thead className="bg-gray-50 text-gray-700 text-left">
+                                <tr>
+                                    <th className="px-6 py-3">Job ID</th>
+                                    <th className="px-6 py-3">Job Title</th>
+                                    <th className="px-6 py-3">Created On</th>
+                                    <th className="px-6 py-3">Skills</th>
+                                    <th className="px-6 py-3">Filtered</th>
+                                    <th className="px-6 py-3">Unfiltered</th>
+                                    <th className="px-6 py-3">Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {currentData.map((jd, index) => (
+                                    <tr key={jd._id} className="border-t hover:bg-gray-50 transition">
+                                        <td className="px-6 py-4 font-medium text-gray-800">{startIndex + index + 1}</td>
+                                        <td className="px-6 py-4 font-medium text-gray-800">{jd.title}</td>
+                                        <td className="px-6 py-4 text-gray-600">
+                                            {new Date(jd.createdAt).toLocaleDateString("en-IN")}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() => openModal(jd.skills)}
+                                                className="inline-flex items-center gap-1 px-4 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full hover:bg-indigo-100 hover:text-indigo-900 transition-all duration-200"
+                                            >
+                                                View Skills
+                                                <span className="text-xs font-semibold text-indigo-500">
+                                                    ({jd.skills.length})
+                                                </span>
+                                            </button>
+                                        </td>
+                                        <td className="px-6 py-4 text-green-600">{jd.filteredResumes.length}</td>
+                                        <td className="px-6 py-4 text-red-600">{jd.unfilteredResumes.length}</td>
+                                        <td className="py-4 px-6 space-x-3 flex">
+                                            <select
+                                                value={selectedAction[jd._id] || ""}
+                                                onChange={(e) => handleSelectChange(e, jd)}
+                                                className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700"
+                                            >
+                                                <option value="">Choose</option>
+                                                <option value="open">Open</option>
+                                                <option value="delete">Delete</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </div>
+
+            {/* Pagination Component */}
+            {!loading && jdData.length > rowsPerPage && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            )}
 
             {/* Modal for Skills */}
             {showModal && (

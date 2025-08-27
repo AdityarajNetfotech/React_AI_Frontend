@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   FiHome,
@@ -9,8 +9,8 @@ import {
   FiLink,
   FiUser,
   FiLogOut,
-  FiChevronLeft,
-  FiChevronRight,
+  FiMenu,
+  FiX,
 } from "react-icons/fi";
 
 const navItems = [
@@ -23,8 +23,7 @@ const navItems = [
   { label: "Logout", icon: FiLogOut, path: "/RecruiterLogin" },
 ];
 
-const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+const Sidebar = ({ collapsed, setCollapsed }) => {
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -32,8 +31,22 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("recruiterAuthToken");  
+    localStorage.removeItem("recruiterAuthToken");
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 700) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div
@@ -46,8 +59,11 @@ const Sidebar = () => {
         {!collapsed && (
           <span className="text-2xl font-bold tracking-wide">MyPortal</span>
         )}
-        <button onClick={toggleSidebar} className="text-gray-400 hover:text-white">
-          {collapsed ? <FiChevronRight /> : <FiChevronLeft />}
+        <button
+          onClick={toggleSidebar}
+          className="text-gray-400 hover:text-white text-xl"
+        >
+          {collapsed ? <FiMenu /> : <FiX />}
         </button>
       </div>
 
@@ -63,7 +79,9 @@ const Sidebar = () => {
                   onClick={item.label === "Logout" ? handleLogout : undefined}
                   className={({ isActive }) =>
                     `flex items-center px-4 py-3 text-sm font-medium transition-all duration-300 group ${
-                      isActive ? "bg-gray-800 text-white" : "text-gray-300 hover:text-white hover:bg-gray-800"
+                      isActive
+                        ? "bg-gray-800 text-white"
+                        : "text-gray-300 hover:text-white hover:bg-gray-800"
                     }`
                   }
                 >

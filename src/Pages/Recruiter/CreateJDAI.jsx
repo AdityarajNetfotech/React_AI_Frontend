@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { FilePlus, X, Download, Upload } from 'lucide-react';
 import JobDescAI from './component/JobDescAI';
 import jsPDF from "jspdf";
+import { AuthContext } from '../../Components/Context/RecruiterContext';
 
 const CreateJDAI = () => {
     const [formData, setFormData] = useState({
@@ -25,6 +26,12 @@ const CreateJDAI = () => {
     const [loader, setLoader] = useState(false);
     const fileInputRef = useRef(null);
 
+    const { recruiterData } = useContext(AuthContext);
+    const companyName = recruiterData?.companyName || "";
+    useEffect(() => {
+        console.log("Recruiter Data from Context:", recruiterData);
+    }, [recruiterData]);
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -39,7 +46,7 @@ const CreateJDAI = () => {
         }
     };
 
-     const removeSkill = (index) => {
+    const removeSkill = (index) => {
         setSkillsList(skillsList.filter((_, i) => i !== index));
     };
 
@@ -213,7 +220,7 @@ const CreateJDAI = () => {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    title: formData.title,
+                    title: `${formData.title} at ${companyName}`,
                     domain: formData.domain,
                     Qualification: formData.qualification,
                     experience: parseInt(formData.experience),
