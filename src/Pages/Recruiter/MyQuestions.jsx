@@ -2,50 +2,50 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import Pagination from "../../Components/Pagination/Pagination";
- 
+
 const MyQuestion = () => {
   const navigate = useNavigate();
- 
+
   const [jdData, setJdData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [loadingQuestionId, setLoadingQuestionId] = useState(null);
- 
+
   const itemsPerPage = 7;
- 
+
   useEffect(() => {
     const fetchJDs = async () => {
       setLoading(true);
       setFetchError(null);
- 
+
       try {
         const token = localStorage.getItem("recruiterAuthToken");
         if (!token) throw new Error("No token found. Please login again.");
- 
+
         const res = await axios.get(
-"http://localhost:5000/api/jd/get-all-jd-by-recruiter",
+          "http://localhost:5000/api/jd/get-all-jd-by-recruiter",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
- 
+
         console.log("GET /get-all-jd-by-recruiter response:", res.data);
- 
+
         const payload = res.data;
         let jds = [];
- 
+
         if (Array.isArray(payload)) jds = payload;
         else if (Array.isArray(payload.data)) jds = payload.data;
         else if (Array.isArray(payload.jds)) jds = payload.jds;
-else if (Array.isArray(payload.jobs)) jds = payload.jobs;
+        else if (Array.isArray(payload.jobs)) jds = payload.jobs;
         else if (Array.isArray(payload.result)) jds = payload.result;
         else if (payload && payload.jd) {
           jds = Array.isArray(payload.jd) ? payload.jd : [payload.jd];
         } else {
           jds = [];
         }
- 
+
         setJdData(jds);
       } catch (err) {
         console.error(err);
@@ -55,31 +55,31 @@ else if (Array.isArray(payload.jobs)) jds = payload.jobs;
         setLoading(false);
       }
     };
- 
+
     fetchJDs();
   }, []);
- 
+
   const totalPages = Math.ceil(jdData.length / itemsPerPage);
   const currentData = Array.isArray(jdData)
     ? jdData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
     : [];
- 
+
   const handleNavigate = async (jd) => {
     setLoadingQuestionId(jd._id);
     console.log("hard id-->", jd._id);
-    
- 
+
+
     try {
- 
+
       const res = await axios.get(
-`https://back-3-s1d4.onrender.com/api/hr/questions/${jd._id}`
+        `https://back-3-s1d4.onrender.com/api/hr/questions/${jd._id}`
       );
- 
+
       console.log(`GET /questions/${jd.jobId} response:`, res.data);
- 
+
       const payload = res.data;
       let questions = [];
- 
+
       if (Array.isArray(payload)) questions = payload;
       else if (Array.isArray(payload.data)) questions = payload.data;
       else if (Array.isArray(payload.questions)) questions = payload.questions;
@@ -87,25 +87,25 @@ else if (Array.isArray(payload.jobs)) jds = payload.jobs;
       else if (payload && payload.data?.questions)
         questions = payload.data.questions;
       else questions = [];
- 
+
       const selected = { ...jd, questions };
       console.log("selected", selected);
-      
-      navigate("Questions",{state:{selected}});
+
+      navigate("Questions", { state: { selected } });
     } catch (err) {
       console.error(err);
       alert(
-          (err.response?.data?.detail ?? err.message)
+        (err.response?.data?.detail ?? err.message)
       );
     } finally {
       setLoadingQuestionId(null);
     }
   };
- 
+
   return (
     <div className="max-w-7xl mx-auto mt-10 px-4">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">My Question</h1>
- 
+
       {loading ? (
         <div className="text-center py-10 text-gray-500">Loading...</div>
       ) : fetchError ? (
@@ -139,7 +139,7 @@ else if (Array.isArray(payload.jobs)) jds = payload.jobs;
                       {jd.jobId ?? jd._id}
                     </td>
                     <td className="px-6 py-4 font-medium text-gray-800">
-{jd.jobTitle ?? jd.title ?? jd.name}
+                      {jd.jobTitle ?? jd.title ?? jd.name}
                     </td>
                     <td className="px-6 py-4 text-gray-600">
                       {(() => {
@@ -167,7 +167,7 @@ else if (Array.isArray(payload.jobs)) jds = payload.jobs;
                           <>
                             <svg
                               className="animate-spin h-4 w-4"
-xmlns="http://www.w3.org/2000/svg"
+                              xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
                             >
@@ -197,7 +197,7 @@ xmlns="http://www.w3.org/2000/svg"
               </tbody>
             </table>
           </div>
- 
+
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -210,5 +210,5 @@ xmlns="http://www.w3.org/2000/svg"
     </div>
   );
 };
- 
+
 export default MyQuestion;

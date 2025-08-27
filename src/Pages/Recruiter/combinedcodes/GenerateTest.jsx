@@ -91,7 +91,7 @@ const GenerateTest = ({  onDataPass }) => {
       console.log('Sending form data with jd_id:', finalFormData.jd_id); // Debug log
 
       const data = await generateTest(finalFormData);
-      navigate('/finalize-test',  { state: { jd_id:jd_id,questions:data.questions } }); // Navigate + pass questions
+      navigate('/Recruiter-Dashboard/finalize-test',  { state: { jd_id:jd_id,questions:data.questions } }); // Navigate + pass questions
       console.log('Generated questions:', jd_id);
       console.log("havdhscbjd",data.questions);
       
