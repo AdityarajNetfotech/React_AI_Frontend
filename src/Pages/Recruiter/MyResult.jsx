@@ -311,10 +311,7 @@ const MyResult = () => {
                                     <h3 className="font-semibold text-gray-700 mb-3">Candidate Information</h3>
                                     <div className="bg-gray-50 rounded-lg p-4">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                            <div>
-                                                <span className="text-gray-500">ID:</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.ID}</span>
-                                            </div>
+
                                             <div>
                                                 <span className="text-gray-500">Name:</span>
                                                 <span className="ml-2 font-medium">{currentCandidate.name}</span>
@@ -336,10 +333,6 @@ const MyResult = () => {
                                                 <span className="ml-2 font-medium">{currentCandidate.testId}</span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500">Evaluated at</span>
-                                                <span className="ml-2 font-medium">{currentCandidate.evaluated_at} </span>
-                                            </div>
-                                            <div>
                                                 <span className="text-gray-500">Max Score</span>
                                                 <span className="ml-2 font-medium">{currentCandidate.maxScore} </span>
                                             </div>
@@ -351,6 +344,10 @@ const MyResult = () => {
                                                 <span className="text-gray-500">Status</span>
                                                 <span className="ml-2 font-medium">{currentCandidate.status}</span>
                                             </div>
+                                            <div>
+                                                <span className="text-gray-500">Percentage</span>
+                                                <span className="ml-2 font-medium">{currentCandidate.percentage}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -360,33 +357,34 @@ const MyResult = () => {
                                     <div className="bg-gray-50 rounded-lg p-4">
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                             <div>
-                                                <span className="text-gray-500 block">Risk Level</span>
-                                                {/* <span className={`font-semibold ${getCheatRiskColor(currentCandidate.cheating_insights.cheating_probability)}`}>
-                                                    {currentCandidate.cheating_insights.cheating_probability}
-                                                </span> */}
+                                                <span className="text-gray-500 block">right_clicks</span>
+                                                <span className="font-semibold">{currentCandidate.right_clicks}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Copy/Paste</span>
-                                                <span className="font-semibold">{currentCandidate.pastes}</span>
+                                                <span className="font-semibold">{currentCandidate.copies}</span>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-500 block">face_not_visible</span>
+                                                <span className="font-semibold">{currentCandidate.face_not_visible}</span>
+                                            </div>
+                                             <div>
+                                                <span className="text-gray-500 block">inactivites</span>
+                                                <span className="font-semibold">{currentCandidate.inactivites}</span>
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Tab Switches</span>
-                                                {/* <span className="font-semibold">{currentCandidate.cheating_insights.tab_switches}</span> */}
+                                                <span className="font-semibold">{currentCandidate.tab_switches}</span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500 block">Inactivity</span>
-                                                {/* <span className="font-semibold">{currentCandidate.cheating_insights.inactivity_warnings}</span> */}
+                                                <span className="text-gray-500 block">text_selections</span>
+                                                <span className="font-semibold">{currentCandidate.text_selections}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div>
-                                    <h3 className="font-semibold text-gray-700 mb-3">Feedback</h3>
-                                    <div className="bg-gray-50 rounded-lg p-4">
-                                        <p className="text-sm text-gray-600 whitespace-pre-line">{currentCandidate.status}</p>
-                                    </div>
-                                </div>
+                                
                             </div>
 
                             <div className="border-t border-gray-200 px-6 py-4 bg-gray-50 rounded-b-lg">
