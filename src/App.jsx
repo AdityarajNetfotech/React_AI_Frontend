@@ -46,6 +46,8 @@ import FinalizeTest from './Pages/Recruiter/combinedcodes/FinalizeTest';
 import GiveTestWrapper from './Pages/Recruiter/component/GiveTestWrapper';
 import NewRegisterAdmin from './Pages/Admin/NewRegisterAdmin';
 import UserEmail from './Components/Instructions_page/UserEmail';
+import ProtectedRoute from './Components/PrivateRoute/ProtectedRoute';
+import AllJDs from './Pages/Admin/AllJDs';
 
 
 
@@ -91,39 +93,44 @@ const App = () => {
             <Route path="/EmailResetPage" element={<EmailResetPage />} />
             <Route path="/EmailOtpPage" element={<EmailOtpPage />} />
             <Route path="/ChangePasswordPage" element={<ChangePassword />} />
-
-            <Route path="/Admin-Dashboard" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="Profile" element={<AdminProfile />} />
-              <Route path="RegisteredRecruiters" element={<RegisteredRecruiters />} />
-              <Route path="RegisteredApplicants" element={<RegisteredApplicants />} />
-              <Route path="RegisteredApplicants" element={<RegisteredApplicants />} />
-              <Route path="NewRegisterAdmin" element={<NewRegisterAdmin />} />
-            </Route>
-            <Route path="/jd-details/:id" element={<JDDetails />} />
-
-
             <Route path="/AdminRegister" element={<AdminRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/UserEmail" element={<UserEmail />} />
 
-            <Route path="/Recruiter-Dashboard" element={<Layout />}>
-              <Route index element={<RecruiterDashboard />} />
-              <Route path="/Recruiter-Dashboard/CreateJDOption/CreateJDManually" element={<CreateJDManually />} />
-              <Route path="/Recruiter-Dashboard/CreateJDOption/CreateJDAI" element={<CreateJDAI />} />
-              <Route path="My-Jd" element={<MyJD />} />
-              <Route path="My-Question" element={<MyQuestion />} />
-              <Route path="/Recruiter-Dashboard/My-Question/Questions" element={<Questions />} />
-              <Route path="Result" element={<MyResult />} />
-              <Route path="CreateJDOption" element={<CreateJDOption />} />
-              <Route path="RecruiterProfile" element={<RecruiterProfilePage />} />
-              <Route path="/Recruiter-Dashboard/My-Jd/JDDetails" element={<JDDetails />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/Admin-Dashboard" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="Profile" element={<AdminProfile />} />
+                <Route path="RegisteredRecruiters" element={<RegisteredRecruiters />} />
+                <Route path="RegisteredApplicants" element={<RegisteredApplicants />} />
+                <Route path="RegisteredApplicants" element={<RegisteredApplicants />} />
+                <Route path="NewRegisterAdmin" element={<NewRegisterAdmin />} />
+                <Route path="AllJDs" element={<AllJDs />} />
+              </Route>
             </Route>
 
 
-            <Route path="/generate-test" element={<GenerateTest />} />
-            <Route path="/finalize-test" element={<FinalizeTest />} />
-            <Route path="/test/:id" element={<GiveTestWrapper />} />
+
+            <Route element={<ProtectedRoute />}>
+              <Route path="/Recruiter-Dashboard" element={<Layout />}>
+                <Route path="jd-details/:id" element={<JDDetails />} />
+                <Route index element={<RecruiterDashboard />} />
+                <Route path="/Recruiter-Dashboard/CreateJDOption/CreateJDManually" element={<CreateJDManually />} />
+                <Route path="/Recruiter-Dashboard/CreateJDOption/CreateJDAI" element={<CreateJDAI />} />
+                <Route path="My-Jd" element={<MyJD />} />
+                <Route path="My-Question" element={<MyQuestion />} />
+                <Route path="/Recruiter-Dashboard/My-Question/Questions" element={<Questions />} />
+                <Route path="Result" element={<MyResult />} />
+                <Route path="CreateJDOption" element={<CreateJDOption />} />
+                <Route path="RecruiterProfile" element={<RecruiterProfilePage />} />
+                <Route path="/Recruiter-Dashboard/My-Jd/JDDetails" element={<JDDetails />} />
+                <Route path="generate-test" element={<GenerateTest />} />
+                <Route path="finalize-test" element={<FinalizeTest />} />
+                <Route path="test/:id" element={<GiveTestWrapper />} />
+              </Route>
+            </Route>
+
+
 
 
           </Routes>
