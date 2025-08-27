@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Clock, AlertCircle, CheckCircle, Code, Play, Loader,Info } from 'lucide-react';
 import MonacoEditor from '@monaco-editor/react';
 import { submitTest } from '../../../api';
@@ -7,6 +7,7 @@ import InstructionsPage from '../../../Components/Instructions_page/Instructions
 import ActivityMonitor from '../../../Components/Instructions_page/ActivityMonitor';
 import FaceDetection from '../../../Components/Instructions_page/FaceDetection'
 import UserEmail from '../../../Components/Instructions_page/UserEmail';
+import { emitViolation } from '../../../utils/socket'
  
 const JUDGE0_API_KEY = import.meta.env.VITE_JUDGE0_API_KEY;
 const JUDGE0_HOST = 'judge0-ce.p.rapidapi.com';
@@ -93,6 +94,22 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
   const [mediaAllowed, setMediaAllowed] = useState(false);
   const [step, setStep] = useState("entry");
   const [userInfo, setUserInfo] = useState({name:"",email:"",id:""});
+  const faceEventRef = useRef(null);
+
+  const [violations, setViolations] = useState({
+    tab_switches: 0,
+    inactivities: 0,
+    text_selections: 0,
+    copies: 0,
+    pastes: 0,
+    right_clicks: 0,
+    face_not_visible: 0
+  });
+
+  // Add this debug effect
+  useEffect(() => {
+    console.log("GiveTest violations state updated:", violations);
+  }, [violations]);
  
   const questions = testQuestions || [];
   const error = null;
@@ -109,8 +126,6 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
         alert("Please allow camera and microphone access to continue the test.");
       }
     };
-
-
 
  // Initialize timer when exam starts
   useEffect(() => {
@@ -295,11 +310,32 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
   const handleSubmit = async () => {
     try {
       setSubmitting(true);
+      
+      // Calculate score
+      const score = testQuestions.reduce((total, question, index) => {
+        if (question.options && question.options.length > 0) {
+          return total + (answers[index] === question.answer ? 10 : 0);
+        }
+        return total + (answers[index] && answers[index].trim() ? 5 : 0);
+      }, 0);
+
+      // Create clean violations object
+      const cleanViolations = {
+        tab_switches: Number(violations.tab_switches || 0),
+        inactivities: Number(violations.inactivities || 0),
+        text_selections: Number(violations.text_selections || 0),
+        copies: Number(violations.copies || 0),
+        pastes: Number(violations.pastes || 0),
+        right_clicks: Number(violations.right_clicks || 0),
+        face_not_visible: Number(violations.face_not_visible || 0)
+      };
+
       const data = {
-         candidate_id:userInfo.id,
-        candidate_name:userInfo.name,
-        candidate_email:userInfo.email,
+        candidate_id: userInfo.id,
+        candidate_name: userInfo.name,
+        candidate_email: userInfo.email,
         question_set_id: questionSetId,
+        score,
         questions: testQuestions.map(q => ({
           question: q.question,
           options: q.options,
@@ -307,19 +343,61 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
         })),
         answers: testQuestions.map((_, idx) => answers[idx] || ''),
         languages: testQuestions.map((_, idx) => selectedLanguages[idx] || 'javascript'),
-        duration_used: (testDuration * 60) - timeLeft // Calculate time used in seconds
+        duration_used: (testDuration * 60) - timeLeft,
+        tab_switches: Number(violations.tab_switches || 0),
+        inactivities: Number(violations.inactivities || 0),
+        text_selections: Number(violations.text_selections || 0),
+        copies: Number(violations.copies || 0),
+        pastes: Number(violations.pastes || 0),
+        right_clicks: Number(violations.right_clicks || 0),
+        face_not_visible: Number(violations.face_not_visible || 0)
       };
- 
+
+      console.log('\n' + '='.repeat(60));
+      console.log('FRONTEND: FINAL SUBMISSION DEBUG');
+      console.log('='.repeat(60));
+      console.log('Original violations state:', violations);
+      console.log('Clean violations object:', cleanViolations);
+      console.log('Candidate info:');
+      console.log(`  Name: ${data.candidate_name}`);
+      console.log(`  Email: ${data.candidate_email}`);
+      console.log(`  Score: ${data.score}`);
+      console.log('Violations in final data:');
+      Object.keys(cleanViolations).forEach(key => {
+        console.log(`  ${key}: ${data[key]} (${typeof data[key]})`);
+      });
+      console.log('\nSending to API...');
+      console.log('='.repeat(60));
+      
       const result = await submitTest(data);
+      
+      console.log('\n' + '='.repeat(60));
+      console.log('API RESPONSE:');
+      console.log('='.repeat(60));
+      console.log('Response:', result);
+      if (result.violations_summary) {
+        console.log('Violations saved in database:');
+        Object.entries(result.violations_summary).forEach(([key, value]) => {
+          console.log(`  ${key}: ${value}`);
+        });
+      }
+      console.log('='.repeat(60));
+      
       setResult(result);
       setSubmitted(true);
     } catch (err) {
-      console.error("Submission error:", err);
+      console.error('\n' + '='.repeat(60));
+      console.error('SUBMISSION ERROR:');
+      console.error('='.repeat(60));
+      console.error('Error:', err);
+      console.error('Response data:', err.response?.data);
+      console.error('Response status:', err.response?.status);
+      console.error('='.repeat(60));
     } finally {
       setSubmitting(false);
     }
   };
- 
+
   // Timer effect
   useEffect(() => {
     if (submitted || !testStarted || timeLeft === null) return;
@@ -451,8 +529,31 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
   return (
     <>
       {/* Hidden monitoring */}
-      <ActivityMonitor />
-      <FaceDetection />
+      <ActivityMonitor
+        examId={questionSetId}
+        candidateName={userInfo.name}
+        email={userInfo.email}
+        faceEventRef={faceEventRef}
+        onViolation={(key, count = 1) => {
+          setViolations(prev => {
+            const updated = { ...prev, [key]: (prev[key] || 0) + count };
+
+            // Emit violation to backend in real-time
+            emitViolation({
+              candidate_email: userInfo.email,
+              candidate_name: userInfo.name,
+              question_set_id: questionSetId,
+              [key]: count
+            });
+
+            return updated;
+          });
+        }}
+      />
+
+      <FaceDetection
+        faceEventRef={faceEventRef}
+      />
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow-md p-4 mb-6 flex items-center justify-between">
