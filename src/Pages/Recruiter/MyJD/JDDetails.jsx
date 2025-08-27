@@ -15,8 +15,10 @@ const JDDetails = () => {
     const navigate = useNavigate();
 
     const location = useLocation();
-    const { id } = location.state || {};
-    
+    const { id, jobSummary } = location.state || {};
+    // console.log(jobSummary);
+
+
 
     const [activeTab, setActiveTab] = useState("filtered");
     const [resumes, setResumes] = useState([]);
@@ -110,6 +112,8 @@ const JDDetails = () => {
                 const res = await axios.get(`http://localhost:5000/api/jd/resumes/${jdId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
+                console.log("resumes", res.data);
+
 
                 const { filtered, unfiltered } = res.data;
                 setFilteredResumes(filtered);
@@ -173,12 +177,12 @@ const JDDetails = () => {
 
         const formData = new FormData();
         formData.append("jdId", id);
-        formData.append("jdText", "Paste the JD text here or fetch from backend");
+        formData.append("jdText", jobSummary || ""); // ✅ ab JD text bhej raha hai
 
         resumes.forEach((resume) => {
             formData.append("resumes", resume);
         });
-         
+
         setFilterLoader(true);
 
         try {
@@ -196,26 +200,29 @@ const JDDetails = () => {
             );
 
             const data = res.data;
-            // console.log("Filtered Data:", data);
 
-            // Save dynamic resumes to state
-            setFilteredResumes(data.filtered || []);
-            setUnfilteredResumes(data.unfiltered || []);
+            console.log("Filter API Response:", data);
+            console.log("✅ Filtered Resumes:", data.filtered);
+            console.log("📂 Unfiltered Resumes:", data.unfiltered);
 
+            setFilteredResumes((prev) => [...prev, ...(data.filtered || [])]);
+            setUnfilteredResumes((prev) => [...prev, ...(data.unfiltered || [])]);
             setResumes([]);
             setActiveTab("filtered");
 
             toast.success(`✅ Resumes Filtered!
-        🎯 Filtered: ${data.filtered.length}
-        📂 Unfiltered: ${data.unfiltered.length}`);
+            🎯 Filtered: ${data.filtered.length}
+            📂 Unfiltered: ${data.unfiltered.length}`);
+
 
         } catch (err) {
             console.error(err);
             toast.error("❌ Something went wrong during filtering.");
-        }finally{
-            setFilterLoader(false)
+        } finally {
+            setFilterLoader(false);
         }
     };
+
 
 
     const indexOfLastResume = currentPage * resumePerPage;
@@ -298,10 +305,10 @@ const JDDetails = () => {
                             </div>
                         )}
                         <button
-                            className="mt-5 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            className="mt-5 bg-blue-500 flex flex-col justify-center items-center text-white px-4 py-2 rounded hover:bg-blue-600"
                             onClick={handleFilterResume}
                         >
-                            Filter Resume {filterLoader && <SpinLoader/> }
+                            Filter Resume {filterLoader && <SpinLoader />}
                         </button>
 
                     </div>
@@ -330,45 +337,47 @@ const JDDetails = () => {
                                 <p className="text-gray-600">No filtered resumes available</p>
                             </div>
                         ) : (
-                            <table className="min-w-full text-sm text-gray-700">
-                                <thead className="bg-gray-200 text-gray-700">
-                                    <tr>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Candidate Name</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Email</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Skills</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Match %</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredResumes.map((resume, index) => (
-                                        <tr
-                                            key={index}
-                                            className={`transition duration-200 ease-in-out hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
-                                        >
-                                            <td className="py-4 px-6 font-medium">
-                                                <div>{resume.fileName || "Unnamed File"}</div>
-                                                <div className="text-xs text-gray-500">{resume.name || "No name provided"}</div>
-                                            </td>
-                                            <td className="py-4 px-6">{resume.email || "N/A"}</td>
-                                            <td className="py-4 px-6">
-                                                {Array.isArray(resume.skills) && resume.skills.length > 0
-                                                    ? resume.skills.join(", ")
-                                                    : "N/A"}
-                                            </td>
-                                            <td className="py-4 px-6">{resume.matchPercentage ? `${resume.matchPercentage}%` : "N/A"}</td>
-                                            <td className="py-4 px-6">
-                                                <button
-                                                    onClick={() => handleOpenModal(resume)}
-                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
-                                                >
-                                                    View
-                                                </button>
-                                            </td>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full text-sm text-gray-700">
+                                    <thead className="bg-gray-200 text-gray-700">
+                                        <tr>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Candidate Name</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Email</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Skills</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Match %</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {filteredResumes.map((resume, index) => (
+                                            <tr
+                                                key={index}
+                                                className={`transition duration-200 ease-in-out hover:bg-gray-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                                            >
+                                                <td className="py-4 px-6 font-medium">
+                                                    <div>{resume.fileName || "Unnamed File"}</div>
+                                                    <div className="text-xs text-gray-500">{resume.name || "No name provided"}</div>
+                                                </td>
+                                                <td className="py-4 px-6">{resume.email || "N/A"}</td>
+                                                <td className="py-4 px-6">
+                                                    {Array.isArray(resume.skills) && resume.skills.length > 0
+                                                        ? resume.skills.join(", ")
+                                                        : "N/A"}
+                                                </td>
+                                                <td className="py-4 px-6">{resume.matchPercentage ? `${resume.matchPercentage}%` : "N/A"}</td>
+                                                <td className="py-4 px-6">
+                                                    <button
+                                                        onClick={() => handleOpenModal(resume)}
+                                                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
+                                                    >
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         )
                     ) : (
                         unfilteredResumes.length === 0 ? (
@@ -377,45 +386,47 @@ const JDDetails = () => {
                                 <p className="text-gray-600">No unfiltered resumes available</p>
                             </div>
                         ) : (
-                            <table className="min-w-full text-sm text-gray-700">
-                                <thead className="bg-gray-200 text-gray-700">
-                                    <tr>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Candidate Name</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Email</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Skills</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Experience</th>
-                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {unfilteredResumes.map((resume, index) => (
-                                        <tr
-                                            key={index}
-                                            className={`transition duration-200 ease-in-out hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
-                                        >
-                                            <td className="py-4 px-6 font-medium">
-                                                <div>{resume.fileName || "Unnamed File"}</div>
-                                                <div className="text-xs text-gray-500">{resume.name || "No name provided"}</div>
-                                            </td>
-                                            <td className="py-4 px-6">{resume.email || "N/A"}</td>
-                                            <td className="py-4 px-6">
-                                                {Array.isArray(resume.skills) && resume.skills.length > 0
-                                                    ? resume.skills.join(", ")
-                                                    : "N/A"}
-                                            </td>
-                                            <td className="py-4 px-6">{resume.experience || "N/A"}</td>
-                                            <td className="py-4 px-6">
-                                                <button
-                                                    onClick={() => handleOpenModal(resume)}
-                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
-                                                >
-                                                    View
-                                                </button>
-                                            </td>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full text-sm text-gray-700">
+                                    <thead className="bg-gray-200 text-gray-700">
+                                        <tr>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Candidate Name</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Email</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Skills</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Experience</th>
+                                            <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {unfilteredResumes.map((resume, index) => (
+                                            <tr
+                                                key={index}
+                                                className={`transition duration-200 ease-in-out hover:bg-blue-50 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                                            >
+                                                <td className="py-4 px-6 font-medium">
+                                                    <div>{resume.fileName || "Unnamed File"}</div>
+                                                    <div className="text-xs text-gray-500">{resume.name || "No name provided"}</div>
+                                                </td>
+                                                <td className="py-4 px-6">{resume.email || "N/A"}</td>
+                                                <td className="py-4 px-6">
+                                                    {Array.isArray(resume.skills) && resume.skills.length > 0
+                                                        ? resume.skills.join(", ")
+                                                        : "N/A"}
+                                                </td>
+                                                <td className="py-4 px-6">{resume.experience || "N/A"}</td>
+                                                <td className="py-4 px-6">
+                                                    <button
+                                                        onClick={() => handleOpenModal(resume)}
+                                                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
+                                                    >
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         )
                     )}
                 </div>
