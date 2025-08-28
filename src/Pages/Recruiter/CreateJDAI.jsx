@@ -23,12 +23,14 @@ const CreateJDAI = () => {
     const [displayedJD, setDisplayedJD] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [showButtons, setShowButtons] = useState(false);
+    const [currentJdId, setCurrentJdId] = useState(null);
     const typingIntervalRef = useRef(null);
     const [loader, setLoader] = useState(false);
     const fileInputRef = useRef(null);
 
     const { recruiterData } = useContext(AuthContext);
     const companyName = recruiterData?.companyName || "";
+
     useEffect(() => {
         console.log("Recruiter Data from Context:", recruiterData);
     }, [recruiterData]);
@@ -166,8 +168,6 @@ const CreateJDAI = () => {
             });
 
             const data = await res.json();
-            // console.log("first", data);
-
 
             if (res.ok) {
                 setFormData({
@@ -182,9 +182,8 @@ const CreateJDAI = () => {
                 });
 
                 setSkillsList(data.jd.skills || []);
-
                 setFullJD(data.jd.fullJD);
-                console.log("second", fullJD);
+                setCurrentJdId(data.jd._id); // Store the JD ID
 
                 startTypingEffect(data.jd.fullJD);
 
@@ -233,9 +232,9 @@ const CreateJDAI = () => {
             });
 
             const data = await res.json();
-            // console.log("output", data);
 
             setFullJD(data.jd.fullJD);
+            setCurrentJdId(data.jd._id); // Store the JD ID
             startTypingEffect(data.jd.fullJD);
         } catch (error) {
             console.error(error);
@@ -243,6 +242,13 @@ const CreateJDAI = () => {
         } finally {
             setLoader(false);
         }
+    };
+
+    const handleJDUpdate = (updatedJD) => {
+        // Update the fullJD state
+        setFullJD(updatedJD);
+        // Re-trigger the typing effect with updated content
+        startTypingEffect(updatedJD);
     };
 
     const downloadJDAsPDF = () => {
@@ -462,9 +468,14 @@ const CreateJDAI = () => {
 
                     <JobDescAI
                         jdData={displayedJD}
+                        fullJD={fullJD}
+                        currentJdId={currentJdId}
                         isTyping={isTyping}
                         showButtons={showButtons}
                         onDownload={downloadJDAsPDF}
+                        onJDUpdate={handleJDUpdate}
+                        loader={loader}
+                        setLoader={setLoader}
                     />
                 </div>
             </div>
