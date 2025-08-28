@@ -357,19 +357,19 @@ const MyResult = () => {
                                     <div className="bg-gray-50 rounded-lg p-4">
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                             <div>
-                                                <span className="text-gray-500 block">right_clicks</span>
+                                                <span className="text-gray-500 block">Right Clicks</span>
                                                 <span className="font-semibold">{currentCandidate.right_clicks}</span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500 block">Copy/Paste</span>
+                                                <span className="text-gray-500 block">Copy Paste</span>
                                                 <span className="font-semibold">{currentCandidate.copies}</span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500 block">face_not_visible</span>
+                                                <span className="text-gray-500 block">Face not visible</span>
                                                 <span className="font-semibold">{currentCandidate.face_not_visible}</span>
                                             </div>
                                              <div>
-                                                <span className="text-gray-500 block">inactivites</span>
+                                                <span className="text-gray-500 block">Inactivites</span>
                                                 <span className="font-semibold">{currentCandidate.inactivites}</span>
                                             </div>
                                             <div>
@@ -377,7 +377,7 @@ const MyResult = () => {
                                                 <span className="font-semibold">{currentCandidate.tab_switches}</span>
                                             </div>
                                             <div>
-                                                <span className="text-gray-500 block">text_selections</span>
+                                                <span className="text-gray-500 block">Text Selections</span>
                                                 <span className="font-semibold">{currentCandidate.text_selections}</span>
                                             </div>
                                         </div>

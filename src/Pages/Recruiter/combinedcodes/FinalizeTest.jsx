@@ -87,7 +87,7 @@ const FinalizeTest = ({onDataPass}) => {
         totalQuestions: editableQuestions.length
       };
 
-      const response = await fetch('http://localhost:3001/api/send-test-invitation', {
+      const response = await fetch('https://mail-3.onrender.com/api/send-test-invitation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
