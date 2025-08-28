@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import SkeletonJDCard from "../../Components/Skeletons/SkeletonJDCard";
 import Pagination from "../../Components/Pagination/Pagination";
+import { baseUrl } from "../../utils/ApiConstants";
 
 const MyJD = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const MyJD = () => {
         const fetchJDs = async () => {
             try {
                 const token = localStorage.getItem("recruiterAuthToken");
-                const res = await axios.get("http://localhost:5000/api/jd/get-all", {
+                const res = await axios.get(`${baseUrl}/api/jd/get-all`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -89,7 +90,7 @@ const MyJD = () => {
 
         try {
             const token = localStorage.getItem("recruiterAuthToken");
-            await axios.delete(`http://localhost:5000/api/jd/delete/${id}`, {
+            await axios.delete(`${baseUrl}/api/jd/delete/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

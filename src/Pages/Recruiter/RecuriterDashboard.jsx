@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Briefcase, Users, Calendar, CheckCircle } from 'lucide-react';
 import axios from "axios"
+import { baseUrl } from '../../utils/ApiConstants';
 
 
 
@@ -24,7 +25,7 @@ const [fetchStats, setFetchStats] = useState({});
 const handleStats = async() => {
   const token = localStorage.getItem('recruiterAuthToken')
 try {
-  const response = await axios.get("http://localhost:5000/api/jd/get-count",{
+  const response = await axios.get(`${baseUrl}/api/jd/get-count`,{
     headers:{
       Authorization:`Bearer ${token}`
     }
@@ -42,7 +43,7 @@ try {
 const handleGetJds = async() => {
   const token = localStorage.getItem("recruiterAuthToken")
 try {
-  const response = await axios.get("http://localhost:5000/api/jd/get-recentJds",{
+  const response = await axios.get(`${baseUrl}/api/jd/get-recentJds`,{
     headers:{
       Authorization:`Bearer ${token}`
     }
@@ -62,7 +63,7 @@ try {
     setFilterLoading(true);
     const token = localStorage.getItem('recruiterAuthToken')
     try {
-      const response = await axios.get("http://localhost:5000/api/jd/get-all-recent-filtered",{
+      const response = await axios.get(`${baseUrl}/api/jd/get-all-recent-filtered`,{
         headers:{
           Authorization: `Bearer ${token}`
         }

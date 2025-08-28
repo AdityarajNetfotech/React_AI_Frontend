@@ -3,6 +3,7 @@ import { CheckCircle, Settings, AlertCircle, Clock, Users, User, Mail, Percent, 
 // import { generateTest } from "../../../api.js";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { finalizeTest } from '../../../api';
+import { baseUrl } from '../../../utils/ApiConstants';
 
 const FinalizeTest = ({onDataPass}) => {
   const [testLink, setTestLink] = useState('');
@@ -44,7 +45,7 @@ const FinalizeTest = ({onDataPass}) => {
     setCandidatesError('');
     
     try {
-      const response = await fetch(`http://localhost:5000/api/jd/filtered-resumes/${jdId}`, {
+      const response = await fetch(`${baseUrl}/api/jd/filtered-resumes/${jdId}`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

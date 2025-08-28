@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import {
   UserPlus,
   ClipboardList,
@@ -26,39 +26,9 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import axios from "axios";
+import { baseUrl } from "../../../utils/ApiConstants";
 
-const stats = [
-  {
-    label: "All Recruiters",
-    value: 25,
-    icon: <UserPlus className="h-6 w-6 text-indigo-600" />,
-  },
-  {
-    label: "All JDs",
-    value: 40,
-    icon: <ClipboardList className="h-6 w-6 text-green-600" />,
-  },
-  {
-    label: "Applied Candidates",
-    value: 132,
-    icon: <Users className="h-6 w-6 text-yellow-600" />,
-  },
-  {
-    label: "Selected Candidates",
-    value: 47,
-    icon: <CheckCircle className="h-6 w-6 text-emerald-600" />,
-  },
-  {
-    label: "Result List",
-    value: 20,
-    icon: <FileText className="h-6 w-6 text-purple-600" />,
-  },
-  {
-    label: "Active Users",
-    value: 150,
-    icon: <UserCheck className="h-6 w-6 text-pink-600" />,
-  },
-];
+
 
 const pieData = [
   { name: "Selected", value: 47 },
@@ -80,12 +50,31 @@ const AdminDashboard = () => {
   const [jds, setJDs] = React.useState([]);
   const [chartData, setChartData] = React.useState([]);
   const [monthlyRecruiterData, setMonthlyRecruiterData] = React.useState([]);
+  const [statsBackend, setStatsBackend] = useState({})
+
+  const stats = [
+  {
+    label: "All Recruiters",
+    value: statsBackend.Recruiter_count,
+    icon: <UserPlus className="h-6 w-6 text-indigo-600" />,
+  },
+  {
+    label: "All JDs",
+    value: statsBackend.countJd,
+    icon: <ClipboardList className="h-6 w-6 text-green-600" />,
+  },
+  {
+    label: "Total Candidates",
+    value: statsBackend.Candidate_count,
+    icon: <Users className="h-6 w-6 text-yellow-600" />,
+  },
+];
 
 
   useEffect(() => {
     const getAllRecruiter = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/admin/getAllRecruiters");
+        const res = await axios.get(`${baseUrl}/api/admin/getAllRecruiters`);
         console.log("data", res.data);
 
         setRecruiters(res.data.recruiters || []);
@@ -100,7 +89,7 @@ const AdminDashboard = () => {
     const fetchJDs = async () => {
       try {
         const token = localStorage.getItem("recruiterAuthToken");
-        const res = await axios.get("http://localhost:5000/api/jd/get-all", {
+        const res = await axios.get(`${baseUrl}/api/jd/get-all`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log("jd", res.data);
@@ -153,6 +142,25 @@ const AdminDashboard = () => {
       setMonthlyRecruiterData(monthData);
     }
   }, [recruiters]);
+
+  const getStatsFromBackend = async () => {
+    try {
+      const response  = await axios.get(`${baseUrl}/api/admin/getAlldata`);
+      if (response.status === 200){
+        setStatsBackend(response.data)
+      }
+    } catch (error) {
+      console.error("something went wrong", error);
+      
+    }
+  }
+
+  console.log("stats----->",statsBackend);
+  
+
+  useEffect(()=>{
+    getStatsFromBackend()
+  },[])
 
 
 

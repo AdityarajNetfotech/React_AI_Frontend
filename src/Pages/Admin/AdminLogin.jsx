@@ -3,6 +3,7 @@ import Frame from "../../Components/Images/Frame.png"
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
+import { baseUrl } from "../../utils/ApiConstants";
 
 
 const AdminLogin = () => {
@@ -24,7 +25,7 @@ const AdminLogin = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/admin/login", { email, password });
+            const response = await axios.post(`${baseUrl}/api/admin/login`, { email, password });
             console.log(response.data);
             setLoading(false);
 

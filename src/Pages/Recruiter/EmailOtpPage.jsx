@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Frame from "../../Components/Images/Frame.png"
 import axios from "axios"
+import { baseUrl } from "../../utils/ApiConstants";
 
 const EmailOtpPage = () => {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -40,7 +41,7 @@ const EmailOtpPage = () => {
         try {
             setLoading(true);
 
-            const response = await axios.post("http://localhost:5000/api/recruiter/verify-otp", { otp: enteredOtp });
+            const response = await axios.post(`${baseUrl}/api/recruiter/verify-otp`, { otp: enteredOtp });
 
             console.log(response.data)
 

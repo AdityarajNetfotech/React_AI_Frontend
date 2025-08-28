@@ -7,6 +7,7 @@ import { MdWorkOutline } from "react-icons/md";
 import { RiBuilding4Line } from "react-icons/ri";
 import axios from "axios";
 import { AuthContext } from '../../../Components/Context/RecruiterContext';
+import { baseUrl } from '../../../utils/ApiConstants';
 
 
 
@@ -61,7 +62,7 @@ const RecruiterProfilePage = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.put("http://localhost:5000/api/recruiter/update", {
+      const response = await axios.put(`${baseUrl}/api/recruiter/update`, {
         name: formData.name,
         email: formData.email,
         number: formData.number,

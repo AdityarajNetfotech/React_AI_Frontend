@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { User } from "lucide-react";
 import axios from "axios";
+import { baseUrl } from "../../utils/ApiConstants";
  
 const EntryPage = ({ onContinue }) => {
   const [name, setName] = useState("");
@@ -18,7 +19,7 @@ const EntryPage = ({ onContinue }) => {
       return;
     }
     try {
-       const response = await axios.post("http://localhost:5000/api/jd/get-filteredCandidateByEmail",{email})
+       const response = await axios.post(`${baseUrl}/api/jd/get-filteredCandidateByEmail`,{email})
      if(response.status === 200){
 console.log("response aaya ----> ", response.data);
       const id = await response.data.filteredResumes[0]?._id;

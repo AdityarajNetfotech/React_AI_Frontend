@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import Pagination from "../../Components/Pagination/Pagination";
+import { baseUrl } from "../../utils/ApiConstants";
 
 const MyQuestion = () => {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const MyQuestion = () => {
         if (!token) throw new Error("No token found. Please login again.");
 
         const res = await axios.get(
-          "http://localhost:5000/api/jd/get-all-jd-by-recruiter",
+          `${baseUrl}/api/jd/get-all-jd-by-recruiter`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

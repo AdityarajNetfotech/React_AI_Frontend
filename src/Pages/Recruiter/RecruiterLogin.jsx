@@ -5,6 +5,7 @@ import axios from "axios";
 import { AuthContext } from "../../Components/Context/RecruiterContext";
 import SpinLoader from "../../Components/SpinLoader/SpinLoader";
 import { toast, ToastContainer } from "react-toastify";
+import { baseUrl } from "../../utils/ApiConstants";
 
 
 const RecruiterLogin = () => {
@@ -26,7 +27,7 @@ const RecruiterLogin = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/recruiter/login", { email, password });
+            const response = await axios.post(`${baseUrl}/api/recruiter/login`, { email, password });
             console.log(response.data);
 
 
