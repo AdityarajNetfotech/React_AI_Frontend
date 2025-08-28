@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Frame from "../../Components/Images/Frame.png"
 import axios from "axios"
+import { baseUrl } from "../../utils/ApiConstants";
 
 
 export default function EmailResetPage() {
@@ -23,7 +24,7 @@ export default function EmailResetPage() {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/recruiter/forgot-password",{ email });
+            const response = await axios.post(`${baseUrl}/api/recruiter/forgot-password`,{ email });
             console.log(response.data)
 
             localStorage.setItem("resetEmail", email);

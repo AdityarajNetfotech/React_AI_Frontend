@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Users, Activity, X, Building2, User, MapPin, Briefcase, Clock, CircleDollarSign, Wrench, CalendarDays, FileText } from "lucide-react";
 import Pagination from '../../Components/Pagination/Pagination';
 import axios from 'axios';
+import { baseUrl } from '../../utils/ApiConstants';
 
 const AllJDs = () => {
     const [jobs, setJobs] = useState([]);
@@ -14,7 +15,7 @@ const AllJDs = () => {
     useEffect(() => {
         const getAllJDs = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/admin/getAllJD");
+                const res = await axios.get(`${baseUrl}/api/admin/getAllJD`);
                 console.log("res", res.data);
                 setJobs(res.data.Jd || []);
             } catch (error) {

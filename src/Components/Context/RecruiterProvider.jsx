@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { AuthContext } from './RecruiterContext';
 import axios from "axios";
+import { baseUrl } from '../../utils/ApiConstants';
 
 
 const RecruiterProvider = ({ children }) => {
@@ -15,7 +16,7 @@ const RecruiterProvider = ({ children }) => {
         return;
 
       try {
-        const response = await axios.get("http://localhost:5000/api/recruiter/getRecruiterData", {
+        const response = await axios.get(`${baseUrl}/api/recruiter/getRecruiterData`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         setRecruiterData(response.data);

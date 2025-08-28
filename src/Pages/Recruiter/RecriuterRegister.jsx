@@ -5,6 +5,7 @@ import axios from "axios"
 import { AuthContext } from "../../Components/Context/RecruiterContext";
 import SpinLoader from "../../Components/SpinLoader/SpinLoader";
 import { toast, ToastContainer } from "react-toastify"
+import { baseUrl } from "../../utils/ApiConstants";
 
 const RecriuterRegister = () => {
 
@@ -52,7 +53,7 @@ const RecriuterRegister = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/recruiter/register", formData);
+            const response = await axios.post(`${baseUrl}/api/recruiter/register`, formData);
 
             console.log(response.data)
 

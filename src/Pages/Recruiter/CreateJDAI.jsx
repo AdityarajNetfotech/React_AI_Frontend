@@ -3,6 +3,7 @@ import { FilePlus, X, Download, Upload } from 'lucide-react';
 import JobDescAI from './component/JobDescAI';
 import jsPDF from "jspdf";
 import { AuthContext } from '../../Components/Context/RecruiterContext';
+import { baseUrl } from '../../utils/ApiConstants';
 
 const CreateJDAI = () => {
     const [formData, setFormData] = useState({
@@ -156,7 +157,7 @@ const CreateJDAI = () => {
             const formData = new FormData();
             formData.append('jdPdf', file);
 
-            const res = await fetch("http://localhost:5000/api/jd/upload-pdf", {
+            const res = await fetch(`${baseUrl}/api/jd/upload-pdf`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -213,7 +214,7 @@ const CreateJDAI = () => {
         try {
             const token = localStorage.getItem("recruiterAuthToken");
 
-            const res = await fetch("http://localhost:5000/api/jd/generate", {
+            const res = await fetch(`${baseUrl}/api/jd/generate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

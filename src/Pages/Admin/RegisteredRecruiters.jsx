@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Users, FileText, Activity, Trash2 } from "lucide-react";
 import axios from "axios"
 import Pagination from '../../Components/Pagination/Pagination';
+import { baseUrl } from '../../utils/ApiConstants';
 
 const RegisteredRecruiters = () => {
 
@@ -17,7 +18,7 @@ const RegisteredRecruiters = () => {
         const fetchRecruiters = async () => {
             try {
                 setLoading(true)
-                const response = await axios.get("http://localhost:5000/api/admin/getAllRecruiters")
+                const response = await axios.get(`${baseUrl}/api/admin/getAllRecruiters`)
                 console.log("Recruiters from backend", response.data.recruiters)
                 setRecruiters(response.data.recruiters)
             } catch (error) {
@@ -41,7 +42,7 @@ const RegisteredRecruiters = () => {
         setOpenModal(false);
 
         try {
-            const response = await axios.delete(`http://localhost:5000/api/admin/deleteRecruiter/${selectedRecruiter}`);
+            const response = await axios.delete(`${baseUrl}/api/admin/deleteRecruiter/${selectedRecruiter}`);
             console.log("Recruiter deleted successfully:", response.data.message);
 
             const recruiterDelete = recruiters.filter((recruiter) => recruiter._id !== selectedRecruiter);

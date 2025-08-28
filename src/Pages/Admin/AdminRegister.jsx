@@ -3,6 +3,7 @@ import Frame from "../../Components/Images/Frame.png"
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify"
+import { baseUrl } from "../../utils/ApiConstants";
 
 const AdminRegister = () => {
 
@@ -36,7 +37,7 @@ const AdminRegister = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/admin/register", formData);
+            const response = await axios.post(`${baseUrl}/api/admin/register`, formData);
 
             console.log(response.data)
 

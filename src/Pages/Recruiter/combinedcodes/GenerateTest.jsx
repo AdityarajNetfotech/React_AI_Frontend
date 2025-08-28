@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FileText, AlertCircle, Target, Hash, Zap, Award, Layers } from 'lucide-react';
 import { generateTest } from "../../../api.js";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { baseUrl } from '../../../utils/ApiConstants.jsx';
 
 const GenerateTest = ({  onDataPass }) => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ const GenerateTest = ({  onDataPass }) => {
         // console.log('Fetching job summary for JD ID:', jobDescriptionId);
         console.log("Jd id --->",jobDescriptionId);
         
-        const response = await fetch(`http://localhost:5000/api/jd/get-jd-summary/${jobDescriptionId}`, {
+        const response = await fetch(`${baseUrl}/api/jd/get-jd-summary/${jobDescriptionId}`, {
           headers: {
             'Content-Type': 'application/json',
           },

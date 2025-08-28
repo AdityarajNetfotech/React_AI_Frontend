@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MessageSquare } from 'lucide-react';
 import axios from "axios";
+import { baseUrl } from '../../utils/ApiConstants';
 
 const Contact = () => {
 
@@ -26,7 +27,7 @@ const Contact = () => {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/getInTouch/message", formData);
+            const response = await axios.post(`${baseUrl}/api/getInTouch/message`, formData);
 
             console.log(response.data)
 

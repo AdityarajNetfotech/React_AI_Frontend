@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Frame from "../../Components/Images/Frame.png"
 import axios from "axios"
+import { baseUrl } from "../../utils/ApiConstants";
 
 const ChangePassword = () => {
     const [password, setPassword] = useState("");
@@ -37,7 +38,7 @@ const ChangePassword = () => {
         try {
             setLoading(true);
 
-            const response = await axios.post("http://localhost:5000/api/recruiter/reset-password", { email, newPassword: password, confirmPassword });
+            const response = await axios.post(`${baseUrl}/api/recruiter/reset-password`, { email, newPassword: password, confirmPassword });
             console.log(response.data)
 
             setSuccessMessage("Password reset successfully. Redirecting...");

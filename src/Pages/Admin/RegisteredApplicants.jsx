@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Users, FileText, Activity, Trash2 } from "lucide-react";
 import axios from "axios";
 import Pagination from '../../Components/Pagination/Pagination';
+import { baseUrl } from '../../utils/ApiConstants';
 
 const RegisteredApplicants = () => {
 
@@ -17,7 +18,7 @@ const RegisteredApplicants = () => {
         const fetchApplicants = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("http://localhost:5000/api/admin/getAllApplicants");
+                const res = await axios.get(`${baseUrl}/api/admin/getAllApplicants`);
                 console.log("Applicants:", res.data.Candidates);
                 setApplicants(res.data.Candidates);
             } catch (err) {
@@ -39,7 +40,7 @@ const RegisteredApplicants = () => {
         setOpenModal(false);
 
         try {
-            const response = await axios.delete(`http://localhost:5000/api/admin/deleteApplicant/${selectedApplicant}`);
+            const response = await axios.delete(`${baseUrl}/api/admin/deleteApplicant/${selectedApplicant}`);
             console.log("Applicant deleted successfully:", response.data.message);
             alert("Applicant Deleted Successfully!!")
 

@@ -9,6 +9,7 @@ import ResumeModal from './ResumeModal';
 import axios from "axios";
 import SpinLoader from '../../../Components/SpinLoader/SpinLoader';
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from '../../../utils/ApiConstants';
 
 const JDDetails = () => {
 
@@ -109,7 +110,7 @@ const JDDetails = () => {
         const fetchResumes = async (jdId) => {
             try {
                 const token = localStorage.getItem("recruiterAuthToken");
-                const res = await axios.get(`http://localhost:5000/api/jd/resumes/${jdId}`, {
+                const res = await axios.get(`${baseUrl}/api/jd/resumes/${jdId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 console.log("Fetched Resumes:", res.data);
@@ -188,7 +189,7 @@ const JDDetails = () => {
             const token = localStorage.getItem("recruiterAuthToken");
 
             const res = await axios.post(
-                "http://localhost:5000/api/jd/filter",
+                `${baseUrl}/api/jd/filter`,
                 formData,
                 {
                     headers: {
