@@ -9,8 +9,15 @@ const MyResult = () => {
 
     const getCandidatesData = async()=>{
         setLoading(true)
+        // const recruiterId = JSON.parse(localStorage.getItem('userId'));
+        const recruiterId = localStorage.getItem('userId');
+        console.log("recruiterid--->",recruiterId);
+        
+        
         try {
-             const response = await axios.get("https://kshitij-11.onrender.com/result");
+             const response = await axios.get(`https://kshitij-11.onrender.com/result?recruiterId=${recruiterId}`);
+            
+             
         if(response.status === 200){
             console.log("candidate_Response----->",response.data)
             setAllData(response.data)
