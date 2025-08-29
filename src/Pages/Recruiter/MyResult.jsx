@@ -373,7 +373,7 @@ const MyResult = () => {
                                             </div>
                                             <div>
                                                 <span className="text-gray-500 block">Face not visible</span>
-                                                <span className="font-semibold">{currentCandidate.face_not_visible} ms</span>
+                                               {currentCandidate.face_not_visible?<span className="font-semibold">{currentCandidate.face_not_visible}ms</span>:<span className="font-semibold">{currentCandidate.face_not_visible}</span> }
                                             </div>
                                              <div>
                                                 <span className="text-gray-500 block">Inactivites</span>
