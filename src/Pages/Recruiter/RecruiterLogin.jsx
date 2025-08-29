@@ -28,11 +28,12 @@ const RecruiterLogin = () => {
 
         try {
             const response = await axios.post(`${baseUrl}/api/recruiter/login`, { email, password });
-            console.log(response.data);
+            console.log("response--->",response.data);
 
 
             if (response.data.token) {
-                localStorage.setItem("recruiterAuthToken", response.data.token);
+                localStorage.setItem("recruiterAuthToken",response.data.token);
+                localStorage.setItem("userId",response.data._id)
                 setRecruiterData(response.data);
             }
             toast.success("Login Successful!", {
