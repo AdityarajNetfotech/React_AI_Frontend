@@ -221,41 +221,8 @@ const AdminDashboard = () => {
 
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-6 mt-10">
-        {/* Pie Chart */}
-        <div className="bg-white rounded-2xl shadow-md p-5 flex-1">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Selection Ratio</h2>
-          <PieChart width={300} height={250}>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-              label
-            >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </div>
 
         {/* Scatter Chart */}
-        <div className="bg-white rounded-2xl shadow-md p-5 flex-1">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Engagement</h2>
-          <ScatterChart width={300} height={250}>
-            <CartesianGrid />
-            <XAxis dataKey="x" name="Days" />
-            <YAxis dataKey="y" name="Activity" />
-            <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-            <Scatter name="User Activity" data={scatterData} fill="#82ca9d" />
-          </ScatterChart>
-        </div>
-      </div>
 
     </div>
   );

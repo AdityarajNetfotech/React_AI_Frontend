@@ -212,7 +212,7 @@ const MyResult = () => {
 
     return (
         <div className="max-w-7xl mx-auto mt-10 px-4 relative">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">📁 My Result</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-6"> My Result</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
                 <div className="bg-white rounded-xl shadow p-5 border border-gray-100">
