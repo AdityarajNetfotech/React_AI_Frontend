@@ -11,6 +11,7 @@ const GiveTestWrapper = () => {
   const navigate = useNavigate();
   const [testQuestions, setTestQuestions] = useState([]);
   const [testDuration, setTestDuration] = useState(null); // Add state for duration
+  const [jdId, setJdId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -21,6 +22,7 @@ const GiveTestWrapper = () => {
         console.log('📄 Fetched test data in GiveTestWrapper:', data); // Debug
         setTestQuestions(data.questions || []);
         setTestDuration(data.duration); // Set duration
+        setJdId(data.jd_id)
         setLoading(false);
       } catch (err) {
         console.error('❌ Failed to load test:', err);
@@ -53,7 +55,8 @@ const GiveTestWrapper = () => {
   return (
     <GiveTest
       testQuestions={testQuestions}
-      testDuration={testDuration} // Pass duration
+      testDuration={testDuration} 
+      jdId={jdId}// Pass duration
       questionSetId={id}
       onNavigate={(page) => {
         if (page === 'home') navigate('/');

@@ -79,7 +79,7 @@ const PROGRAMMING_LANGUAGES = [
   { value: 'sql', label: 'SQL', defaultCode: '-- SQL execution requires database setup\nSELECT "Hello, World!" as message;', judgeId: 82 }
 ];
  
-const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) => {
+const GiveTest = ({ testQuestions, testDuration, questionSetId, jdId, onNavigate }) => {
   const [answers, setAnswers] = useState({});
   const [selectedLanguages, setSelectedLanguages] = useState({});
   const [timeLeft, setTimeLeft] = useState(null); // Will be set based on testDuration
@@ -438,7 +438,9 @@ const GiveTest = ({ testQuestions, testDuration, questionSetId, onNavigate }) =>
 
   if(step==="entry"){
     return(
-    <UserEmail onContinue={(info) =>{
+    <UserEmail
+    jdId={jdId}
+     onContinue={(info) =>{
       setUserInfo(info);
       setStep("instructions")
       requestMedia();

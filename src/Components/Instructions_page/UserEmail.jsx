@@ -3,10 +3,13 @@ import { User } from "lucide-react";
 import axios from "axios";
 import { baseUrl } from "../../utils/ApiConstants";
  
-const EntryPage = ({ onContinue }) => {
+const EntryPage = ({ onContinue,jdId }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+
+ 
+  
  
   const handleSubmit = async() => {
     if (!name.trim()) {
@@ -37,6 +40,8 @@ console.log("response aaya ----> ", response.data);
     
     
   };
+
+   console.log("Jd hard id here---->",jdId);
  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-100 to-purple-100 p-6">
