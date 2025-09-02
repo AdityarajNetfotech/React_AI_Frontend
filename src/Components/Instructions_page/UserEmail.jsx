@@ -12,6 +12,7 @@ const EntryPage = ({ onContinue,jdId }) => {
   
  
   const handleSubmit = async() => {
+      console.log("Jd hard id here---->",jdId);
     if (!name.trim()) {
       setErrorMsg("Name is required");
       return;
@@ -22,7 +23,7 @@ const EntryPage = ({ onContinue,jdId }) => {
       return;
     }
     try {
-       const response = await axios.post(`${baseUrl}/api/jd/get-filteredCandidateByEmail`,{email})
+       const response = await axios.post(`${baseUrl}/api/jd/get-filteredCandidateByEmail`,{email,jdId})
      if(response.status === 200){
 console.log("response aaya ----> ", response.data);
       const id = await response.data.filteredResumes[0]?._id;
@@ -41,7 +42,7 @@ console.log("response aaya ----> ", response.data);
     
   };
 
-   console.log("Jd hard id here---->",jdId);
+ 
  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-blue-100 to-purple-100 p-6">
