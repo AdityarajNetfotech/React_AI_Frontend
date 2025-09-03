@@ -14,9 +14,8 @@ const Layout = () => {
 
       {/* Main Content */}
       <main
-        className={`transition-all duration-300 flex-1 overflow-y-auto bg-gray-100 p-6 ${
-          collapsed ? "ml-20" : "ml-64"
-        }`}
+        className={`transition-all duration-300 flex-1 overflow-y-auto bg-gray-100 p-6 max-[555px]:p-0 ${collapsed ? "ml-20" : "ml-64"
+          }`}
       >
         <Outlet />
       </main>

@@ -93,7 +93,7 @@ const RecruiterProfilePage = () => {
   return (
 
     <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-blue-100 py-10 px-4">
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-10">
+     <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-10 max-[555px]:p-5">
 
         <div className="flex flex-col md:flex-row items-center md:items-start md:space-x-10">
           <img
@@ -147,7 +147,7 @@ const RecruiterProfilePage = () => {
               ) : (
                 <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
                   <span className="text-gray-400 text-lg mr-3"><HiOutlineMail /></span>
-                  {formData.email}
+                  <span className="truncate">{formData.email}</span>
                 </div>
               )}
             </div>
@@ -191,7 +191,8 @@ const RecruiterProfilePage = () => {
               ) : (
                 <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
                   <span className="text-gray-400 text-lg mr-3"><FaLinkedin /></span>
-                  {formData.linkedInProfile}
+                  <span className="truncate">{formData.linkedInProfile}</span>
+
                 </div>
               )}
             </div>
@@ -234,7 +235,7 @@ const RecruiterProfilePage = () => {
               ) : (
                 <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
                   <span className="text-gray-400 text-lg mr-3"><FiGlobe /></span>
-                  {formData.companyWebsite}
+                  <span className="truncate">{formData.companyWebsite}</span>
                 </div>
               )}
             </div>
@@ -276,7 +277,7 @@ const RecruiterProfilePage = () => {
           </div>
         </div>
 
-        <div className="mt-12 flex justify-end gap-4">
+        <div className="mt-8 sm:mt-10 md:mt-12 flex flex-col sm:flex-row justify-center sm:justify-end gap-3 sm:gap-4">
           {!isEditing ? (
             <button
               onClick={handleEdit}
