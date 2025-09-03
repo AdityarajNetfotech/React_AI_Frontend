@@ -117,86 +117,85 @@ const MyQuestion = () => {
         </div>
       ) : (
         <>
-          <div className="bg-white rounded-xl shadow border border-gray-100 overflow-x-auto">
-            <table
-              className="w-full table-auto text-sm"
-              style={{ tableLayout: "fixed" }}
-            >
-              <thead className="bg-gray-50 text-gray-700 text-left">
-                <tr>
-                  <th className="px-6 py-3 w-1/4">Job ID</th>
-                  <th className="px-6 py-3 w-1/4">Job Title</th>
-                  <th className="px-6 py-3 w-1/4">Created On</th>
-                  <th className="px-6 py-3 w-1/4">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData.map((jd) => (
-                  <tr
-                    key={jd.jobId ?? jd._id ?? JSON.stringify(jd)}
-                    className="border-t hover:bg-gray-50 transition"
-                  >
-                    <td className="px-6 py-4 font-medium text-gray-800 truncate">
-                      {jd.jobId ?? jd._id}
-                    </td>
-                    <td className="px-6 py-4 font-medium text-gray-800">
-                      {jd.jobTitle ?? jd.title ?? jd.name}
-                    </td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {(() => {
-                        const rawDate =
-                          jd.createdAt ||
-                          jd.createdOn ||
-                          jd.created_at ||
-                          jd.created;
-                        try {
-                          return rawDate
-                            ? new Date(rawDate).toLocaleDateString("en-IN")
-                            : "-";
-                        } catch {
-                          return rawDate ?? "-";
-                        }
-                      })()}
-                    </td>
-                    <td className="py-4 px-6">
-                      <button
-                        onClick={() => handleNavigate(jd)}
-                        className="flex items-center gap-2 px-4 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full hover:bg-indigo-100 hover:text-indigo-900 transition-all duration-200"
-                        disabled={loadingQuestionId !== null}
-                      >
-                        {loadingQuestionId === jd._id ? (
-                          <>
-                            <svg
-                              className="animate-spin h-4 w-4"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              />
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                              />
-                            </svg>
-                            <span>Loading</span>
-                          </>
-                        ) : (
-                          "My Question"
-                        )}
-                      </button>
-                    </td>
+          <div className="bg-white rounded-xl shadow border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-gray-700 text-left">
+                  <tr>
+                    <th className="px-6 py-3 min-w-[150px] whitespace-nowrap">Job ID</th>
+                    <th className="px-6 py-3 min-w-[200px] whitespace-nowrap">Job Title</th>
+                    <th className="px-6 py-3 min-w-[150px] whitespace-nowrap">Created On</th>
+                    <th className="px-6 py-3 min-w-[150px] whitespace-nowrap">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {currentData.map((jd) => (
+                    <tr
+                      key={jd.jobId ?? jd._id ?? JSON.stringify(jd)}
+                      className="border-t hover:bg-gray-50 transition"
+                    >
+                      <td className="px-6 py-4 font-medium text-gray-800 truncate">
+                        {jd.jobId ?? jd._id}
+                      </td>
+                      <td className="px-6 py-4 font-medium text-gray-800">
+                        {jd.jobTitle ?? jd.title ?? jd.name}
+                      </td>
+                      <td className="px-6 py-4 text-gray-600">
+                        {(() => {
+                          const rawDate =
+                            jd.createdAt ||
+                            jd.createdOn ||
+                            jd.created_at ||
+                            jd.created;
+                          try {
+                            return rawDate
+                              ? new Date(rawDate).toLocaleDateString("en-IN")
+                              : "-";
+                          } catch {
+                            return rawDate ?? "-";
+                          }
+                        })()}
+                      </td>
+                      <td className="py-4 px-6">
+                        <button
+                          onClick={() => handleNavigate(jd)}
+                          className="flex items-center gap-2 px-4 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full hover:bg-indigo-100 hover:text-indigo-900 transition-all duration-200"
+                          disabled={loadingQuestionId !== null}
+                        >
+                          {loadingQuestionId === jd._id ? (
+                            <>
+                              <svg
+                                className="animate-spin h-4 w-4"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                />
+                              </svg>
+                              <span>Loading</span>
+                            </>
+                          ) : (
+                            "My Question"
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <Pagination

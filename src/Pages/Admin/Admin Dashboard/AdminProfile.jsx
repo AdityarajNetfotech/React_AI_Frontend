@@ -25,7 +25,7 @@ const AdminProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-blue-100 py-10 px-4">
-      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-10">
+      <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl p-10 max-[555px]:p-5">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-center md:items-start md:space-x-10">
           <img
@@ -65,8 +65,8 @@ const AdminProfile = () => {
                   className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
                 />
               ) : (
-                <div className="bg-gray-100 p-3 rounded-md shadow-inner text-gray-800">
-                  {formData.email}
+                <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="truncate"> {formData.email} </span>
                 </div>
               )}
             </div>
@@ -81,8 +81,8 @@ const AdminProfile = () => {
                   className="w-full bg-white border rounded-md px-3 py-2 shadow-sm"
                 />
               ) : (
-                <div className="bg-gray-100 p-3 rounded-md shadow-inner text-gray-800">
-                  {formData.phone}
+                 <div className="bg-gray-100 flex items-center p-3 rounded-md shadow-inner text-gray-800">
+                  <span className="truncate"> {formData.phone} </span>
                 </div>
               )}
             </div>

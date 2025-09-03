@@ -36,7 +36,7 @@ const RegisteredApplicants = () => {
         setSelectedApplicant(id);
     };
 
-   const handleConfirmDelete = async () => {
+    const handleConfirmDelete = async () => {
         setOpenModal(false);
 
         try {
@@ -69,25 +69,25 @@ const RegisteredApplicants = () => {
                     <h2 className='text-2xl font-bold text-blue-700 mb-4'>Registered Applicants</h2>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+                        <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4 max-[377px]:flex-col">
                             <div className="p-3 bg-gray-100 rounded-full"><Users className="text-blue-500" /></div>
-                            <div>
+                            <div className='flex gap-3.5 items-center'>
                                 <p className="text-sm text-gray-500">Total Applicants</p>
                                 <p className="text-xl font-semibold">{applicants.length}</p>
                             </div>
                         </div>
 
-                        <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+                        <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4 max-[377px]:flex-col">
                             <div className="p-3 bg-gray-100 rounded-full"><Activity className="text-yellow-500" /></div>
-                            <div>
+                            <div className='flex gap-3.5 items-center'>
                                 <p className="text-sm text-gray-500">Active Applicants</p>
                                 <p className="text-xl font-semibold">30</p>
                             </div>
                         </div>
 
-                        <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+                        <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4 max-[377px]:flex-col">
                             <div className="p-3 bg-gray-100 rounded-full"><FileText className="text-green-500" /></div>
-                            <div>
+                            <div className='flex gap-3.5 items-center'>
                                 <p className="text-sm text-gray-500">Total Applications</p>
                                 <p className="text-xl font-semibold">45</p>
                             </div>
