@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "../../utils/ApiConstants";
 import axios from "axios";
 import Frame from "../../Components/Images/Frame.png";
 
@@ -29,7 +30,7 @@ function CandidateRegister() {
 
         try {
             const res = await axios.post(
-                "http://localhost:5000/api/candidate/register-candidate",
+                `${baseUrl}/api/candidate/register-candidate`,
                 formData
             );
 

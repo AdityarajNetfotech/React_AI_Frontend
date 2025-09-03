@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Frame from "../../Components/Images/Frame.png";
-
+import { baseUrl } from "../../utils/ApiConstants";
 function CandidateLogin() {
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function CandidateLogin() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/candidate/login-candidate",
+        `${baseUrl}/api/candidate/login-candidate`,
         formData
       );
 
