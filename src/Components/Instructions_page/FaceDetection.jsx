@@ -8,25 +8,39 @@ const FaceDetection = ({ faceEventRef }) => {
   const intervalRef = useRef(null);
 
   useEffect(() => {
-    let videoEl = null; // local variable to hold reference
+    let videoEl = null;
+    let missCount = 0;
 
-    const loadModelAndStart = async () => {
-      try {
-        modelRef.current = await blazeface.load();
-        await setupCamera();
-        startDetectionLoop();
-      } catch (err) {
-        console.error("Error loading BlazeFace:", err);
-      }
+    const startDetectionLoop = () => {
+      intervalRef.current = setInterval(async () => {
+        if (!videoEl || !modelRef.current) return; // safety check
+
+        try {
+          const predictions = await modelRef.current.estimateFaces(videoEl, false);
+          const faceNotVisible = !predictions.length;
+
+          if (faceNotVisible) {
+            missCount++;
+            if (missCount >= 2 && faceEventRef?.current) {
+              faceEventRef.current();
+              missCount = 0;
+            }
+          } else {
+            missCount = 0;
+          }
+        } catch (err) {
+          console.warn("Face detection error:", err);
+        }
+      }, 3000);
     };
 
     const setupCamera = async () => {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: false, // no need for mic
+        audio: false,
       });
       if (videoRef.current) {
-        videoEl = videoRef.current; // capture ref into local var
+        videoEl = videoRef.current;
         videoEl.srcObject = stream;
         await new Promise((resolve) => {
           videoEl.onloadedmetadata = () => {
@@ -37,28 +51,21 @@ const FaceDetection = ({ faceEventRef }) => {
       }
     };
 
-    const startDetectionLoop = () => {
-      intervalRef.current = setInterval(async () => {
-        if (videoRef.current && modelRef.current) {
-          const predictions = await modelRef.current.estimateFaces(videoRef.current, false);
-
-          const faceNotVisible =
-            !predictions.length ||
-            (predictions[0].probability && predictions[0].probability < 0.15);
-
-          if (faceNotVisible && faceEventRef?.current) {
-            faceEventRef.current(); // increments once per second
-          }
-        }
-      }, 1000); // run every 1 second
+    const loadModelAndStart = async () => {
+      try {
+        modelRef.current = await blazeface.load();
+        await setupCamera();
+        startDetectionLoop(); // ✅ make sure this is called
+      } catch (err) {
+        console.error("Error loading BlazeFace:", err);
+      }
     };
 
     loadModelAndStart();
 
     return () => {
-      // cleanup: stop detection + stop camera
       if (intervalRef.current) clearInterval(intervalRef.current);
-      const stream = videoEl?.srcObject; // use captured ref
+      const stream = videoEl?.srcObject;
       stream?.getTracks().forEach((track) => track.stop());
     };
   }, [faceEventRef]);

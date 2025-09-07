@@ -255,7 +255,6 @@ const InstructionsPage = ({ onComplete }) => {
       Keep your camera on throughout the exam.
       Ensure your face is clearly visible under proper lighting.
       Do NOT switch tabs, minimize the window, or open other applications.
-      Do NOT copy or attempt to extract any exam content.
       Stay active; prolonged inactivity may trigger warnings.
       Maintain a stable internet connection for the entire duration.
       Violations of these rules may lead to disqualification.
@@ -311,7 +310,6 @@ v.name.toLowerCase().includes("female")
           <li>
             Do NOT switch tabs, minimize the window, or open other applications.
           </li>
-          <li>Do NOT copy or attempt to extract any exam content.</li>
           <li>Stay active; prolonged inactivity may trigger warnings.</li>
           <li>Maintain a stable internet connection for the entire duration.</li>
         </ul>
