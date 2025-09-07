@@ -48,6 +48,11 @@ import NewRegisterAdmin from './Pages/Admin/NewRegisterAdmin';
 import UserEmail from './Components/Instructions_page/UserEmail';
 import ProtectedRoute from './Components/PrivateRoute/ProtectedRoute';
 import AllJDs from './Pages/Admin/AllJDs';
+import CandidateLogin from './Pages/Candidate/CandidateLogin';
+import CandidateRegister from './Pages/Candidate/CandidateRegister';
+import CandidateLayout from './Pages/Candidate/CandidateLayout';
+import CandidateDashboard from './Pages/Candidate/CandidateDashboard';
+import CandidateJd from './Pages/Candidate/CandidateJd';
 
 
 
@@ -94,8 +99,19 @@ const App = () => {
             <Route path="/EmailOtpPage" element={<EmailOtpPage />} />
             <Route path="/ChangePasswordPage" element={<ChangePassword />} />
             <Route path="/AdminRegister" element={<AdminRegister />} />
+            <Route path="/CandidateLogin" element={<CandidateLogin />} />
+            <Route path="/CandidateRegister" element={<CandidateRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/UserEmail" element={<UserEmail />} />
+
+
+            <Route element={<ProtectedRoute />}>
+              <Route path="/Candidate-Dashboard" element={<CandidateLayout />}>
+                <Route index element={<CandidateDashboard />} />
+                <Route path='Alljds' element={<CandidateJd />} />
+              </Route>
+            </Route>
+
 
             <Route element={<ProtectedRoute />}>
               <Route path="/Admin-Dashboard" element={<AdminLayout />}>
@@ -126,7 +142,7 @@ const App = () => {
                 <Route path="/Recruiter-Dashboard/My-Jd/JDDetails" element={<JDDetails />} />
                 <Route path="/Recruiter-Dashboard/generate-test" element={<GenerateTest />} />
                 <Route path="/Recruiter-Dashboard/finalize-test" element={<FinalizeTest />} />
-                
+
               </Route>
             </Route>
 

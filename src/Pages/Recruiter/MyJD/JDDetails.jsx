@@ -313,7 +313,7 @@ const JDDetails = () => {
                 </div>
 
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow">
-                    <div className="flex space-x-4 mb-4 border-b border-gray-300">
+                    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0 mb-4 border-b border-gray-300">
                         <button
                             className={`py-2 px-4 font-medium ${activeTab === "filtered" ? "text-blue-700 border-b-2 border-blue-700" : "text-gray-600"}`}
                             onClick={() => setActiveTab("filtered")}

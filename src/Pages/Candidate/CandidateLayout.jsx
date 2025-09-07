@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
-import AdminSidebar from '../../../Components/Admin/AdminSidebar';
+import CandidateSidebar from "./components/CandidateSidebar";
 
-const AdminLayout = () => {
+const CandidateLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Fixed Sidebar */}
-      <div className="fixed top-0 left-0 h-screen w-64 z-50">
-        <AdminSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+      {/* Sidebar */}
+      <div className="fixed top-0 left-0 h-screen z-50">
+        <CandidateSidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       </div>
 
-      {/* Scrollable Main Content */}
+      {/* Main Content */}
       <main
         className={`transition-all duration-300 flex-1 overflow-y-auto bg-gray-100 p-6 max-[555px]:p-0 ${collapsed ? "ml-20" : "ml-64"
-          }`}>
+          }`}
+      >
         <Outlet />
       </main>
     </div>
   );
 };
 
-export default AdminLayout;
+export default CandidateLayout;

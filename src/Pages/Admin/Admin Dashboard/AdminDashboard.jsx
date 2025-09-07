@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   UserPlus,
   ClipboardList,
@@ -53,22 +53,22 @@ const AdminDashboard = () => {
   const [statsBackend, setStatsBackend] = useState({})
 
   const stats = [
-  {
-    label: "All Recruiters",
-    value: statsBackend.Recruiter_count,
-    icon: <UserPlus className="h-6 w-6 text-indigo-600" />,
-  },
-  {
-    label: "All JDs",
-    value: statsBackend.countJd,
-    icon: <ClipboardList className="h-6 w-6 text-green-600" />,
-  },
-  {
-    label: "Total Candidates",
-    value: statsBackend.Candidate_count,
-    icon: <Users className="h-6 w-6 text-yellow-600" />,
-  },
-];
+    {
+      label: "All Recruiters",
+      value: statsBackend.Recruiter_count,
+      icon: <UserPlus className="h-6 w-6 text-indigo-600" />,
+    },
+    {
+      label: "All JDs",
+      value: statsBackend.countJd,
+      icon: <ClipboardList className="h-6 w-6 text-green-600" />,
+    },
+    {
+      label: "Total Candidates",
+      value: statsBackend.Candidate_count,
+      icon: <Users className="h-6 w-6 text-yellow-600" />,
+    },
+  ];
 
 
   useEffect(() => {
@@ -145,22 +145,22 @@ const AdminDashboard = () => {
 
   const getStatsFromBackend = async () => {
     try {
-      const response  = await axios.get(`${baseUrl}/api/admin/getAlldata`);
-      if (response.status === 200){
+      const response = await axios.get(`${baseUrl}/api/admin/getAlldata`);
+      if (response.status === 200) {
         setStatsBackend(response.data)
       }
     } catch (error) {
       console.error("something went wrong", error);
-      
+
     }
   }
 
-  console.log("stats----->",statsBackend);
-  
+  console.log("stats----->", statsBackend);
 
-  useEffect(()=>{
+
+  useEffect(() => {
     getStatsFromBackend()
-  },[])
+  }, [])
 
 
 
@@ -186,43 +186,49 @@ const AdminDashboard = () => {
       {/* Bar Chart */}
       <div className="bg-white p-6 rounded-2xl shadow-md">
         <h2 className="text-lg font-semibold mb-4">Recruiters & JDs</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="Recruiters" fill="#6366f1" />
-            <Bar dataKey="JDs" fill="#10b981" />
-          </BarChart>
-        </ResponsiveContainer>
-
+        <div className="overflow-x-auto md:overflow-x-visible"> 
+          <div className="min-w-[800px] md:min-w-0"> 
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Recruiters" fill="#6366f1" />
+                <Bar dataKey="JDs" fill="#10b981" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Line Chart */}
       <div className="bg-white p-6 rounded-2xl shadow-md">
         <h2 className="text-lg font-semibold mb-4">Recruiter Growth Trend</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={monthlyRecruiterData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis allowDecimals={false} />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="Recruiters"
-              stroke="#3b82f6"
-              strokeWidth={2}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-
+        <div className="overflow-x-auto md:overflow-x-visible">
+          <div className="min-w-[800px] md:min-w-0">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={monthlyRecruiterData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="Recruiters"
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
 
-        {/* Scatter Chart */}
+      {/* Scatter Chart */}
 
     </div>
   );
