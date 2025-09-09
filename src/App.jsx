@@ -53,6 +53,8 @@ import CandidateRegister from './Pages/Candidate/CandidateRegister';
 import CandidateLayout from './Pages/Candidate/CandidateLayout';
 import CandidateDashboard from './Pages/Candidate/CandidateDashboard';
 import CandidateJd from './Pages/Candidate/CandidateJd';
+import ExamResult from './Pages/Candidate/ExamResult';
+import UpdateCandidate from './Pages/Candidate/UpdateCandidate';
 
 
 
@@ -103,12 +105,14 @@ const App = () => {
             <Route path="/CandidateRegister" element={<CandidateRegister />} />
             <Route path="/AdminLogin" element={<AdminLogin />} />
             <Route path="/UserEmail" element={<UserEmail />} />
+            <Route path='/UpdateCandidate' element={<UpdateCandidate />} />
 
 
             <Route element={<ProtectedRoute />}>
               <Route path="/Candidate-Dashboard" element={<CandidateLayout />}>
                 <Route index element={<CandidateDashboard />} />
                 <Route path='Alljds' element={<CandidateJd />} />
+                <Route path='/Candidate-Dashboard/Alljds/JDResult' element={<ExamResult />} />
               </Route>
             </Route>
 

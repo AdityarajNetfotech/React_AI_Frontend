@@ -12,14 +12,14 @@ import { useNavigate } from "react-router-dom";
 import { baseUrl } from '../../../utils/ApiConstants';
 
 const JDDetails = () => {
-
     const navigate = useNavigate();
+    const [candidates, setCandidates] = useState([]);
+    const [filterAllLoader, setFilterAllLoader] = useState(false);
+
 
     const location = useLocation();
     const { id, jobSummary } = location.state || {};
     // console.log(jobSummary);
-
-
 
     const [activeTab, setActiveTab] = useState("filtered");
     const [resumes, setResumes] = useState([]);
@@ -31,80 +31,6 @@ const JDDetails = () => {
     const [filteredResumes, setFilteredResumes] = useState([]);
     const [unfilteredResumes, setUnfilteredResumes] = useState([]);
     const [filterLoader, setFilterLoader] = useState(false);
-
-
-
-    // const filteredResumes = [
-    //     {
-    //         name: "Aarav Mehta",
-    //         email: "aarav.mehta@gmail.com",
-    //         skills: "React, Node.js, MongoDB",
-    //         experience: "2 years",
-    //         fileName: "aarav_resume.pdf",
-    //         matchPercentage: 88,
-    //         goodFit: "Yes",
-    //         keyMatchingSkills: ["React", "Node.js", "MongoDB"],
-    //         reasoning: "Candidate has strong experience in full-stack projects using MERN stack.",
-    //     },
-    //     {
-    //         name: "Isha Verma",
-    //         email: "isha.verma@outlook.com",
-    //         skills: "Java, Spring Boot, MySQL",
-    //         experience: "3 years",
-    //         fileName: "isha_resume.pdf",
-    //         matchPercentage: 72,
-    //         goodFit: "Yes",
-    //         keyMatchingSkills: ["HTML", "CSS", "JavaScript"],
-    //         reasoning: "Has strong frontend skills, aligns with UI/UX requirements of the job.",
-    //     },
-    //     {
-    //         name: "Rohan Kapoor",
-    //         email: "rohan.kapoor@example.com",
-    //         skills: "Python, Django, PostgreSQL",
-    //         experience: "1.5 years",
-    //         fileName: "rohan_resume.pdf",
-    //         matchPercentage: 72,
-    //         goodFit: "Yes",
-    //         keyMatchingSkills: ["HTML", "CSS", "JavaScript"],
-    //         reasoning: "Has strong frontend skills, aligns with UI/UX requirements of the job.",
-    //     },
-    // ];
-
-    // const unfilteredResumes = [
-    //     {
-    //         name: "Sneha Joshi",
-    //         email: "sneha.joshi@gmail.com",
-    //         skills: "HTML, CSS, Bootstrap",
-    //         experience: "1 year",
-    //         fileName: "sneha_resume.pdf",
-    //         matchPercentage: 42,
-    //         goodFit: "No",
-    //         keyMatchingSkills: ["Excel"],
-    //         reasoning: "Doesn't match tech stack or role expectations.",
-    //     },
-    //     {
-    //         name: "Vikram Rao",
-    //         email: "vikram.rao@yahoo.com",
-    //         skills: "C++, Data Structures, Algorithms",
-    //         experience: "Fresher",
-    //         fileName: "vikram_resume.pdf",
-    //         matchPercentage: 42,
-    //         goodFit: "No",
-    //         keyMatchingSkills: ["Excel"],
-    //         reasoning: "Doesn't match tech stack or role expectations.",
-    //     },
-    //     {
-    //         name: "Anjali Nair",
-    //         email: "anjali.nair@protonmail.com",
-    //         skills: "PHP, Laravel, MySQL",
-    //         experience: "2 years",
-    //         fileName: "anjali_resume.pdf",
-    //         matchPercentage: 42,
-    //         goodFit: "No",
-    //         keyMatchingSkills: ["Excel"],
-    //         reasoning: "Doesn't match tech stack or role expectations.",
-    //     },
-    // ];
 
     useEffect(() => {
         const fetchResumes = async (jdId) => {
@@ -127,6 +53,75 @@ const JDDetails = () => {
             fetchResumes(id);
         }
     }, [id]);
+
+
+    useEffect(() => {
+        const fetchCandidates = async () => {
+            if (!id) return;
+
+            try {
+                const token = localStorage.getItem("recruiterAuthToken");
+                const response = await axios.get(
+                    `${baseUrl}/api/jd/getAllCandidatesdataAccordingToJD/${id}`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
+                console.log(response.data);
+
+                setCandidates(response.data.candidates);
+            } catch (error) {
+                console.error("Error fetching candidates:", error);
+            }
+        };
+
+        fetchCandidates();
+    }, [id]);
+
+    const handleFilterAll = async () => {
+        if (candidates.length === 0) {
+            toast.error("No candidates to filter");
+            return;
+        }
+
+        setFilterAllLoader(true);
+
+        try {
+            const token = localStorage.getItem("recruiterAuthToken");
+
+            const formData = new FormData();
+            formData.append("jdId", id);
+            formData.append("jdText", jobSummary || "");
+
+            const res = await axios.post(
+                `${baseUrl}/api/jd/filter-cloudinary`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            const data = res.data;
+
+            setFilteredResumes((prev) => [...prev, ...(data.filtered || [])]);
+            setUnfilteredResumes((prev) => [...prev, ...(data.unfiltered || [])]);
+
+            setActiveTab("filtered");
+
+            toast.success(`All Candidates Filtered!
+            Filtered: ${data.filtered.length}
+            Unfiltered: ${data.unfiltered.length}`);
+
+        } catch (err) {
+            console.error(err);
+            toast.error("Error filtering candidates");
+        } finally {
+            setFilterAllLoader(false);
+        }
+    };
 
 
     const handleUploadClick = () => {
@@ -202,7 +197,6 @@ const JDDetails = () => {
             const data = res.data;
             // console.log("Filtered Data:", data);
 
-            // Save dynamic resumes to state
             setFilteredResumes((prev) => [...prev, ...(data.filtered || [])]);
             setUnfilteredResumes((prev) => [...prev, ...(data.unfiltered || [])]);
 
@@ -210,13 +204,13 @@ const JDDetails = () => {
             setResumes([]);
             setActiveTab("filtered");
 
-            toast.success(`✅ Resumes Filtered!
-        🎯 Filtered: ${data.filtered.length}
-        📂 Unfiltered: ${data.unfiltered.length}`);
+            toast.success(`Resumes Filtered!
+            Filtered: ${data.filtered.length}
+            Unfiltered: ${data.unfiltered.length}`);
 
         } catch (err) {
             console.error(err);
-            toast.error("❌ Something went wrong during filtering.");
+            toast.error("Something went wrong during filtering.");
         } finally {
             setFilterLoader(false)
         }
@@ -231,10 +225,7 @@ const JDDetails = () => {
 
     return (
         <>
-
             <main className="flex-1 p-6 transition-all duration-300">
-
-
                 <div className="bg-gray-100 border-l-4 border-blue-700 p-5 rounded-lg shadow mb-6">
                     <h2 className="text-2xl font-bold text-blue-700 mb-1">JD Details Page</h2>
                     <p className="text-sm text-gray-600">Upload, view, and manage resumes for this job listing.</p>
@@ -264,8 +255,6 @@ const JDDetails = () => {
                             className="hidden"
                             hidden
                         />
-
-
 
                         <p className="text-gray-600 mt-5"> <i>You can only upload 20 resumes at a time!</i></p>
                     </div>
@@ -310,6 +299,62 @@ const JDDetails = () => {
                         </button>
 
                     </div>
+                </div>
+
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow mb-6">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-semibold">Candidates</h2>
+                        <button
+                            onClick={handleFilterAll}
+                            disabled={filterAllLoader || candidates.length === 0}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                            Filter All {filterAllLoader && <SpinLoader />}
+                        </button>
+                    </div>
+
+                    {candidates.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-10">
+                            <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </svg>
+                            <p className="text-gray-600 text-lg font-medium">No candidates found</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-sm text-gray-700">
+                                <thead className="bg-gray-200 text-gray-700">
+                                    <tr>
+                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide whitespace-nowrap">
+                                            Candidate Name
+                                        </th>
+                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide whitespace-nowrap">
+                                            Email
+                                        </th>
+                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide whitespace-nowrap">
+                                            Skills
+                                        </th>
+                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide whitespace-nowrap">
+                                            Location
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {candidates.map((candidate, index) => (
+                                        <tr key={index} className="bg-white hover:bg-gray-50 transition duration-200 ease-in-out">
+                                            <td className="py-4 px-6 font-medium whitespace-nowrap">
+                                                <div>{candidate.fileName || "Resume File"}</div>
+                                                <div className="text-xs text-gray-500">{candidate.candidateId?.name || "No name"}</div>
+                                            </td>
+                                            <td className="py-4 px-6 whitespace-nowrap">{candidate.candidateId?.email || "N/A"}</td>
+                                            <td className="py-4 px-6 min-w-[200px]">{candidate.skills || "N/A"}</td>
+                                            <td className="py-4 px-6 whitespace-nowrap">{candidate.currentLocation || "N/A"}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
 
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow">
@@ -441,12 +486,9 @@ const JDDetails = () => {
                 <ResumeModal
                     onClose={handleCloseModal}
                     resume={selectedResume}
-
                 />
             )}
         </>
-
-
     );
 };
 
