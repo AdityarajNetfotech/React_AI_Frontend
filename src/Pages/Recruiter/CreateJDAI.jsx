@@ -220,7 +220,8 @@ const CreateJDAI = () => {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    title: `${formData.title} at ${companyName}`,
+                    title: formData.title,
+                    company:companyName,
                     domain: formData.domain,
                     Qualification: formData.qualification,
                     experience: parseInt(formData.experience),
@@ -228,6 +229,7 @@ const CreateJDAI = () => {
                     location: formData.location,
                     employmentType: formData.employmentType,
                     salaryRange: formData.salaryRange
+
                 })
             });
 
