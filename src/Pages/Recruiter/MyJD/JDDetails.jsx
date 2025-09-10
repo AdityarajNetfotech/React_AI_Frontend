@@ -31,6 +31,18 @@ const JDDetails = () => {
     const [filteredResumes, setFilteredResumes] = useState([]);
     const [unfilteredResumes, setUnfilteredResumes] = useState([]);
     const [filterLoader, setFilterLoader] = useState(false);
+    const [selectedCandidate, setSelectedCandidate] = useState(null);
+    const [candidateModalOpen, setCandidateModalOpen] = useState(false);
+
+    const handleViewCandidate = (candidate) => {
+        setSelectedCandidate(candidate);
+        setCandidateModalOpen(true);
+    };
+
+    const handleCloseCandidateModal = () => {
+        setCandidateModalOpen(false);
+        setSelectedCandidate(null);
+    };
 
     useEffect(() => {
         const fetchResumes = async (jdId) => {
@@ -62,7 +74,7 @@ const JDDetails = () => {
             try {
                 const token = localStorage.getItem("recruiterAuthToken");
                 const response = await axios.get(
-                    `${baseUrl}/api/jd/getAllCandidatesdataAccordingToJD/${id}`,
+                    `${baseUrl}/api/candidate/get-all-candidates/${id}`,
                     {
                         headers: { Authorization: `Bearer ${token}` }
                     }
@@ -337,18 +349,45 @@ const JDDetails = () => {
                                         <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide whitespace-nowrap">
                                             Location
                                         </th>
+                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide whitespace-nowrap">
+                                            Status
+                                        </th>
+                                        <th className="py-4 px-6 text-left font-semibold uppercase tracking-wide whitespace-nowrap">
+                                            Actions
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {candidates.map((candidate, index) => (
                                         <tr key={index} className="bg-white hover:bg-gray-50 transition duration-200 ease-in-out">
                                             <td className="py-4 px-6 font-medium whitespace-nowrap">
-                                                <div>{candidate.fileName || "Resume File"}</div>
-                                                <div className="text-xs text-gray-500">{candidate.candidateId?.name || "No name"}</div>
+                                                {candidate.candidate?.name || "N/A"}
                                             </td>
-                                            <td className="py-4 px-6 whitespace-nowrap">{candidate.candidateId?.email || "N/A"}</td>
-                                            <td className="py-4 px-6 min-w-[200px]">{candidate.skills || "N/A"}</td>
-                                            <td className="py-4 px-6 whitespace-nowrap">{candidate.currentLocation || "N/A"}</td>
+                                            <td className="py-4 px-6 whitespace-nowrap">
+                                                {candidate.candidate?.email || "N/A"}
+                                            </td>
+                                            <td className="py-4 px-6 min-w-[200px]">
+                                                {candidate.skills?.join(", ") || "N/A"}
+                                            </td>
+                                            <td className="py-4 px-6 whitespace-nowrap">
+                                                {candidate.currentLocation || "N/A"}
+                                            </td>
+                                            <td className="py-4 px-6 whitespace-nowrap">
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${candidate.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                        candidate.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                            'bg-red-100 text-red-800'
+                                                    }`}>
+                                                    {candidate.status || "N/A"}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 px-6 whitespace-nowrap">
+                                                <button
+                                                    onClick={() => handleViewCandidate(candidate)}
+                                                    className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200 ease-in-out"
+                                                >
+                                                    View More
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -356,6 +395,123 @@ const JDDetails = () => {
                         </div>
                     )}
                 </div>
+
+                {candidateModalOpen && selectedCandidate && (
+                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                            <div className="p-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-2xl font-bold text-gray-800">Candidate Details</h2>
+                                    <button
+                                        onClick={handleCloseCandidateModal}
+                                        className="text-gray-500 hover:text-gray-700"
+                                    >
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Name</h3>
+                                            <p className="text-gray-600">{selectedCandidate.candidate?.name || "N/A"}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Email</h3>
+                                            <p className="text-gray-600">{selectedCandidate.candidate?.email || "N/A"}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Current Location</h3>
+                                            <p className="text-gray-600">{selectedCandidate.currentLocation || "N/A"}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Relocation</h3>
+                                            <p className="text-gray-600">{selectedCandidate.relocation ? "Yes" : "No"}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Current CTC</h3>
+                                            <p className="text-gray-600">{selectedCandidate.currentCTC ? `${selectedCandidate.currentCTC} LPA` : "N/A"}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Expected CTC</h3>
+                                            <p className="text-gray-600">{selectedCandidate.expectedCTC ? `${selectedCandidate.expectedCTC} LPA` : "N/A"}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Notice Period</h3>
+                                            <p className="text-gray-600">{selectedCandidate.noticePeriod || "N/A"}</p>
+                                        </div>
+                                        <div>
+                                            <h3 className="font-semibold text-gray-700">Applied At</h3>
+                                            <p className="text-gray-600">
+                                                {selectedCandidate.appliedAt
+                                                    ? new Date(selectedCandidate.appliedAt).toLocaleDateString()
+                                                    : "N/A"}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-semibold text-gray-700">Skills</h3>
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {selectedCandidate.skills?.map((skill, index) => (
+                                                <span key={index} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
+                                                    {skill}
+                                                </span>
+                                            )) || <p className="text-gray-600">N/A</p>}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-semibold text-gray-700">LinkedIn Profile</h3>
+                                        {selectedCandidate.linkedInProfile ? (
+                                            <a
+                                                href={selectedCandidate.linkedInProfile}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                View Profile
+                                            </a>
+                                        ) : (
+                                            <p className="text-gray-600">N/A</p>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-semibold text-gray-700">Resume</h3>
+                                        {selectedCandidate.resume ? (
+                                            <a
+                                                href={selectedCandidate.resume}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 text-blue-600 hover:underline"
+                                            >
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                                Download Resume
+                                            </a>
+                                        ) : (
+                                            <p className="text-gray-600">N/A</p>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <h3 className="font-semibold text-gray-700">Status</h3>
+                                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${selectedCandidate.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                selectedCandidate.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                    'bg-red-100 text-red-800'
+                                            }`}>
+                                            {selectedCandidate.status || "N/A"}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 shadow">
                     <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0 mb-4 border-b border-gray-300">

@@ -15,6 +15,8 @@ const CandidateJd = () => {
     const [jdData, setJdData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 5;
+    const [candidate, setCandidate] = useState(null);
+const [appliedJobIds, setAppliedJobIds] = useState([]);
 
     const [applicationData, setApplicationData] = useState({
         skills: '',
@@ -23,7 +25,6 @@ const CandidateJd = () => {
         currentLocation: '',
         relocation: false,
         noticePeriod: '',
-        linkedInProfile: ''
     });
     const [resumeFile, setResumeFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,6 +33,8 @@ const CandidateJd = () => {
         const fetchJD = async () => {
             try {
                 const res = await axios.get(`${baseUrl}/api/admin/getAllJD`);
+                console.log("all jd", res.data);
+
                 setJdData(res.data?.Jd || []);
             } catch (error) {
                 console.log(error);
@@ -39,6 +42,60 @@ const CandidateJd = () => {
         };
         fetchJD();
     }, []);
+
+   useEffect(() => {
+    const fetchAppliedJobs = async () => {
+        try {
+            const token = localStorage.getItem("candidateAuthToken");
+            if (!token) throw new Error("Authentication token not found");
+
+            const response = await axios.get(
+                `${baseUrl}/api/candidate/get-all-applied-jobs`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log("applied jd", response.data);
+            
+            const appliedIds = response.data.specificItems.map(item => item.jobId);
+            setAppliedJobIds(appliedIds);
+            
+        } catch (err) {
+            console.log("Error fetching applied jobs:", err);
+        }
+    };
+
+    fetchAppliedJobs();
+}, []);
+
+
+    useEffect(() => {
+        const fetchCandidateProfile = async () => {
+            try {
+                const token = localStorage.getItem("candidateAuthToken");
+                if (!token) throw new Error("No token found");
+
+                const res = await axios.get(
+                    `${baseUrl}/api/candidate/getcandidate-profile`,
+                    {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }
+                );
+                // console.log("logged in candidate", res.data.candidate);
+
+
+                setCandidate(res.data.candidate);
+            } catch (err) {
+                console.error("Error fetching candidate profile:", err);
+            }
+        };
+
+        fetchCandidateProfile();
+    }, []);
+
 
     const uniqueTitles = [...new Set(jdData.map(jd => jd.title))];
     const uniqueCompanies = [...new Set(jdData.map(jd => jd.company))];
@@ -67,17 +124,33 @@ const CandidateJd = () => {
     const handleApplyJD = (jd) => {
         setSelectedJD(jd);
         setShowApplyModal(true);
-        setApplicationData({
-            skills: '',
-            currentCTC: '',
-            expectedCTC: '',
-            currentLocation: '',
-            relocation: false,
-            noticePeriod: '',
-            linkedInProfile: ''
-        });
+
+        if (candidate && candidate.candidateAdditiondetails) {
+            const additionalDetails = candidate.candidateAdditiondetails;
+            setApplicationData({
+                skills: additionalDetails.skills ? additionalDetails.skills.join(', ') : '',
+                currentCTC: additionalDetails.currentCTC || '',
+                expectedCTC: additionalDetails.expectedCTC || '',
+                currentLocation: additionalDetails.currentLocation || '',
+                relocation: additionalDetails.relocation === 'yes' || additionalDetails.relocation === true,
+                noticePeriod: additionalDetails.noticePeriod || '',
+            });
+        } else {
+            setApplicationData({
+                skills: '',
+                currentCTC: '',
+                expectedCTC: '',
+                currentLocation: '',
+                relocation: false,
+                noticePeriod: '',
+            });
+        }
         setResumeFile(null);
     };
+
+
+
+
 
     const closeModal = () => {
         setSelectedJD(null);
@@ -94,7 +167,6 @@ const CandidateJd = () => {
             currentLocation: '',
             relocation: false,
             noticePeriod: '',
-            linkedInProfile: ''
         });
         setResumeFile(null);
     };
@@ -150,7 +222,6 @@ const CandidateJd = () => {
             formData.append('currentLocation', applicationData.currentLocation);
             formData.append('relocation', applicationData.relocation);
             formData.append('noticePeriod', applicationData.noticePeriod);
-            formData.append('linkedInProfile', applicationData.linkedInProfile);
 
             const token = localStorage.getItem('candidateAuthToken');
 
@@ -171,7 +242,7 @@ const CandidateJd = () => {
                 }
             );
             console.log(response.data);
-            
+
 
             if (response.status === 201) {
                 alert('Application submitted successfully!');
@@ -359,9 +430,13 @@ const CandidateJd = () => {
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => handleApplyJD(jd)}
-                                                    className="px-3 py-1.5 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition"
+                                                    disabled={appliedJobIds.includes(jd._id)}
+                                                    className={`px-3 py-1.5 text-white text-sm rounded-lg transition ${appliedJobIds.includes(jd._id)
+                                                            ? 'bg-gray-400 cursor-not-allowed'
+                                                            : 'bg-green-500 hover:bg-green-600'
+                                                        }`}
                                                 >
-                                                    Apply
+                                                    {appliedJobIds.includes(jd._id) ? 'Applied' : 'Apply'}
                                                 </button>
                                                 <button
                                                     onClick={() => handleViewJD(jd)}
@@ -535,20 +610,6 @@ const CandidateJd = () => {
                                         I am willing to relocate for this position
                                     </span>
                                 </label>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
-                                    LinkedIn Profile
-                                </label>
-                                <input
-                                    type="url"
-                                    name="linkedInProfile"
-                                    value={applicationData.linkedInProfile}
-                                    onChange={handleInputChange}
-                                    placeholder="https://linkedin.com/in/yourprofile"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                />
                             </div>
 
                             <div className="flex gap-3 pt-4">
