@@ -164,7 +164,7 @@ const CreateJDAI = () => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                body: formData
+                body: formData,company:companyName
             });
 
             const data = await res.json();
