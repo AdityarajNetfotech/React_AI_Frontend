@@ -19,7 +19,7 @@ const navItems = [
   { label: "My Results", icon: FiFileText, path: "JDResults" },
   { label: "Update Profile", icon: FiHelpCircle, path: "UpdateCandidate" },
   { label: "Result", icon: FiCheckCircle, path: "Result" },
-  { label: "Profile", icon: FiUser, path: "CandidateProfile" },
+  { label: "Profile", icon: FiUser, path: "candidate-profile" },
   { label: "Logout", icon: FiLogOut, path: "/CandidateLogin" },
 ];
 
