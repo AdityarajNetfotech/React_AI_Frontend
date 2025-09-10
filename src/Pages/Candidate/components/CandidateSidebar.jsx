@@ -16,7 +16,7 @@ import {
 const navItems = [
   { label: "Dashboard", icon: FiHome, path: "" },
   { label: "All JDs", icon: FiFilePlus, path: "Alljds" },
-  { label: "My Results", icon: FiFileText, path: "JDResults" },
+  { label: "My Results", icon: FiFileText, path: "JDResult" },
   { label: "Update Profile", icon: FiHelpCircle, path: "UpdateCandidate" },
   { label: "Result", icon: FiCheckCircle, path: "Result" },
   { label: "Profile", icon: FiUser, path: "candidate-profile" },

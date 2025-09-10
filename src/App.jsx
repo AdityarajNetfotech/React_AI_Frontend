@@ -56,6 +56,7 @@ import CandidateJd from './Pages/Candidate/CandidateJd';
 // import ExamResult from './Pages/Candidate/ExamResult';
 import UpdateCandidate from './Pages/Candidate/UpdateCandidate';
 import CandidateProfilePage from './Pages/Candidate/CandidateProfile';
+import ExamResult from './Pages/Candidate/ExamResult';
 
 
 
@@ -115,7 +116,7 @@ const App = () => {
                 <Route path='Alljds' element={<CandidateJd />} />
                 <Route path='candidate-profile' element={<CandidateProfilePage />} />
 
-                {/* <Route path='/Candidate-Dashboard/Alljds/JDResult' element={<ExamResult />} /> */}
+                <Route path='/Candidate-Dashboard/JDResult' element={<ExamResult />} />
               </Route>
             </Route>
 
