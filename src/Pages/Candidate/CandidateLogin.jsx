@@ -42,11 +42,17 @@ function CandidateLogin() {
         `${baseUrl}/api/candidate/login-candidate`,
         formData
       );
+      // console.log(res.data);
 
       setSuccess("Login successful!");
       localStorage.setItem("candidateAuthToken", res.data.token);
 
-      setTimeout(() => navigate("/Candidate-Dashboard"), 1500);
+      if (res.data.hasAdditionalDetails === true) {
+        navigate("/Candidate-Dashboard");
+      } else {
+        navigate("/UpdateCandidate");
+      }
+
     } catch (err) {
       if (err.response) {
         setError(err.response.data.message || "Invalid credentials");

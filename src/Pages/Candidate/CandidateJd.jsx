@@ -1,77 +1,61 @@
-import React, { useState } from "react";
-import { X, Briefcase, Layers, Code, Palette, Search, Filter, Building2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { X, Briefcase, Code, Palette, Search, Filter, Building2, Upload } from "lucide-react";
+import axios from "axios";
+import Pagination from "../../Components/Pagination/Pagination";
+import { baseUrl } from "../../utils/ApiConstants";
 
 const CandidateJd = () => {
     const [showModal, setShowModal] = useState(false);
+    const [showApplyModal, setShowApplyModal] = useState(false);
     const [selectedJD, setSelectedJD] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedTitle, setSelectedTitle] = useState("");
     const [selectedSkill, setSelectedSkill] = useState("");
     const [selectedCompany, setSelectedCompany] = useState("");
+    const [jdData, setJdData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const rowsPerPage = 5;
 
-    const jdData = [
-        {
-            _id: "JD001",
-            title: "Frontend Developer",
-            company: "Tech Solutions Pvt Ltd",
-            createdAt: "2025-08-01",
-            jobSummary: "We are looking for a skilled Frontend Developer with React.js experience.",
-            skills: ["React", "JavaScript", "CSS", "TailwindCSS", "Git"],
-        },
-        {
-            _id: "JD002",
-            title: "Backend Developer",
-            company: "InnovateTech India",
-            createdAt: "2025-07-28",
-            jobSummary: "Looking for a Backend Developer skilled in Node.js and Express.",
-            skills: ["Node.js", "Express", "MongoDB", "API Development"],
-        },
-        {
-            _id: "JD003",
-            title: "UI/UX Designer",
-            company: "Creative Studios",
-            createdAt: "2025-07-20",
-            jobSummary: "Creative designer with knowledge of Figma and user flows.",
-            skills: ["Figma", "Wireframing", "Prototyping", "User Research"],
-        },
-        {
-            _id: "JD004",
-            title: "DevOps Engineer",
-            company: "Cloud Matrix Solutions",
-            createdAt: "2025-07-15",
-            jobSummary: "Hiring DevOps Engineer with cloud and CI/CD pipeline expertise.",
-            skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Linux"],
-        },
-        {
-            _id: "JD005",
-            title: "Frontend Developer",
-            company: "WebCraft Technologies",
-            createdAt: "2025-07-10",
-            jobSummary: "Looking for Frontend Developer with Vue.js expertise.",
-            skills: ["Vue.js", "JavaScript", "HTML", "CSS", "Webpack"],
-        },
-        {
-            _id: "JD006",
-            title: "Full Stack Developer",
-            company: "Tech Solutions Pvt Ltd",
-            createdAt: "2025-07-05",
-            jobSummary: "Need Full Stack Developer proficient in MERN stack.",
-            skills: ["React", "Node.js", "MongoDB", "Express", "Redux"],
-        },
-    ];
+    const [applicationData, setApplicationData] = useState({
+        skills: '',
+        currentCTC: '',
+        expectedCTC: '',
+        currentLocation: '',
+        relocation: false,
+        noticePeriod: '',
+        linkedInProfile: ''
+    });
+    const [resumeFile, setResumeFile] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    useEffect(() => {
+        const fetchJD = async () => {
+            try {
+                const res = await axios.get(`${baseUrl}/api/admin/getAllJD`);
+                setJdData(res.data?.Jd || []);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchJD();
+    }, []);
 
     const uniqueTitles = [...new Set(jdData.map(jd => jd.title))];
     const uniqueCompanies = [...new Set(jdData.map(jd => jd.company))];
-    const allSkills = [...new Set(jdData.flatMap(jd => jd.skills))];
+    const allSkills = [...new Set(jdData.flatMap(jd => jd.skills || []))];
 
     const filteredData = jdData.filter(jd => {
-        const matchesSearch = jd.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                             jd.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                             jd.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()));
+        const matchesSearch =
+            jd.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            jd.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (jd.skills || []).some(skill =>
+                skill.toLowerCase().includes(searchTerm.toLowerCase())
+            );
         const matchesTitle = selectedTitle === "" || jd.title === selectedTitle;
         const matchesCompany = selectedCompany === "" || jd.company === selectedCompany;
-        const matchesSkill = selectedSkill === "" || jd.skills.includes(selectedSkill);
-        
+        const matchesSkill =
+            selectedSkill === "" || (jd.skills || []).includes(selectedSkill);
+
         return matchesSearch && matchesTitle && matchesCompany && matchesSkill;
     });
 
@@ -80,8 +64,19 @@ const CandidateJd = () => {
         setShowModal(true);
     };
 
-    const handleApplyJD = (jdId) => {
-        alert(`Applied to JD: ${jdId}`);
+    const handleApplyJD = (jd) => {
+        setSelectedJD(jd);
+        setShowApplyModal(true);
+        setApplicationData({
+            skills: '',
+            currentCTC: '',
+            expectedCTC: '',
+            currentLocation: '',
+            relocation: false,
+            noticePeriod: '',
+            linkedInProfile: ''
+        });
+        setResumeFile(null);
     };
 
     const closeModal = () => {
@@ -89,11 +84,105 @@ const CandidateJd = () => {
         setShowModal(false);
     };
 
+    const closeApplyModal = () => {
+        setSelectedJD(null);
+        setShowApplyModal(false);
+        setApplicationData({
+            skills: '',
+            currentCTC: '',
+            expectedCTC: '',
+            currentLocation: '',
+            relocation: false,
+            noticePeriod: '',
+            linkedInProfile: ''
+        });
+        setResumeFile(null);
+    };
+
     const clearFilters = () => {
         setSearchTerm("");
         setSelectedTitle("");
         setSelectedSkill("");
         setSelectedCompany("");
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setApplicationData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size should not exceed 5MB');
+                return;
+            }
+            setResumeFile(file);
+        }
+    };
+
+    const handleSubmitApplication = async (e) => {
+        e.preventDefault();
+
+        if (!resumeFile) {
+            alert('Please upload your resume');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const formData = new FormData();
+            formData.append('resume', resumeFile);
+
+            const skillsArray = applicationData.skills.split(',').map(skill => skill.trim()).filter(skill => skill);
+
+            skillsArray.forEach(skill => {
+                formData.append('skills[]', skill);
+            });
+
+            formData.append('currentCTC', applicationData.currentCTC);
+            formData.append('expectedCTC', applicationData.expectedCTC);
+            formData.append('currentLocation', applicationData.currentLocation);
+            formData.append('relocation', applicationData.relocation);
+            formData.append('noticePeriod', applicationData.noticePeriod);
+            formData.append('linkedInProfile', applicationData.linkedInProfile);
+
+            const token = localStorage.getItem('candidateAuthToken');
+
+            if (!token) {
+                alert('Please login to apply for jobs');
+                setIsSubmitting(false);
+                return;
+            }
+
+            const response = await axios.post(
+                `${baseUrl}/api/candidate/jobs/${selectedJD._id}/apply`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            console.log(response.data);
+            
+
+            if (response.status === 201) {
+                alert('Application submitted successfully!');
+                closeApplyModal();
+            }
+        } catch (error) {
+            console.error('Error submitting application:', error);
+            alert(error.response?.data?.message || 'Failed to submit application. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const stats = [
@@ -111,17 +200,25 @@ const CandidateJd = () => {
         },
         {
             label: "Tech Jobs",
-            value: filteredData.filter((jd) => jd.title.toLowerCase().includes("developer")).length,
+            value: filteredData.filter((jd) =>
+                jd.title?.toLowerCase().includes("developer")
+            ).length,
             icon: Code,
             color: "bg-purple-100 text-purple-700",
         },
         {
             label: "Design Jobs",
-            value: filteredData.filter((jd) => jd.title.toLowerCase().includes("designer")).length,
+            value: filteredData.filter((jd) =>
+                jd.title?.toLowerCase().includes("designer")
+            ).length,
             icon: Palette,
             color: "bg-pink-100 text-pink-700",
         },
     ];
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
+    const start = (currentPage - 1) * rowsPerPage;
+    const currentData = filteredData.slice(start, start + rowsPerPage);
 
     return (
         <div className="max-w-7xl mx-auto mt-10 px-4 relative">
@@ -178,8 +275,8 @@ const CandidateJd = () => {
                         className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                         <option value="">All Titles</option>
-                        {uniqueTitles.map((title) => (
-                            <option key={title} value={title}>{title}</option>
+                        {uniqueTitles.map((title, index) => (
+                            <option key={`title-${index}`} value={title}>{title}</option>
                         ))}
                     </select>
 
@@ -189,8 +286,8 @@ const CandidateJd = () => {
                         className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                         <option value="">All Skills</option>
-                        {allSkills.sort().map((skill) => (
-                            <option key={skill} value={skill}>{skill}</option>
+                        {allSkills.sort().map((skill, index) => (
+                            <option key={`skill-${index}`} value={skill}>{skill}</option>
                         ))}
                     </select>
 
@@ -200,8 +297,8 @@ const CandidateJd = () => {
                         className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                         <option value="">All Companies</option>
-                        {uniqueCompanies.map((company) => (
-                            <option key={company} value={company}>{company}</option>
+                        {uniqueCompanies.map((company, index) => (
+                            <option key={`company-${index}`} value={company}>{company}</option>
                         ))}
                     </select>
 
@@ -213,7 +310,7 @@ const CandidateJd = () => {
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow border border-gray-100">
+            <div className="bg-white rounded-xl shadow border border-gray-100 pb-4">
                 <div className="overflow-x-auto">
                     <table className="min-w-[1000px] w-full text-sm">
                         <thead className="bg-gray-50 text-gray-700 text-left">
@@ -221,26 +318,29 @@ const CandidateJd = () => {
                                 <th className="px-6 py-3">Id</th>
                                 <th className="px-6 py-3">Job Title</th>
                                 <th className="px-6 py-3">Company</th>
-                                <th className="px-6 py-3">Created On</th>
+                                <th className="px-6 py-3">Location</th>
                                 <th className="px-6 py-3">Skills</th>
                                 <th className="px-6 py-3">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredData.length > 0 ? (
-                                filteredData.map((jd, index) => (
-                                    <tr key={jd._id} className="border-t hover:bg-gray-50 transition">
-                                        <td className="px-6 py-4 font-medium text-gray-800">{index + 1}</td>
-                                        <td className="px-6 py-4 font-medium text-gray-800">{jd.title}</td>
-                                        <td className="px-6 py-4">
-                                            <span className="text-gray-700 font-medium">{jd.company}</span>
+                            {currentData.length > 0 ? (
+                                currentData.map((jd, index) => (
+                                    <tr
+                                        key={jd._id}
+                                        className="border-t hover:bg-gray-50 transition"
+                                    >
+                                        <td className="px-6 py-4 font-medium text-gray-800">
+                                            {(currentPage - 1) * rowsPerPage + index + 1}
                                         </td>
-                                        <td className="px-6 py-4 text-gray-600">
-                                            {new Date(jd.createdAt).toLocaleDateString("en-IN")}
+                                        <td className="px-6 py-4 font-medium text-gray-800">
+                                            {jd.title}
                                         </td>
+                                        <td className="px-6 py-4 text-gray-700">{jd.company}</td>
+                                        <td className="px-6 py-4 text-gray-600">{jd.location}</td>
                                         <td className="px-6 py-4">
                                             <div className="flex flex-wrap gap-1">
-                                                {jd.skills.slice(0, 3).map((skill, idx) => (
+                                                {(jd.skills || []).slice(0, 3).map((skill, idx) => (
                                                     <span
                                                         key={idx}
                                                         className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded"
@@ -248,7 +348,7 @@ const CandidateJd = () => {
                                                         {skill}
                                                     </span>
                                                 ))}
-                                                {jd.skills.length > 3 && (
+                                                {(jd.skills || []).length > 3 && (
                                                     <span className="text-gray-500 text-xs px-2 py-1">
                                                         +{jd.skills.length - 3} more
                                                     </span>
@@ -258,7 +358,7 @@ const CandidateJd = () => {
                                         <td className="px-6 py-4">
                                             <div className="flex gap-2">
                                                 <button
-                                                    onClick={() => handleApplyJD(jd._id)}
+                                                    onClick={() => handleApplyJD(jd)}
                                                     className="px-3 py-1.5 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition"
                                                 >
                                                     Apply
@@ -275,7 +375,10 @@ const CandidateJd = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
+                                    <td
+                                        colSpan="6"
+                                        className="px-6 py-12 text-center text-gray-500"
+                                    >
                                         No jobs found matching your criteria
                                     </td>
                                 </tr>
@@ -283,8 +386,194 @@ const CandidateJd = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {totalPages > 1 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page) => setCurrentPage(page)}
+                    />
+                )}
             </div>
 
+            {showApplyModal && selectedJD && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+                    <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-3xl relative max-h-[90vh] overflow-y-auto">
+                        <button
+                            onClick={closeApplyModal}
+                            className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+
+                        <div className="mb-6">
+                            <h2 className="text-2xl font-semibold text-gray-800 mb-2">Apply for {selectedJD.title}</h2>
+                            <p className="text-gray-600">{selectedJD.company} • {selectedJD.location}</p>
+                        </div>
+
+                        <form onSubmit={handleSubmitApplication} className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Resume <span className="text-red-500">*</span>
+                                </label>
+                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition">
+                                    <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                                    <div className="text-sm text-gray-600">
+                                        <label htmlFor="resume-upload" className="cursor-pointer">
+                                            <span className="text-indigo-600 hover:text-indigo-500 font-medium">
+                                                Click to upload
+                                            </span>
+                                            <span> or drag and drop</span>
+                                        </label>
+                                        <input
+                                            id="resume-upload"
+                                            name="resume"
+                                            type="file"
+                                            className="sr-only"
+                                            accept=".pdf,.doc,.docx"
+                                            onChange={handleFileChange}
+                                            required
+                                        />
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-2">PDF, DOC, DOCX up to 5MB</p>
+                                    {resumeFile && (
+                                        <div className="mt-3 text-sm text-green-600 font-medium">
+                                            ✓ {resumeFile.name}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Skills <span className="text-red-500">*</span>
+                                </label>
+                                <textarea
+                                    name="skills"
+                                    value={applicationData.skills}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter your relevant skills (comma separated)"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    rows="3"
+                                    required
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Current CTC (LPA)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="currentCTC"
+                                        value={applicationData.currentCTC}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., 5.5"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        step="0.1"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Expected CTC (LPA) <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="expectedCTC"
+                                        value={applicationData.expectedCTC}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., 8.0"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        step="0.1"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Current Location <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="currentLocation"
+                                        value={applicationData.currentLocation}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., Mumbai, Maharashtra"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Notice Period <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="noticePeriod"
+                                        value={applicationData.noticePeriod}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., 30 days, Immediate, 2 months"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        name="relocation"
+                                        checked={applicationData.relocation}
+                                        onChange={handleInputChange}
+                                        className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    />
+                                    <span className="text-sm font-medium text-gray-700">
+                                        I am willing to relocate for this position
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    LinkedIn Profile
+                                </label>
+                                <input
+                                    type="url"
+                                    name="linkedInProfile"
+                                    value={applicationData.linkedInProfile}
+                                    onChange={handleInputChange}
+                                    placeholder="https://linkedin.com/in/yourprofile"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                />
+                            </div>
+
+                            <div className="flex gap-3 pt-4">
+                                <button
+                                    type="button"
+                                    onClick={closeApplyModal}
+                                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                                    disabled={isSubmitting}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* View JD Modal */}
             {showModal && selectedJD && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center p-4">
                     <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-2xl relative max-h-[90vh] overflow-y-auto">
@@ -295,30 +584,14 @@ const CandidateJd = () => {
                             <X className="w-5 h-5" />
                         </button>
                         <h2 className="text-2xl font-semibold mb-3 text-gray-800">{selectedJD.title}</h2>
-                        <div className="space-y-3 mb-4">
-                            <p className="text-gray-600">
-                                <strong>Company:</strong> {selectedJD.company}
-                            </p>
-                            <p className="text-gray-600">
-                                <strong>Created On:</strong>{" "}
-                                {new Date(selectedJD.createdAt).toLocaleDateString("en-IN")}
-                            </p>
-                        </div>
-                        <p className="text-gray-700 mb-4">
-                            <strong>Job Summary:</strong> {selectedJD.jobSummary}
+                        <p className="text-gray-600 mb-2"><strong>Company:</strong> {selectedJD.company}</p>
+                        <p className="text-gray-600 mb-2">
+                            <strong>Required Skills:</strong>{" "}
+                            {selectedJD.skills && selectedJD.skills.join(", ")}
                         </p>
-                        <div>
-                            <h3 className="text-lg font-semibold mb-2">Required Skills:</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {selectedJD.skills.map((skill, idx) => (
-                                    <span
-                                        key={idx}
-                                        className="bg-indigo-100 text-indigo-700 text-sm font-medium px-3 py-1 rounded-full"
-                                    >
-                                        {skill}
-                                    </span>
-                                ))}
-                            </div>
+                        <p className="text-gray-600 mb-2"><strong>Location:</strong> {selectedJD.location}</p>
+                        <div className="mt-4 text-gray-700 whitespace-pre-line">
+                            {selectedJD.fullJD}
                         </div>
                     </div>
                 </div>
