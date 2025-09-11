@@ -143,7 +143,7 @@ getCandidateDetails()
         {/* BASIC DETAILS */}
         <div className="mt-12">
           <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">
-            👤 Personal & Contact Details
+             Personal & Contact Details
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -268,7 +268,7 @@ getCandidateDetails()
         {/* ADDITIONAL DETAILS */}
         <div className="mt-12">
           <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">
-            🏢 Additional Details
+             Additional Details
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">

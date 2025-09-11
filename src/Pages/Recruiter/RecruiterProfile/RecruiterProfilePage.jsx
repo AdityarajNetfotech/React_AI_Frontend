@@ -110,7 +110,7 @@ const RecruiterProfilePage = () => {
 
 
         <div className="mt-12">
-          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">👤 Personal Details</h3>
+          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6"> Personal Details</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
               <label className="block text-sm text-gray-600 mb-1">Full Name</label>
@@ -156,7 +156,7 @@ const RecruiterProfilePage = () => {
 
 
         <div className="mt-10">
-          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">📞 Contact</h3>
+          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6"> Contact</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
               <label className="block text-sm text-gray-600 mb-1">Phone</label>
@@ -201,7 +201,7 @@ const RecruiterProfilePage = () => {
 
 
         <div className="mt-10">
-          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6">🏢 Company Details</h3>
+          <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-6"> Company Details</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <div>
               <label className="block text-sm text-gray-600 mb-1">Company Name</label>

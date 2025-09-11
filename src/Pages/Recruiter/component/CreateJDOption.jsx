@@ -23,9 +23,9 @@ function CreateJDOption () {
                     <button onClick={()=>navigate("/Recruiter-Dashboard/CreateJDOption/CreateJDAI")} className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 text-white font-semibold rounded-2xl shadow-lg hover:scale-105 hover:shadow-indigo-200 transform transition duration-300">
                         <Sparkles className="w-5 h-5" /> Create JD by AI
                     </button>
-                    <button onClick={()=>navigate("/Recruiter-Dashboard/CreateJDOption/CreateJDManually")} className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 font-semibold rounded-2xl shadow-md hover:scale-105 hover:shadow-gray-300 transform transition duration-300">
+                    {/* <button onClick={()=>navigate("/Recruiter-Dashboard/CreateJDOption/CreateJDManually")} className="w-full flex items-center justify-center gap-3 py-4 px-6 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 font-semibold rounded-2xl shadow-md hover:scale-105 hover:shadow-gray-300 transform transition duration-300">
                         <PenLine className="w-5 h-5" /> Create JD Manually
-                    </button>
+                    </button> */}
                 </div>
                 
             </div>
