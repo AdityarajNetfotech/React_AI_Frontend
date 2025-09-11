@@ -287,47 +287,8 @@ function AppliedJD() {
                         </div>
                         <div className="mt-2 max-h-96 overflow-y-auto">
                             {selectedJob.matchSummary ? (
-                                <div className="space-y-4">
-                                    {selectedJob.matchSummary.split('**').map((section, index) => {
-                                        if (section.trim() === '') return null;
-
-                                        if (section.match(/^\d+\./)) {
-                                            return (
-                                                <div key={index} className="border-l-4 border-blue-500 pl-4 py-2 bg-blue-50">
-                                                    <p className="font-semibold text-gray-800">{section.trim()}</p>
-                                                </div>
-                                            );
-                                        }
-
-                                        if (section.includes('Yes/No') || section.includes('Detailed Explanation')) {
-                                            return (
-                                                <div key={index} className="border-l-4 border-green-500 pl-4 py-2 bg-green-50">
-                                                    <p className="font-semibold text-gray-800">{section.trim()}</p>
-                                                </div>
-                                            );
-                                        }
-
-                                        if (section.startsWith('*')) {
-                                            const cleanSection = section.replace(/^\*+/, '').trim();
-                                            if (cleanSection) {
-                                                return (
-                                                    <div key={index} className="ml-4 border-l-2 border-gray-300 pl-4 py-1">
-                                                        <p className="text-gray-700">{cleanSection}</p>
-                                                    </div>
-                                                );
-                                            }
-                                        }
-
-                                        if (section.trim().length > 0) {
-                                            return (
-                                                <div key={index} className="py-1">
-                                                    <p className="text-gray-700">{section.trim()}</p>
-                                                </div>
-                                            );
-                                        }
-
-                                        return null;
-                                    }).filter(Boolean)}
+                                <div className="whitespace-pre-line text-gray-700">
+                                    {selectedJob.matchSummary.replace(/\*+/g, '').replace(/#/g, '')}
                                 </div>
                             ) : (
                                 <p className="text-gray-500">No match summary available</p>
