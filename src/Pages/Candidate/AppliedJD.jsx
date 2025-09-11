@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { baseUrl } from '../../utils/ApiConstants'
-import { Briefcase, MapPin, Calendar, DollarSign, GraduationCap, Clock, FileText, CheckCircle, XCircle, AlertCircle, Eye, Code, X } from 'lucide-react'
+import { Briefcase, MapPin, Calendar, DollarSign, GraduationCap, Clock, FileText, CheckCircle, XCircle, AlertCircle, Eye, Code, X, IndianRupee } from 'lucide-react'
 
 function AppliedJD() {
     const [appliedJobs, setAppliedJobs] = useState([])
@@ -217,7 +217,7 @@ function AppliedJD() {
                                                     {job.experience} years
                                                 </div>
                                                 <div className="flex items-center text-gray-600 mt-1">
-                                                    <DollarSign className="w-4 h-4 mr-1 text-gray-400" />
+                                                    <IndianRupee className="w-4 h-4 mr-1 text-gray-400" />
                                                     {job.salary} LPA
                                                 </div>
                                             </div>
