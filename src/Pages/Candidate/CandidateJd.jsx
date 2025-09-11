@@ -584,8 +584,8 @@ const [appliedJobIds, setAppliedJobIds] = useState([]);
                                     </label>
                                     <input
                                         type="text"
-                                        name="currentCTC"
-                                        value={applicationData.currentCTC}
+                                        name="expectedCTC"
+                                        value={applicationData.expectedCTC}
                                         onChange={handleInputChange}
                                         placeholder="e.g., 4lpa,"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
