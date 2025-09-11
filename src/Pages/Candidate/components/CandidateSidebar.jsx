@@ -17,8 +17,7 @@ const navItems = [
   { label: "Dashboard", icon: FiHome, path: "" },
   { label: "All JDs", icon: FiFilePlus, path: "Alljds" },
   { label: "My Results", icon: FiFileText, path: "JDResult" },
-  { label: "Update Profile", icon: FiHelpCircle, path: "UpdateCandidate" },
-  { label: "Result", icon: FiCheckCircle, path: "Result" },
+  { label: "Applied JD", icon: FiFileText, path: "AppliedJD" },
   { label: "Profile", icon: FiUser, path: "candidate-profile" },
   { label: "Logout", icon: FiLogOut, path: "/CandidateLogin" },
 ];
