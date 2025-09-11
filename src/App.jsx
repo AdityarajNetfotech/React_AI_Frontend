@@ -57,6 +57,7 @@ import CandidateJd from './Pages/Candidate/CandidateJd';
 import UpdateCandidate from './Pages/Candidate/UpdateCandidate';
 import CandidateProfilePage from './Pages/Candidate/CandidateProfile';
 import ExamResult from './Pages/Candidate/ExamResult';
+import AppliedJD from './Pages/Candidate/AppliedJD';
 
 
 
@@ -114,6 +115,7 @@ const App = () => {
               <Route path="/Candidate-Dashboard" element={<CandidateLayout />}>
                 <Route index element={<CandidateDashboard />} />
                 <Route path='Alljds' element={<CandidateJd />} />
+                <Route path='AppliedJD' element={<AppliedJD />} />
                 <Route path='candidate-profile' element={<CandidateProfilePage />} />
 
                 <Route path='/Candidate-Dashboard/JDResult' element={<ExamResult />} />
