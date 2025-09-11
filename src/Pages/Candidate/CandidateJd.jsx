@@ -535,7 +535,7 @@ const [appliedJobIds, setAppliedJobIds] = useState([]);
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                                {/* <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Current CTC (LPA)
                                     </label>
@@ -548,8 +548,22 @@ const [appliedJobIds, setAppliedJobIds] = useState([]);
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         step="0.1"
                                     />
-                                </div>
+                                </div> */}
                                 <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Current CTC <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="currentCTC"
+                                        value={applicationData.currentCTC}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., 4lpa,"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        required
+                                    />
+                                </div>
+                                {/* <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Expected CTC (LPA) <span className="text-red-500">*</span>
                                     </label>
@@ -561,6 +575,20 @@ const [appliedJobIds, setAppliedJobIds] = useState([]);
                                         placeholder="e.g., 8.0"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         step="0.1"
+                                        required
+                                    />
+                                </div> */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Current CTC <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="currentCTC"
+                                        value={applicationData.currentCTC}
+                                        onChange={handleInputChange}
+                                        placeholder="e.g., 4lpa,"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         required
                                     />
                                 </div>
